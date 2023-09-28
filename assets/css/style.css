@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Martian+Mono&family=Poppins:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Sofia');
 
 :root {
     --color-blue: #0d6efd;
@@ -18,19 +19,24 @@
     --color-gray-900: #212529;
     --color-info: #0dcaf0;
     --color-dark: #212529;
-    --color-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-    --color-info: rgb(13, 202, 240);
-    --color-dark: rgb(33, 37, 41);
-    --color-black: rgb(0, 0, 0);
-    --color-secondary-color: rgba(33, 37, 41, 0.75);
-    --color-secondary-color: rgb(33, 37, 41);
-    --color-secondary-bg: rgb(233, 236, 239);
-    --color-tertiary-color: rgba(33, 37, 41, 0.5);
-    --color-tertiary-color: rgb(33, 37, 41);
-    --color-border-color-translucent: rgba(0, 0, 0, 0.175);
-    --color-box-shadow: rgba(0, 0, 0, 0.15);
-    --color-box-shadow: rgba(0, 0, 0, 0.075);
-    --color-box-shadow-lg: rgba(0, 0, 0, 0.175);
-    --color-box-shadow-inset: inset rgba(0, 0, 0, 0.075);
-    --color-focus-ring-color: rgba(13, 110, 253, 0.25);
+    --color-info-bg: rgb(13, 202, 240);
+    --color-dark-bg: rgb(33, 37, 41);
+    --color-black-bg: rgb(0, 0, 0);
 }
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* NAVIGATION AREA STYLE START */
+
+#bg-color {
+    background-color: var(--color-dark-bg);
+}
+
+.font-style {
+    font-family: 'sofia', sans-serif;
+}
+
+/* NAVIGATION AREA STYLE END */

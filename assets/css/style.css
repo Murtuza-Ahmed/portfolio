@@ -31,12 +31,62 @@ body {
 
 /* NAVIGATION AREA STYLE START */
 
-#bg-color {
+.navbar {
     background-color: var(--color-dark-bg);
 }
 
-.font-style {
+.logo-name {
+    color: var(--color-cyan);
     font-family: 'sofia', sans-serif;
+    font-size: 2rem;
+    cursor: default;
+}
+
+.logo-name span {
+    color: #FFFF00;
+    display: inline-block;
+}
+
+.button-hover button {
+    background-color: transparent;
+    color: var(--color-cyan);
+    transition: .5s ease;
+    transform: translate(50%);
+    display: block;
+}
+
+.button-hover button:hover {
+    background-color: var(--color-cyan);
+    color: var(--color-black-bg);
+    border: none;
+    transform: translate(0);
+}
+
+.nav-item {
+    font-size: 1rem;
+    font-family: 'poppins', sans-serif;
+}
+
+.nav-item a {
+    display: block;
+    color: #FFF;
+    transition: .5s;
+    transform: .5s;
+}
+
+.nav-item a:hover {
+    color: var(--color-cyan);
+    text-shadow: 0 0 9px var(--color-cyan);
+    transform: scaleY(2.1);
+}
+
+.nav-item a:nth-of-type(1) {
+    color: var(--color-cyan);
+    text-shadow: 0 0 9px var(--color-cyan);
+}
+
+.nav-item a:nth-of-type(1):hover {
+    text-shadow: none;
 }
 
 /* NAVIGATION AREA STYLE END */

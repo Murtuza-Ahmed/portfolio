@@ -2,22 +2,11 @@
 @import url('https://fonts.googleapis.com/css?family=Sofia');
 
 :root {
-    --color-blue: #0d6efd;
-    --color-cyan: #0dcaf0;
+    --color-main: #0EF;
     --color-black: #000;
     --color-white: #fff;
-    --color-gray: #6c757d;
-    --color-gray-dark: #343a40;
-    --color-gray-100: #f8f9fa;
-    --color-gray-200: #e9ecef;
-    --color-gray-300: #dee2e6;
-    --color-gray-400: #ced4da;
-    --color-gray-500: #adb5bd;
-    --color-gray-600: #6c757d;
-    --color-gray-700: #495057;
     --color-gray-800: #343a40;
     --color-gray-900: #212529;
-    --color-info: #0dcaf0;
     --color-dark: #212529;
     --color-info-bg: rgb(13, 202, 240);
     --color-dark-bg: rgb(33, 37, 41);
@@ -36,7 +25,7 @@ body {
 }
 
 .logo-name {
-    color: var(--color-cyan);
+    color: var(--color-main);
     font-family: 'sofia', sans-serif;
     font-size: 2rem;
     cursor: default;
@@ -49,14 +38,14 @@ body {
 
 .button-hover button {
     background-color: transparent;
-    color: var(--color-cyan);
+    color: var(--color-main);
     transition: .5s ease;
     transform: translate(50%);
     display: block;
 }
 
 .button-hover button:hover {
-    background-color: var(--color-cyan);
+    background-color: var(--color-main);
     color: var(--color-black-bg);
     border: none;
     transform: translate(0);
@@ -75,18 +64,42 @@ body {
 }
 
 .nav-item a:hover {
-    color: var(--color-cyan);
-    text-shadow: 0 0 9px var(--color-cyan);
+    color: var(--color-main);
+    text-shadow: 0 0 9px var(--color-main);
     transform: scaleY(2.1);
 }
 
 .nav-item a:nth-of-type(1) {
-    color: var(--color-cyan);
-    text-shadow: 0 0 9px var(--color-cyan);
+    color: var(--color-main);
+    text-shadow: 0 0 .5rem var(--color-main);
 }
 
 .nav-item a:nth-of-type(1):hover {
     text-shadow: none;
+}
+
+.git-icon {
+    background-color: var(--color-gray-800);
+    border-radius: .2rem;
+    padding: .2rem 1rem;
+    box-shadow: 0 0 5rem var(--color-main);
+    cursor: pointer;
+    transition: .5s;
+    transform: scale(70%);
+}
+
+.git-icon:hover {
+    background-color: var(--color-main);
+    /* color: var(--color-black-bg); */
+    transform: scale(1.1);
+    box-shadow: none;
+}
+
+.git-icon i {
+    font-size: 1.5rem;
+    color: var(--color-dark-bg);
+    /* box-shadow: 0 0 5rem var(--color-main); */
+    /* display: block; */
 }
 
 /* NAVIGATION AREA STYLE END */

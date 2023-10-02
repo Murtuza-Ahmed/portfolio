@@ -1,0 +1,9 @@
+@media(min-width: 992px) {
+    ul li a {
+        margin-right: 2.5rem;
+    }
+
+    .logo-name {
+        margin: 0 5rem 0 0;
+    }
+}

@@ -1,3 +1,8 @@
+@media(min-width: 768px) {
+    
+}
+
+/* LAPTOP SCREEN */
 @media(min-width: 992px) {
     ul li a {
         margin-right: 2.5rem;

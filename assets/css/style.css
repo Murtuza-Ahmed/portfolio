@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Martian+Mono&family=Poppins:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Sofia');
+@import url('https://fonts.googleapis.com/css2?family=Martian+Mono&family=Poppins:wght@700&family=Roboto&display=swap');
+
 
 :root {
     --color-main: #0EF;
@@ -24,12 +26,11 @@ body {
     background-color: var(--color-dark-bg);
 }
 
-.navbar-top {
+.navbarTop {
     position: fixed;
     top: 0;
     right: 0;
     left: 0;
-    /* width: 100%; */
 }
 
 .logo-name .name {
@@ -206,8 +207,54 @@ body {
 /* NAVIGATION AREA STYLE END */
 
 /* PORTFOLIO AREA STYLE START */
+
 .portfolio {
     background-color: var(--color-gray-800);
+}
+
+.portfolio .text {
+    padding: 2rem 0 0 0;
+    text-align: center;
+}
+
+.text h2 {
+    font-size: 1rem;
+    color: var(--color-white);
+    font-family: 'poppins', sans-serif;
+    letter-spacing: 1px;
+    padding: 0 0 .1rem 0;
+    line-height: 1.1;
+}
+
+.text h2 span {
+    color: var(--color-main);
+    font-size: 1.5rem;
+}
+
+.text p {
+    color: var(--color-white);
+    line-height: 1.2;
+    font-size: 1rem;
+    font-family: 'poppins,roboto', sans-serif;
+    font-weight: 600;
+    /* width: 500px; */
+    /* clip-path: polygon(5% 5%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%); */
+}
+
+.image {
+    margin: 1rem 0 0 0;
+    text-align: center;
+}
+
+.image img {
+    width: 300px;
+    height: 350px;
+    border-radius: 50%;
+    overflow: hidden;
+    object-fit: cover;
+    border: 5px solid var(--color-main);
+    box-shadow: 0 0 9px var(--color-main);
+    margin: 1rem 0 5rem 0;
 }
 
 /* PORTFOLIO AREA STYLE END */

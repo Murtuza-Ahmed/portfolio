@@ -212,9 +212,16 @@ body {
     background-color: var(--color-gray-800);
 }
 
-.portfolio .text {
+/* .profile-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+} */
+
+.profile-text .text {
     padding: 2rem 0 0 0;
-    text-align: center;
 }
 
 .text h2 {
@@ -239,7 +246,7 @@ body {
     font-weight: 600;
     /* width: 500px; */
     /* clip-path: polygon(5% 5%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%); */
-    padding-top: 2rem;
+    padding-top: 1rem;
 }
 
 .image {

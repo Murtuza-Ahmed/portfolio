@@ -1,5 +1,15 @@
 @media(min-width: 768px) {
-    
+    .profile-text {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .text p {
+        width: 350px;
+    }
 }
 
 /* LAPTOP SCREEN */

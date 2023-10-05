@@ -180,9 +180,10 @@ body {
     box-shadow: 0 0 9px var(--color-main);
 }
 
-.social-media ul li a {
+.social-media a {
     background: transparent;
     color: var(--color-main);
+    display: block;
 }
 
 .social-media ul li a i {
@@ -190,7 +191,7 @@ body {
     font-weight: 900;
 }
 
-.social-media li a:hover {
+.social-media a:hover {
     background-color: var(--color-main);
     box-shadow: none;
     color: var(--color-gray-900);

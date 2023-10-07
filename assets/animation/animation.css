@@ -208,6 +208,9 @@
 /* NEW ANIMATION */
 .bubble.second {
     position: absolute;
+    top: 4rem;
+    left: 65rem;
+    z-index: 1000;
     width: 200px;
     height: 200px;
     border-radius: 50%;

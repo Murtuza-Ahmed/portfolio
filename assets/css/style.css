@@ -190,7 +190,7 @@ body {
     display: block;
     padding: 1rem;
     border-radius: 50%;
-    border: 2px solid var(--color-main);
+    border: none;
     box-shadow: 0 0 9px var(--color-main);
     transition: .5s ease-in-out;
     transform: scale(90%);

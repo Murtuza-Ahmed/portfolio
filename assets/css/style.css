@@ -90,28 +90,36 @@ body {
     text-shadow: none;
 }
 
-.git-icon {
+.git-icon a {
+    color: var(--color-main);
     background-color: var(--color-gray-800);
-    border-radius: .2rem;
-    padding: .2rem 1rem;
+    border: 5px;
     box-shadow: 0 0 5rem var(--color-main);
     cursor: pointer;
-    transition: .5s;
+    transition: .5s ease;
+    /* transform: scale(70%); */
+    padding: .5rem 1rem;
+}
+
+.git-icon a:hover {
+    background-color: var(--color-main);
+    color: var(--color-gray-800);
+    /* transform: scale(0); */
+    box-shadow: none;
+}
+
+.git-icon {
     transform: scale(70%);
+    transition: .5s ease-in;
 }
 
 .git-icon:hover {
-    background-color: var(--color-main);
-    /* color: var(--color-black-bg); */
     transform: scale(1.1);
-    box-shadow: none;
 }
 
 .git-icon i {
     font-size: 1.5rem;
-    color: var(--color-dark-bg);
-    /* box-shadow: 0 0 5rem var(--color-main); */
-    /* display: block; */
+    /* color: var(--color-dark-bg); */
 }
 
 /* NAVIGATION AREA STYLE END */
@@ -174,16 +182,18 @@ body {
 
 .social-media ul li {
     margin: 0 1rem 0 0;
-    padding: 1rem;
-    border-radius: 50%;
-    border: 2px solid var(--color-main);
-    box-shadow: 0 0 9px var(--color-main);
 }
 
 .social-media a {
     background: transparent;
     color: var(--color-main);
     display: block;
+    padding: 1rem;
+    border-radius: 50%;
+    border: 2px solid var(--color-main);
+    box-shadow: 0 0 9px var(--color-main);
+    transition: .5s ease-in-out;
+    transform: scale(90%);
 }
 
 .social-media ul li a i {
@@ -195,6 +205,7 @@ body {
     background-color: var(--color-main);
     box-shadow: none;
     color: var(--color-gray-900);
+    transform: scale(1.1);
 }
 
 .image {

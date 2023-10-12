@@ -251,27 +251,3 @@
     filter: blur(8px);
     transform: rotate(330deg);
 }
-
-@mixin keyFrame($animeName) {
-    @-webkit-keyframes #{$animeName} {
-        @content;
-    }
-
-    @-moz-keyframes #{$animeName} {
-        @content;
-    }
-
-    @keyframes #{$animeName} {
-        @content;
-    }
-}
-
-@include keyFrame(animate) {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}

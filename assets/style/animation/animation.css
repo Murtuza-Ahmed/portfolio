@@ -2,10 +2,12 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
 }
+
 .box {
   position: relative;
   width: 300px;
@@ -15,6 +17,7 @@
   overflow: hidden;
   margin: 2rem 0 5rem 0;
 }
+
 .box::before {
   content: "";
   position: absolute;
@@ -23,6 +26,7 @@
   transition: 0.5s;
   animation: animate 4s linear infinite;
 }
+
 .box::after {
   content: "";
   position: absolute;
@@ -31,6 +35,7 @@
   border-radius: 50%;
   z-index: 1;
 }
+
 .box .content {
   position: absolute;
   inset: 30px;
@@ -43,6 +48,7 @@
   overflow: hidden;
   flex-direction: column;
 }
+
 .box .content img {
   position: absolute;
   top: 0;
@@ -54,9 +60,13 @@
   pointer-events: none;
   z-index: 3;
 }
+
 .box:hover::before {
   inset: -20px 0px;
 }
+
 .box:hover img {
   opacity: 1;
-}/*# sourceMappingURL=animation.css.map */
+}
+
+/*# sourceMappingURL=animation.css.map */

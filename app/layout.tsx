@@ -21,8 +21,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "John Doe - MERN Stack Developer",
-    template: "%s | John Doe - MERN Stack Developer",
+    default: "Murtuza - MERN Stack Developer",
+    template: "%s | Murtuza - MERN Stack Developer",
   },
   description:
     "Full-stack MERN developer specializing in modern web applications with React, Node.js, MongoDB, and Express. Building scalable, user-focused solutions.",
@@ -36,23 +36,23 @@ export const metadata: Metadata = {
     "JavaScript",
     "TypeScript",
   ],
-  authors: [{ name: "John Doe" }],
-  creator: "John Doe",
+  authors: [{ name: "Murtuza Ahmed" }],
+  creator: "Murtuza Ahmed",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://johndoe-portfolio.vercel.app",
-    title: "John Doe - MERN Stack Developer",
+    url: "https://murtuzaahmed-portfolio.vercel.app",
+    title: "Murtuza Ahmed - MERN Stack Developer",
     description:
       "Full-stack MERN developer specializing in modern web applications with React, Node.js, MongoDB, and Express.",
-    siteName: "John Doe Portfolio",
+    siteName: "Murtuza Ahmed Portfolio",
   },
   twitter: {
     card: "summary_large_image",
-    title: "John Doe - MERN Stack Developer",
+    title: "Murtuza Ahmed - MERN Stack Developer",
     description:
       "Full-stack MERN developer specializing in modern web applications with React, Node.js, MongoDB, and Express.",
-    creator: "@johndoe",
+    creator: "@murtuza_ahmed",
   },
   robots: {
     index: true,

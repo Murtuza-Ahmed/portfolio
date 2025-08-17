@@ -1,5 +1,5 @@
 {
-  "name": "my-v0-project",
+  "name": "portfolio",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -54,9 +54,9 @@
     "mongoose": "latest",
     "next": "14.2.16",
     "next-themes": "latest",
-    "react": "^18",
+    "react": "^18.3.1",
     "react-day-picker": "9.8.0",
-    "react-dom": "^18",
+    "react-dom": "^18.3.1",
     "react-hook-form": "latest",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.4",
@@ -67,7 +67,7 @@
     "yup": "latest",
     "zod": "3.25.67"
   },
-  "devDependencies": { 
+  "devDependencies": {
     "@tailwindcss/postcss": "^4.1.9",
     "@types/node": "^22",
     "@types/react": "^18",

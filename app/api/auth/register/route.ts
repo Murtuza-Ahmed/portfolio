@@ -1,9 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { cookies } from "next/headers"
 import connectDB from "@/lib/database/connection"
 import User from "@/models/User"
 import { hashPassword } from "@/lib/auth/password"
-import { generateToken } from "@/lib/auth/jwt"
 import { registerSchema } from "@/lib/validations/schemas"
 import { createSuccessResponse, createErrorResponse, HTTP_STATUS } from "@/lib/utils/api"
 
@@ -40,23 +38,10 @@ export async function POST(request: NextRequest) {
       name,
       email,
       password: hashedPassword,
-      role: "user", // Default role
+      role: "admin", // Default role
     })
 
     await user.save()
-
-    // Generate JWT token
-    const token = generateToken(user)
-
-    // Set HTTP-only cookie
-    const cookieStore = cookies()
-    cookieStore.set("auth-token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60, // 7 days
-      path: "/",
-    })
 
     // Remove password from response
     const userResponse = user.toObject()
@@ -66,7 +51,6 @@ export async function POST(request: NextRequest) {
       createSuccessResponse(
         {
           user: userResponse,
-          token,
         },
         "Registration successful",
       ),

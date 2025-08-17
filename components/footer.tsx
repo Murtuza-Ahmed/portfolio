@@ -4,22 +4,22 @@ import { Github, Linkedin, Twitter, Mail, Heart } from "lucide-react"
 const socialLinks = [
   {
     name: "GitHub",
-    href: "https://github.com/johndoe",
+    href: "https://github.com/Murtuza-Ahmed",
     icon: Github,
   },
   {
     name: "LinkedIn",
-    href: "https://linkedin.com/in/johndoe",
+    href: "https://www.linkedin.com/in/murtuza-ahmed-36012628b/",
     icon: Linkedin,
   },
   {
     name: "Twitter",
-    href: "https://twitter.com/johndoe",
+    href: "https://x.com/MurtuzaAhm87472",
     icon: Twitter,
   },
   {
     name: "Email",
-    href: "mailto:john@example.com",
+    href: "mailto:murtuza.programmer@gmail.com",
     icon: Mail,
   },
 ]
@@ -30,7 +30,7 @@ export function Footer() {
       <div className="container px-4 py-8">
         <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
           <div className="flex items-center space-x-4">
-            <p className="text-sm text-muted-foreground">© 2024 John Doe. All rights reserved.</p>
+            <p className="text-sm text-muted-foreground">© 2024 Murtuza Ahmed. All rights reserved.</p>
           </div>
 
           <div className="flex items-center space-x-4">

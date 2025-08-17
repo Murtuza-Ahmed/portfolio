@@ -67,7 +67,7 @@
     "yup": "latest",
     "zod": "3.25.67"
   },
-  "devDependencies": {
+  "devDependencies": { 
     "@tailwindcss/postcss": "^4.1.9",
     "@types/node": "^22",
     "@types/react": "^18",

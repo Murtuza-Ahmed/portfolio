@@ -14,7 +14,7 @@ const navigation = [
   { name: "About", href: "/about", icon: User },
   { name: "Projects", href: "/projects", icon: Briefcase },
   { name: "Resume", href: "/resume", icon: FileText },
-  { name: "Blog", href: "/blog", icon: BookOpen },
+  // { name: "Blog", href: "/blog", icon: BookOpen },
   { name: "Contact", href: "/contact", icon: Mail },
 ]
 

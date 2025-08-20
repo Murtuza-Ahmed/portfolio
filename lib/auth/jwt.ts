@@ -1,8 +1,8 @@
-import jwt from "jsonwebtoken"
+import jwt, { Secret, SignOptions } from "jsonwebtoken"
 import type { User } from "@/lib/types"
 
 const JWT_SECRET = process.env.JWT_SECRET!
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d"
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN! || "7d"
 
 if (!JWT_SECRET) {
   throw new Error("Please define the JWT_SECRET environment variable inside .env.local")
@@ -21,7 +21,9 @@ export function generateToken(user: User): string {
     role: user.role,
   }
 
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN })
+  const option: SignOptions = { expiresIn: JWT_EXPIRES_IN }
+
+  return jwt.sign(payload, JWT_SECRET as Secret, option)
 }
 
 export function verifyToken(token: string): JWTPayload | null {

@@ -1,7 +1,5 @@
-"use client"
-
 import type { Metadata } from "next"
-import { BlogPostClientPage } from "./BlogPostClientPage"
+import  BlogPostClientPage  from "./BlogPostClientPage"
 
 // This would typically come from a CMS, markdown files, or database
 const blogPosts = [

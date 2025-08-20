@@ -47,6 +47,7 @@ export interface ApiResponse<T = any> {
   message: string
   data?: T
   error?: string
+  validationErrors?: { field: string; message: string }[]
 }
 
 // Form interfaces

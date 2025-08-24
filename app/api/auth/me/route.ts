@@ -13,6 +13,8 @@ export async function GET(request: NextRequest) {
     const cookieStore = cookies()
     const token = cookieStore.get("auth-token")?.value || request.headers.get("authorization")?.replace("Bearer ", "")
 
+    console.log('auth_token: ', token)
+
     if (!token) {
       return NextResponse.json(createErrorResponse("Authentication required"), { status: HTTP_STATUS.UNAUTHORIZED })
     }

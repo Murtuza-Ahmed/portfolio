@@ -24,11 +24,15 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null)
+  console.log('AuthProvider_user: ', user)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
   const isAuthenticated = !!user
   const isAdmin = user?.role === "admin"
+
+  console.log('AuthProvider_isAuthenticated: ', isAuthenticated)
+  console.log('AuthProvider_isAdmin: ', isAdmin)
 
   // Check if user is authenticated on mount
   useEffect(() => {
@@ -38,6 +42,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const checkAuth = async () => {
     try {
       const response = await axios.get("/api/auth/me")
+      console.log('auth_context: ', response)
       if (response.data.success) {
         setUser(response.data.data)
       }

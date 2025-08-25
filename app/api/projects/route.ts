@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
     // Validate pagination and filter parameters
     const { page, limit, sortBy, sortOrder } = await paginationSchema.validate(queryParams)
-    const filters = await filterSchema.validate(queryParams)
+    const filters: any = await filterSchema.validate(queryParams)
 
     // Build query - only show active projects for public API
     const filterQuery = {

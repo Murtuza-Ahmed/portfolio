@@ -1,5 +1,5 @@
-import type { Metadata } from "next"
-import  BlogPostClientPage  from "./BlogPostClientPage"
+import type { Metadata } from "next";
+import BlogPostClientPage from "./BlogPostClientPage";
 
 // This would typically come from a CMS, markdown files, or database
 const blogPosts = [
@@ -356,22 +356,19 @@ These TypeScript patterns will help you write more robust React applications. Th
     image: "/blog-typescript-patterns.png",
     featured: false,
   },
-]
+];
 
 interface PageProps {
   params: {
-    slug: string
-  }
+    slug: string;
+  };
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const post = blogPosts.find((p) => p.id === params.slug)
-
-  if (!post) {
-    return {
-      title: "Post Not Found",
-    }
-  }
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const post = blogPosts.find((p) => p.id === params.slug);
+  if (!post) return { title: "Post Not Found" };
 
   return {
     title: post.title,
@@ -384,15 +381,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       authors: [post.author],
       tags: post.tags,
     },
-  }
+  };
 }
 
 export async function generateStaticParams() {
   return blogPosts.map((post) => ({
     slug: post.id,
-  }))
+  }));
 }
 
 export default function BlogPostPage({ params }: PageProps) {
-  return <BlogPostClientPage params={params} />
+  return <BlogPostClientPage params={params} />;
 }

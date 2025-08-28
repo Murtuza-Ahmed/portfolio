@@ -5,6 +5,8 @@ import User from "@/models/User"
 import { verifyToken } from "@/lib/auth/jwt"
 import { createSuccessResponse, createErrorResponse, HTTP_STATUS } from "@/lib/utils/api"
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
     await connectDB()

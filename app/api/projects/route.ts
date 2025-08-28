@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { type NextRequest, NextResponse } from "next/server"
 import connectDB from "@/lib/database/connection"
 import Project from "@/models/Project"
@@ -15,7 +17,7 @@ export async function GET(request: NextRequest) {
   try {
     await connectDB()
 
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = request.nextUrl
     const queryParams = Object.fromEntries(searchParams.entries())
 
     // Validate pagination and filter parameters

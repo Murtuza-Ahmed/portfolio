@@ -30,12 +30,6 @@ const sampleUsers = [
   //   password: "User123!@#",
   //   role: "user" as const,
   // },
-  // {
-  //   name: "Jane Smith",
-  //   email: "jane@example.com",
-  //   password: "User123!@#",
-  //   role: "user" as const,
-  // },
 ]
 
 const sampleProjects = [

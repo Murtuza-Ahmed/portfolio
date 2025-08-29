@@ -16,19 +16,19 @@ const contactInfo = [
   {
     icon: Mail,
     label: "Email",
-    value: "john@example.com",
-    href: "mailto:john@example.com",
+    value: "murtuza.programmer@gmail.com",
+    href: "mailto:murtuza.programmer@gmail.com",
   },
   {
     icon: Phone,
     label: "Phone",
-    value: "+1 (555) 123-4567",
-    href: "tel:+15551234567",
+    value: "+92 (312) 291-3097",
+    href: "tel:+923122913097",
   },
   {
     icon: MapPin,
     label: "Location",
-    value: "San Francisco, CA",
+    value: "SECTOR- 11 IMAM COLONY ORANGI TOWN Karachi",
     href: "https://maps.google.com/?q=San+Francisco,+CA",
   },
   {
@@ -42,19 +42,19 @@ const contactInfo = [
 const socialLinks = [
   {
     name: "LinkedIn",
-    href: "https://linkedin.com/in/johndoe",
+    href: "https://www.linkedin.com/in/murtuza-ahmed-36012628b/",
     icon: Linkedin,
     color: "text-blue-600",
   },
   {
     name: "GitHub",
-    href: "https://github.com/johndoe",
+    href: "https://github.com/Murtuza-Ahmed",
     icon: Github,
     color: "text-gray-800 dark:text-gray-200",
   },
   {
     name: "Twitter",
-    href: "https://twitter.com/johndoe",
+    href: "https://x.com/MurtuzaAhm87472",
     icon: Twitter,
     color: "text-blue-400",
   },

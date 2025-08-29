@@ -1,17 +1,22 @@
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ExternalLink, Github, Calendar, Users, Star } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import type { Metadata } from "next"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ExternalLink, Github, Calendar, Users, Star } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Projects",
   description:
-    "Explore John Doe's portfolio of MERN stack projects, featuring modern web applications built with React, Node.js, MongoDB, and Express.",
-}
+    "Explore Murtuza Ahmed portfolio of MERN stack projects, featuring modern web applications built with React, Node.js, MongoDB, and Express.",
+};
 
 const projects = [
   {
@@ -22,8 +27,10 @@ const projects = [
     image: "/ecommerce-platform-screenshot.png",
     technologies: ["React", "Node.js", "MongoDB", "Express", "Stripe", "JWT"],
     category: "Full Stack",
-    liveUrl: "https://ecommerce-demo.vercel.app",
-    githubUrl: "https://github.com/johndoe/ecommerce-platform",
+    liveUrl: "",
+    githubUrl: "",
+    // liveUrl: "https://ecommerce-demo.vercel.app",
+    // githubUrl: "https://github.com/johndoe/ecommerce-platform",
     featured: true,
     stats: {
       stars: 45,
@@ -39,8 +46,10 @@ const projects = [
     image: "/social-dashboard-screenshot.png",
     technologies: ["Next.js", "TypeScript", "MongoDB", "Socket.io", "Chart.js"],
     category: "Full Stack",
-    liveUrl: "https://social-dashboard-demo.vercel.app",
-    githubUrl: "https://github.com/johndoe/social-dashboard",
+    liveUrl: "",
+    githubUrl: "",
+    // liveUrl: "https://social-dashboard-demo.vercel.app",
+    // githubUrl: "https://github.com/johndoe/social-dashboard",
     featured: true,
     stats: {
       stars: 32,
@@ -116,9 +125,9 @@ const projects = [
       date: "2023",
     },
   },
-]
+];
 
-const categories = ["All", "Full Stack", "Frontend", "Backend"]
+const categories = ["All", "Full Stack", "Frontend", "Backend"];
 
 function ProjectCard({ project }: { project: (typeof projects)[0] }) {
   return (
@@ -133,17 +142,27 @@ function ProjectCard({ project }: { project: (typeof projects)[0] }) {
             className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
           />
           {project.featured && (
-            <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground">Featured</Badge>
+            <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground">
+              Featured
+            </Badge>
           )}
           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-2">
             <Button size="sm" variant="secondary" asChild>
-              <Link href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+              <Link
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <ExternalLink className="h-4 w-4 mr-1" />
                 Live Demo
               </Link>
             </Button>
             <Button size="sm" variant="secondary" asChild>
-              <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+              <Link
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Github className="h-4 w-4 mr-1" />
                 Code
               </Link>
@@ -154,8 +173,12 @@ function ProjectCard({ project }: { project: (typeof projects)[0] }) {
 
       <CardContent className="p-6 space-y-4">
         <div className="space-y-2">
-          <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">{project.title}</h3>
-          <p className="text-muted-foreground text-sm leading-relaxed">{project.description}</p>
+          <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">
+            {project.title}
+          </h3>
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            {project.description}
+          </p>
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -185,26 +208,44 @@ function ProjectCard({ project }: { project: (typeof projects)[0] }) {
       </CardContent>
 
       <CardFooter className="p-6 pt-0 flex space-x-2">
-        <Button variant="outline" size="sm" className="flex-1 bg-transparent" asChild>
-          <Link href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex-1 bg-transparent"
+          asChild
+        >
+          <Link
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <ExternalLink className="h-4 w-4 mr-1" />
             Live Demo
           </Link>
         </Button>
-        <Button variant="outline" size="sm" className="flex-1 bg-transparent" asChild>
-          <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex-1 bg-transparent"
+          asChild
+        >
+          <Link
+            href={project.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Github className="h-4 w-4 mr-1" />
             View Code
           </Link>
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }
 
 export default function ProjectsPage() {
-  const featuredProjects = projects.filter((project) => project.featured)
-  const allProjects = projects
+  const featuredProjects = projects.filter((project) => project.featured);
+  const allProjects = projects;
 
   return (
     <div className="container max-w-7xl mx-auto px-4 py-12 space-y-16">
@@ -212,8 +253,8 @@ export default function ProjectsPage() {
       <section className="text-center space-y-6">
         <h1 className="text-4xl md:text-5xl font-bold">My Projects</h1>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-          Here's a collection of projects I've worked on, showcasing my expertise in MERN stack development and modern
-          web technologies.
+          Here's a collection of projects I've worked on, showcasing my
+          expertise in MERN stack development and modern web technologies.
         </p>
       </section>
 
@@ -222,7 +263,8 @@ export default function ProjectsPage() {
         <div className="text-center space-y-4">
           <h2 className="text-3xl font-bold">Featured Projects</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            These are some of my most impactful and technically challenging projects.
+            These are some of my most impactful and technically challenging
+            projects.
           </p>
         </div>
 
@@ -256,7 +298,9 @@ export default function ProjectsPage() {
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {(category === "All"
                   ? allProjects
-                  : allProjects.filter((project) => project.category === category)
+                  : allProjects.filter(
+                      (project) => project.category === category
+                    )
                 ).map((project) => (
                   <ProjectCard key={project.id} project={project} />
                 ))}
@@ -272,19 +316,31 @@ export default function ProjectsPage() {
           <h2 className="text-3xl font-bold">Project Statistics</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="space-y-2">
-              <div className="text-3xl md:text-4xl font-bold text-primary">50+</div>
-              <div className="text-sm text-muted-foreground">Total Projects</div>
+              <div className="text-3xl md:text-4xl font-bold text-primary">
+                3+
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Total Projects
+              </div>
             </div>
             <div className="space-y-2">
-              <div className="text-3xl md:text-4xl font-bold text-primary">15+</div>
-              <div className="text-sm text-muted-foreground">Technologies Used</div>
+              <div className="text-3xl md:text-4xl font-bold text-primary">
+                5+
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Technologies Used
+              </div>
             </div>
             <div className="space-y-2">
-              <div className="text-3xl md:text-4xl font-bold text-primary">3.5k+</div>
+              <div className="text-3xl md:text-4xl font-bold text-primary">
+                3.5+
+              </div>
               <div className="text-sm text-muted-foreground">GitHub Stars</div>
             </div>
             <div className="space-y-2">
-              <div className="text-3xl md:text-4xl font-bold text-primary">10k+</div>
+              <div className="text-3xl md:text-4xl font-bold text-primary">
+                1+
+              </div>
               <div className="text-sm text-muted-foreground">Total Users</div>
             </div>
           </div>
@@ -295,8 +351,8 @@ export default function ProjectsPage() {
       <section className="text-center space-y-6 py-12">
         <h2 className="text-3xl font-bold">Interested in Working Together?</h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          I'm always excited to take on new challenges and create amazing digital experiences. Let's discuss your next
-          project!
+          I'm always excited to take on new challenges and create amazing
+          digital experiences. Let's discuss your next project!
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button asChild size="lg">
@@ -308,5 +364,5 @@ export default function ProjectsPage() {
         </div>
       </section>
     </div>
-  )
+  );
 }

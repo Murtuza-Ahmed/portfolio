@@ -3,10 +3,11 @@ import type { NextRequest } from "next/server"
 import { verifyToken } from "@/lib/auth/jwt"
 
 export function middleware(request: NextRequest) {
+
   const { pathname } = request.nextUrl
 
   // Check if the request is for admin routes
-  if (pathname.startsWith("/admin")) {
+  if (pathname.startsWith("/admin") && pathname.startsWith("/admin/login")) {
     const token = request.cookies.get("auth-token")?.value
 
     if (!token) {
@@ -43,5 +44,9 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*", "/api/protected/:path*"],
+  matcher: [
+    // "/admin/:path*",
+    "/api/admin/:path*",
+    "/api/protected/:path*"
+  ],
 }

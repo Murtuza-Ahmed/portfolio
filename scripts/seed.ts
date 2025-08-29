@@ -19,23 +19,17 @@ if (!MONGODB_URI) {
 // Sample data
 const sampleUsers = [
   {
-    name: "Admin User",
+    name: "Murtuza",
     email: ADMIN_EMAIL,
     password: ADMIN_PASSWORD,
     role: "admin" as const,
   },
-  {
-    name: "John Doe",
-    email: "john@example.com",
-    password: "User123!@#",
-    role: "user" as const,
-  },
-  {
-    name: "Jane Smith",
-    email: "jane@example.com",
-    password: "User123!@#",
-    role: "user" as const,
-  },
+  // {
+  //   name: "John Doe",
+  //   email: "john@example.com",
+  //   password: "User123!@#",
+  //   role: "user" as const,
+  // },
 ]
 
 const sampleProjects = [

@@ -21,10 +21,10 @@ export const registerSchema = yup.object({
     .matches(/(?=.*\d)/, "Password must contain at least one number")
     .matches(/(?=.*[@$!%*?&])/, "Password must contain at least one special character")
     .required("Password is required"),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref("password")], "Passwords must match")
-    .required("Please confirm your password"),
+  // confirmPassword: yup
+  //   .string()
+  //   .oneOf([yup.ref("password")], "Passwords must match")
+  //   .required("Please confirm your password"),
 })
 
 export const userUpdateSchema = yup.object({

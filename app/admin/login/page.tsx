@@ -9,6 +9,9 @@ import { Loader2 } from "lucide-react"
 
 export default function AdminLoginPage() {
   const { user, loading, isAdmin } = useAuth()
+  console.log('AdminLoginPage_user: ', user)
+  console.log('AdminLoginPage_loading: ', loading)
+  console.log('AdminLoginPage_isAdmin: ', isAdmin)
   const router = useRouter()
 
   useEffect(() => {

@@ -1,4 +1,5 @@
-import type { ApiResponse, FilterParams, PaginatedResponse } from "@/lib/types/api"
+import type {  FilterParams, PaginatedResponse } from "@/lib/types/api"
+import { ApiResponse } from "../types"
 
 // API response helper functions
 export function createSuccessResponse<T>(data: T, message = "Success"): ApiResponse<T> {
@@ -100,7 +101,7 @@ export function handleApiError(error: any): ApiResponse {
     return {
       success: false,
       message: "Validation failed",
-      error: errors,
+      validationErrors: errors,
     }
   }
 

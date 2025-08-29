@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://murtuzaahmed-portfolio.vercel.app",
+    url: "https://portfolio-murtuza-ahmed.vercel.app/ ",
     title: "Murtuza Ahmed - MERN Stack Developer",
     description:
       "Full-stack MERN developer specializing in modern web applications with React, Node.js, MongoDB, and Express.",

@@ -1,26 +1,33 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { Menu, Code2, User, Briefcase, FileText, Mail, BookOpen } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { ThemeToggle } from "@/components/theme-toggle";
+import {
+  Menu,
+  Code2,
+  User,
+  Briefcase,
+  FileText,
+  Mail,
+  BookOpen,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const navigation = [
   { name: "Home", href: "/", icon: Code2 },
   { name: "About", href: "/about", icon: User },
   { name: "Projects", href: "/projects", icon: Briefcase },
   { name: "Resume", href: "/resume", icon: FileText },
-  // { name: "Blog", href: "/blog", icon: BookOpen },
   { name: "Contact", href: "/contact", icon: Mail },
-]
+];
 
 export function Navigation() {
-  const [isOpen, setIsOpen] = useState(false)
-  const pathname = usePathname()
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -40,7 +47,9 @@ export function Navigation() {
               href={item.href}
               className={cn(
                 "text-sm font-medium transition-colors hover:text-primary",
-                pathname === item.href ? "text-primary" : "text-muted-foreground",
+                pathname === item.href
+                  ? "text-primary"
+                  : "text-muted-foreground"
               )}
             >
               {item.name}
@@ -62,7 +71,7 @@ export function Navigation() {
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <div className="flex flex-col space-y-4 mt-8">
                 {navigation.map((item) => {
-                  const Icon = item.icon
+                  const Icon = item.icon;
                   return (
                     <Link
                       key={item.name}
@@ -70,13 +79,15 @@ export function Navigation() {
                       onClick={() => setIsOpen(false)}
                       className={cn(
                         "flex items-center space-x-3 text-lg font-medium transition-colors hover:text-primary",
-                        pathname === item.href ? "text-primary" : "text-muted-foreground",
+                        pathname === item.href
+                          ? "text-primary"
+                          : "text-muted-foreground"
                       )}
                     >
                       <Icon className="h-5 w-5" />
                       <span>{item.name}</span>
                     </Link>
-                  )
+                  );
                 })}
               </div>
             </SheetContent>
@@ -84,5 +95,5 @@ export function Navigation() {
         </div>
       </div>
     </header>
-  )
+  );
 }

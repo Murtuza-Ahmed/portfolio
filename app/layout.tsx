@@ -1,23 +1,20 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter, JetBrains_Mono } from "next/font/google"
-import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { AuthProvider } from "@/lib/contexts/AuthContext"
-import { Navigation } from "@/components/navigation"
-import { Footer } from "@/components/footer"
+import type React from "react";
+import type { Metadata } from "next";
+import { Inter, JetBrains_Mono } from "next/font/google";
+import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
-})
+});
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-jetbrains-mono",
-})
+});
 
 export const metadata: Metadata = {
   title: {
@@ -41,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://murtuzaahmed-portfolio.vercel.app",
+    url: "https://portfolio-murtuza-ahmed.vercel.app/ ",
     title: "Murtuza Ahmed - MERN Stack Developer",
     description:
       "Full-stack MERN developer specializing in modern web applications with React, Node.js, MongoDB, and Express.",
@@ -65,27 +62,30 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-    generator: 'v0.app'
-}
+  generator: "v0.app",
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
       <body className="min-h-screen bg-background font-sans antialiased">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <AuthProvider>
-            <div className="relative flex min-h-screen flex-col">
-              <Navigation />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-          </AuthProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <main className="flex-1">{children}</main>
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,6 +16,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const techStack = [
   { name: "React", icon: "⚛️" },
@@ -52,6 +55,18 @@ const services = [
 ];
 
 export default function Home() {
+  const [proCount, setProCount] = useState(0);
+  const [end, setEnd] = useState(3)
+  useEffect(() =>{
+    let start = 0
+    
+    const timer = setInterval(() => {
+      start ++
+      setProCount(start);
+      if(start === end) clearInterval(timer)
+    },1000);
+  },[])
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -227,7 +242,7 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-                3+
+                {proCount}+
               </div>
               <div className="text-sm text-muted-foreground">
                 Projects Completed
@@ -243,7 +258,7 @@ export default function Home() {
             </div>
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-                1+
+               1+
               </div>
               <div className="text-sm text-muted-foreground">Happy Clients</div>
             </div>

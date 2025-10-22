@@ -159,7 +159,10 @@
 html {
   scroll-behavior: smooth;
 }
-
+.mytheme{
+ position: absolute !;
+ right: 10px !important;
+}
 /* Custom gradient backgrounds */
 .gradient-bg {
   background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 100%);
@@ -170,4 +173,12 @@ html {
   -webkit-background-clip: text;
   -webkit-text-fill-color: #000;
   background-clip: text;
+}
+body[data-scroll-locked] {
+  overflow: auto !important;
+  padding-right: 0 !important;
+}
+/* Ya phir */
+[data-radix-popper-content-wrapper] {
+  position: fixed !important;
 }

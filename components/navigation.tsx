@@ -31,7 +31,7 @@ export function Navigation() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-4">
+      <div className="lg:justify-between lg:min-w-full container flex h-16 items-center justify-evenly px-4">
         <Link href="/" className="flex items-center space-x-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Code2 className="h-4 w-4" />
@@ -40,7 +40,7 @@ export function Navigation() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
+        <nav className="hidden left-4 lg:max-w-full md:flex lg:justify-center items-center space-x-6">
           {navigation.map((item) => (
             <Link
               key={item.name}

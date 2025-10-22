@@ -67,8 +67,8 @@ export default function Home() {
                 <Badge variant="outline" className="w-fit">
                   Available for new opportunities
                 </Badge>
-                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight">
-                  Hi, I'm <span className="gradient-text">Murtuza Ahmed</span>
+                <h1 className="text-4xl text-black dark:text-white md:text-6xl lg:text-7xl font-bold tracking-tight">
+                  Hi, I'm <span className="dark:text-white">Murtuza Ahmed</span>
                 </h1>
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-muted-foreground">
                   MERN Stack Developer

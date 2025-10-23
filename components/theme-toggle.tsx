@@ -29,7 +29,7 @@ export function ThemeToggle() {
       forceMount 
          align="start"
         side="bottom"
-        sideOffset={5}
+        sideOffset={8}
        
         // collisionPadding={16}
       

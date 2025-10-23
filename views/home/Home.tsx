@@ -231,7 +231,7 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-         <CountUp end={3} duration={5} />+
+         <CountUp end={3} duration={4} />+
               </div>
               <div className="text-sm text-muted-foreground">
                 Projects Completed
@@ -239,7 +239,7 @@ export default function Home() {
             </div>
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-              <CountUp end={1} duration={5} />+
+              <CountUp end={1} duration={4} />+
               </div>
               <div className="text-sm text-muted-foreground">
                 Years Experience
@@ -247,7 +247,7 @@ export default function Home() {
             </div>
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-            <CountUp end={1} duration={5} />+
+            <CountUp end={1} duration={4} />+
               </div>
               <div className="text-sm text-muted-foreground">Happy Clients</div>
             </div>

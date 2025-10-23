@@ -312,7 +312,7 @@ export default function Projects() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-               <CountUp end={3} duration={5} />+
+               <CountUp end={3} duration={4} />+
               </div>
               <div className="text-sm text-muted-foreground">
                 Total Projects
@@ -320,7 +320,7 @@ export default function Projects() {
             </div>
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-               <CountUp end={5} duration={5} />+
+               <CountUp end={5} duration={4} />+
               </div>
               <div className="text-sm text-muted-foreground">
                 Technologies Used
@@ -328,13 +328,13 @@ export default function Projects() {
             </div>
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-              <CountUp end={3} duration={5} />+
+              <CountUp end={3} duration={4} />+
               </div>
               <div className="text-sm text-muted-foreground">GitHub Stars</div>
             </div>
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-              <CountUp end={1} duration={5}/>+
+              <CountUp end={1} duration={4}/>+
               </div>
               <div className="text-sm text-muted-foreground">Total Users</div>
             </div>

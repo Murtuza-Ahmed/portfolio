@@ -25,7 +25,7 @@ export function ThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-     className="absolute min-w-[8rem] left-0 top-full z-50"
+     className="absolute min-w-[8rem] left-300 top-15 z-50"
       forceMount 
          align="start"
         side="bottom"

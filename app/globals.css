@@ -159,9 +159,8 @@
 html {
   scroll-behavior: smooth;
 }
-.mytheme{
- position: absolute !;
- right: 10px !important;
+.navbar {
+  overflow: visible !important;
 }
 /* Custom gradient backgrounds */
 .gradient-bg {

@@ -16,9 +16,7 @@ export function ThemeToggle() {
   const { setTheme } = useTheme();
 
   return (
- 
-    
-    <DropdownMenu  modal={false}>
+    <DropdownMenu >
       <DropdownMenuTrigger asChild>
         <Button  variant="outline" size="icon">
           <Sun className= "absolute h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
@@ -27,11 +25,11 @@ export function ThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-     className="absolute min-w-[8rem] left-0 top-full z-50"
+     className="absolute min-w-[8rem] left-300 top-15 z-50"
       forceMount 
          align="start"
         side="bottom"
-        sideOffset={5}
+        sideOffset={8}
        
         // collisionPadding={16}
       

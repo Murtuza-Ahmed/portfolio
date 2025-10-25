@@ -26,8 +26,8 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="border-t bg-background">
-      <div className="container px-4 py-8">
+    <footer className="lg:justify-evenly lg:min-w-full border-t bg-background">
+      <div className="container lg:max-w-full px-4 py-8">
         <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
           <div className="flex items-center space-x-4">
             <p className="text-sm text-muted-foreground">© 2024 Murtuza Ahmed. All rights reserved.</p>

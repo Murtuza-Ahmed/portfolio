@@ -30,6 +30,7 @@ export function middleware(request: NextRequest) {
     }
 
     const payload = verifyToken(token)
+    console.log("payload_middleware: ", payload)
     if (!payload) {
       return NextResponse.json({ success: false, message: "Invalid token" }, { status: 401 })
     }

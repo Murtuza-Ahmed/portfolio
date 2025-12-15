@@ -26,7 +26,8 @@ export function generateToken(user: User): string {
   return jwt.sign(payload, JWT_SECRET as Secret, option)
 }
 
-export function verifyToken(token: string): JWTPayload | null {
+export function verifyToken(token: string): JWTPayload | null | any {
+  console.log("verifyToken_JWT: ", token)
   try {
     return jwt.verify(token, JWT_SECRET) as JWTPayload
   } catch (error) {

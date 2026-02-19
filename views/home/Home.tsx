@@ -16,7 +16,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import CountUp from 'react-countup';
+import CountUp from "react-countup";
+import { TypeAnimation } from "react-type-animation";
 const techStack = [
   { name: "React", icon: "⚛️" },
   { name: "Node.js", icon: "🟢" },
@@ -54,8 +55,6 @@ const services = [
 ];
 
 export default function Home() {
-
-
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -71,12 +70,27 @@ export default function Home() {
                 <Badge variant="outline" className="w-fit">
                   Available for new opportunities
                 </Badge>
-                <h1 className="text-4xl text-black dark:text-white md:text-6xl lg:text-7xl font-bold tracking-tight">
+                <h2 className="text-4xl text-black dark:text-white md:text-6xl lg:text-7xl font-bold tracking-tight">
                   Hi, I'm <span className="dark:text-white">Murtuza Ahmed</span>
-                </h1>
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-muted-foreground">
-                  MERN Stack Developer
                 </h2>
+                <h3 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-muted-foreground">
+                  <TypeAnimation
+                    sequence={[
+                      "MERN Stack Developer",
+                      2000,
+                      "Full Stack Developer",
+                      2000,
+                      "Frontend Developer",
+                      2000,
+                      "Backend Developer",
+                      2000,
+                    ]}
+                    wrapper="span"
+                    repeat={Infinity}
+                    speed={50}
+                    className="text-2xl md:text-3xl lg:text-4xl font-semibold text-muted-foreground"
+                  />
+                </h3>
                 <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
                   I craft modern, scalable web applications using React,
                   Node.js, MongoDB, and Express. Passionate about creating
@@ -153,7 +167,7 @@ export default function Home() {
             </div>
 
             {/* Right Column - Visual */}
-            <div className="relative animate-slide-in-left">
+            <div className="relative animate-slide-in-left h-full">
               <div className="relative w-full max-w-md mx-auto">
                 {/* Profile Image Placeholder */}
                 <div className="relative w-80 h-80 mx-auto">
@@ -231,7 +245,7 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-         <CountUp end={3} duration={4} />+
+                <CountUp end={3} duration={4} />+
               </div>
               <div className="text-sm text-muted-foreground">
                 Projects Completed
@@ -239,7 +253,7 @@ export default function Home() {
             </div>
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-              <CountUp end={1} duration={4} />+
+                <CountUp end={1} duration={4} />+
               </div>
               <div className="text-sm text-muted-foreground">
                 Years Experience
@@ -247,7 +261,7 @@ export default function Home() {
             </div>
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-            <CountUp end={1} duration={4} />+
+                <CountUp end={1} duration={4} />+
               </div>
               <div className="text-sm text-muted-foreground">Happy Clients</div>
             </div>

@@ -17,6 +17,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import CountUp from "react-countup";
+import { TypeAnimation } from "react-type-animation";
 const techStack = [
   { name: "React", icon: "⚛️" },
   { name: "Node.js", icon: "🟢" },
@@ -59,7 +60,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center px-4 py-20 overflow-hidden">
         {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
+        <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-background to-accent/5" />
 
         <div className="container relative z-10 max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -69,13 +70,28 @@ export default function Home() {
                 <Badge variant="outline" className="w-fit">
                   Available for new opportunities
                 </Badge>
-                <h1 className="text-4xl text-black dark:text-white md:text-6xl lg:text-7xl font-bold tracking-tight">
+                <h2 className="text-4xl text-black dark:text-white md:text-6xl lg:text-7xl font-bold tracking-tight">
                   Hi, I'm <span className="dark:text-white">Murtuza Ahmed</span>
-                </h1>
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-muted-foreground">
-                  MERN Stack Developer
                 </h2>
-                <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+                <h3 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-muted-foreground">
+                  <TypeAnimation
+                    sequence={[
+                      "MERN Stack Developer",
+                      1000,
+                      "Full Stack Developer",
+                      1000,
+                      "Frontend Developer",
+                      1000,
+                      "Backend Developer",
+                      1000,
+                    ]}
+                    wrapper="span"
+                    speed={50}
+                    repeat={Infinity}
+                    className="text-2xl md:text-3xl lg:text-4xl font-semibold text-muted-foreground"
+                  />
+                </h3>
+                <p className="text-base md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
                   I craft modern, scalable web applications using React,
                   Node.js, MongoDB, and Express. Passionate about creating
                   seamless user experiences and robust backend solutions.
@@ -151,12 +167,12 @@ export default function Home() {
             </div>
 
             {/* Right Column - Visual */}
-            <div className="relative animate-slide-in-left">
+            <div className="relative animate-slide-in-left h-full">
               <div className="relative w-full max-w-md mx-auto">
                 {/* Profile Image Placeholder */}
                 <div className="relative w-80 h-80 mx-auto">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl" />
-                  <div className="relative w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 rounded-full flex items-center justify-center border border-border/50">
+                  <div className="absolute inset-0 bg-linear-to-br from-primary/20 to-accent/20 rounded-full blur-3xl" />
+                  <div className="relative w-full h-full bg-linear-to-br from-primary/10 to-accent/10 rounded-full flex items-center justify-center border border-border/50">
                     <Image
                       src="/my-image.png"
                       alt="Murtuza - MERN Stack Developer"

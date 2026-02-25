@@ -1,4 +1,4 @@
- "use client"
+"use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ExternalLink, Github, Calendar, Users, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import CountUp from 'react-countup';
+import CountUp from "react-countup";
 
 const projects = [
   {
@@ -48,75 +48,159 @@ const projects = [
     featured: true,
     stats: {
       stars: 32,
-      users: "800",
+      users: "0",
       date: "2024",
     },
   },
   {
     id: 3,
-    title: "Task Management App",
+    title: "Mern Authentication Frontend",
     description:
-      "A collaborative task management application with drag-and-drop functionality, team collaboration, and real-time updates.",
-    image: "/task-management-screenshot.png",
-    technologies: ["React", "Node.js", "PostgreSQL", "Socket.io", "Redux"],
+      "I implemented a complete MERN authentication system covering frontend and backend, including user registration with OTP verification, secure login, token-based authentication, dashboard access, logout functionality, and a full forgot-password workflow.",
+    image: "/mern-authentication-frontend.png",
+    technologies: ["React.js", "Axios"],
     category: "Full Stack",
-    liveUrl: "https://taskmanager-demo.vercel.app",
-    githubUrl: "https://github.com/johndoe/task-manager",
+    liveUrl: "https://mern-authentication-frontend-nine.vercel.app/",
+    githubUrl: "https://github.com/Murtuza-Ahmed/mern-authentication-frontend",
     featured: false,
     stats: {
-      stars: 28,
-      users: "650",
-      date: "2023",
+      stars: 0,
+      users: "0",
+      date: "2025",
     },
   },
   {
     id: 4,
-    title: "Weather Forecast App",
+    title: "Mern Authentication Backend",
     description:
-      "A beautiful weather application with location-based forecasts, interactive maps, and detailed weather analytics.",
-    image: "/weather-app-screenshot.png",
-    technologies: ["React", "TypeScript", "OpenWeather API", "Mapbox"],
-    category: "Frontend",
-    liveUrl: "https://weather-app-demo.vercel.app",
-    githubUrl: "https://github.com/johndoe/weather-app",
+      "I implemented a complete MERN authentication system covering frontend and backend, including user registration with OTP verification, secure login, token-based authentication, dashboard access, logout functionality, and a full forgot-password workflow.",
+    image: "/mern-authentication-backend.png",
+    technologies: [
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "JWT",
+      "joi",
+      "nodemailer",
+      "bcrypt",
+      "dotenv",
+      "cors",
+      "cookie-parser",
+      "morgan",
+    ],
+    category: "Full Stack",
+    liveUrl: "",
+    githubUrl: "https://github.com/Murtuza-Ahmed/mern-authentication-backend",
     featured: false,
     stats: {
-      stars: 19,
-      users: "400",
-      date: "2023",
+      stars: 0,
+      users: "0",
+      date: "2025",
     },
   },
   {
     id: 5,
-    title: "Blog CMS",
+    title: "CISCO Web Page",
     description:
-      "A content management system for bloggers with markdown support, SEO optimization, and analytics dashboard.",
-    image: "/blog-cms-screenshot.png",
-    technologies: ["Next.js", "MongoDB", "MDX", "Tailwind CSS"],
-    category: "Full Stack",
-    liveUrl: "https://blog-cms-demo.vercel.app",
-    githubUrl: "https://github.com/johndoe/blog-cms",
+      "A modern Cisco-inspired corporate website built with React, featuring a clean enterprise UI, responsive layout, structured content sections, and optimized performance. The project focuses on professional design standards, smooth navigation, and real-world corporate website architecture.",
+    image: "/cisco-web.png",
+    technologies: ["React"],
+    category: "Frontend",
+    liveUrl: "https://incandescent-moonbeam-1c2f53.netlify.app/",
+    githubUrl: "https://github.com/Murtuza-Ahmed/cisco-web-page",
     featured: false,
     stats: {
-      stars: 23,
-      users: "300",
-      date: "2023",
+      stars: 0,
+      users: "0",
+      date: "2024",
     },
   },
   {
     id: 6,
-    title: "Expense Tracker",
+    title: "Weather Forecast App",
     description:
-      "A personal finance application with expense tracking, budget management, and financial insights with charts.",
-    image: "/expense-tracker-screenshot.png",
-    technologies: ["React", "Node.js", "MongoDB", "Chart.js", "Express"],
-    category: "Full Stack",
-    liveUrl: "https://expense-tracker-demo.vercel.app",
-    githubUrl: "https://github.com/johndoe/expense-tracker",
+      "A beautiful weather application with location-based forecasts, interactive maps, and detailed weather analytics.",
+    image: "/weather-app-screenshot.png",
+    technologies: ["HTML", "CSS", "JavaScript"],
+    category: "Frontend",
+    liveUrl: "https://appweatherjsproject.netlify.app/",
+    githubUrl:
+      "https://github.com/Murtuza-Ahmed/javascript-paractice-project/tree/main/weather-app",
     featured: false,
     stats: {
-      stars: 15,
-      users: "250",
+      stars: 0,
+      users: "0",
+      date: "2023",
+    },
+  },
+  {
+    id: 7,
+    title: "SHOPPER E-Commerce Website",
+    description:
+      "I developed a Shopper e-commerce website using React.js as part of my learning journey. This project helped me understand folder structure, React hooks, and various core React concepts.",
+    image: "/shopper-ecommerce.png",
+    technologies: ["Next.js", "React", "Tailwind CSS"],
+    category: "Frontend",
+    liveUrl: "https://e-commerce-website-shopper.netlify.app/",
+    githubUrl:
+      "https://github.com/Murtuza-Ahmed/react-paractice-tutorial/tree/main/react-ecommerce-tutorial",
+    featured: false,
+    stats: {
+      stars: 0,
+      users: "0",
+      date: "2023",
+    },
+  },
+  {
+    id: 8,
+    title: "Age Calculator App",
+    description:
+      "I developed an age calculator project using HTML, CSS, and vanilla JavaScript as part of my learning and practice.",
+    image: "/age-calculator.png",
+    technologies: ["React"],
+    category: "Frontend",
+    liveUrl: "https://code-age-calculator.netlify.app/",
+    githubUrl:
+      "https://github.com/Murtuza-Ahmed/react-class-project/tree/main/age-calculator",
+    featured: false,
+    stats: {
+      stars: 0,
+      users: "0",
+      date: "2023",
+    },
+  },
+  {
+    id: 9,
+    title: "Wall of Wander",
+    description:
+      "After completing CSS, I practiced building fully responsive layouts using HTML and CSS. This website is structured and responsive.",
+    image: "/wall-of-wander.png",
+    technologies: ["HTML", "CSS"],
+    category: "Frontend",
+    liveUrl: "https://wall-of-wander.netlify.app/",
+    githubUrl: "https://github.com/Murtuza-Ahmed/wall-repo",
+    featured: false,
+    stats: {
+      stars: 0,
+      users: "0",
+      date: "2023",
+    },
+  },
+  {
+    id: 10,
+    title: "Shopping List",
+    description:
+      "I created a React shopping list project during the early stage of learning React.js, which helped me learn many important concepts.",
+    image: "/shopping-list.png",
+    technologies: ["React"],
+    category: "Frontend",
+    liveUrl: "https://shoppinglist-reactjs.netlify.app/",
+    githubUrl:
+      "https://github.com/Murtuza-Ahmed/react-class-project/tree/main/react-shoppingList",
+    featured: false,
+    stats: {
+      stars: 0,
+      users: "0",
       date: "2023",
     },
   },
@@ -294,7 +378,7 @@ export default function Projects() {
                 {(category === "All"
                   ? allProjects
                   : allProjects.filter(
-                      (project) => project.category === category
+                      (project) => project.category === category,
                     )
                 ).map((project) => (
                   <ProjectCard key={project.id} project={project} />
@@ -312,7 +396,7 @@ export default function Projects() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-               <CountUp end={3} duration={4} />+
+                <CountUp end={3} duration={4} />+
               </div>
               <div className="text-sm text-muted-foreground">
                 Total Projects
@@ -320,7 +404,7 @@ export default function Projects() {
             </div>
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-               <CountUp end={5} duration={4} />+
+                <CountUp end={5} duration={4} />+
               </div>
               <div className="text-sm text-muted-foreground">
                 Technologies Used
@@ -328,13 +412,13 @@ export default function Projects() {
             </div>
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-              <CountUp end={3} duration={4} />+
+                <CountUp end={3} duration={4} />+
               </div>
               <div className="text-sm text-muted-foreground">GitHub Stars</div>
             </div>
             <div className="space-y-2">
               <div className="text-3xl md:text-4xl font-bold text-primary">
-              <CountUp end={1} duration={4}/>+
+                <CountUp end={1} duration={4} />+
               </div>
               <div className="text-sm text-muted-foreground">Total Users</div>
             </div>

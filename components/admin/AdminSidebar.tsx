@@ -1,11 +1,19 @@
-"use client"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { useAuth } from "@/lib/contexts/AuthContext"
-import { LayoutDashboard, Users, FolderOpen, MessageSquare, LogOut, Menu, Settings } from "lucide-react"
-import { cn } from "@/lib/utils"
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useAuth } from "@/lib/contexts/AuthContext";
+import {
+  LayoutDashboard,
+  Users,
+  FolderOpen,
+  MessageSquare,
+  LogOut,
+  Menu,
+  Settings,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const navigation = [
   {
@@ -15,33 +23,33 @@ const navigation = [
   },
   {
     name: "Users",
-    href: "/admin/users",
+    href: "/users",
     icon: Users,
   },
   {
     name: "Projects",
-    href: "/admin/projects",
+    href: "/project",
     icon: FolderOpen,
   },
   {
     name: "Messages",
-    href: "/admin/messages",
+    href: "/messages",
     icon: MessageSquare,
   },
   {
     name: "Settings",
-    href: "/admin/settings",
+    href: "/settings",
     icon: Settings,
   },
-]
+];
 
 interface AdminSidebarProps {
-  className?: string
+  className?: string;
 }
 
 export function AdminSidebar({ className }: AdminSidebarProps) {
-  const pathname = usePathname()
-  const { user, logout } = useAuth()
+  const pathname = usePathname();
+  const { user, logout } = useAuth();
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
@@ -54,8 +62,8 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-2">
         {navigation.map((item) => {
-          const Icon = item.icon
-          const isActive = pathname === item.href
+          const Icon = item.icon;
+          const isActive = pathname === item.href;
 
           return (
             <Link key={item.name} href={item.href}>
@@ -70,7 +78,7 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
                 {item.name}
               </Button>
             </Link>
-          )
+          );
         })}
       </nav>
 
@@ -86,7 +94,7 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
         </Button>
       </div>
     </div>
-  )
+  );
 
   return (
     <>
@@ -103,7 +111,11 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
       {/* Mobile Sidebar */}
       <Sheet>
         <SheetTrigger asChild className="lg:hidden">
-          <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-50">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="fixed top-4 left-4 z-50"
+          >
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
@@ -112,5 +124,5 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
         </SheetContent>
       </Sheet>
     </>
-  )
+  );
 }

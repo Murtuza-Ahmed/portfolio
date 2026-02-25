@@ -1,22 +1,22 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { verifyToken } from "@/lib/auth/jwt"
+import { verifyTokenEdge } from "@/lib/auth/jwt"
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
   // Check if the request is for admin routes
-  if (pathname.startsWith("/admin") && pathname.startsWith("/admin/login")) {
+  if (pathname.startsWith("/admin") && !pathname.startsWith("/login")) {
     const token = request.cookies.get("auth-token")?.value
 
     if (!token) {
-      return NextResponse.redirect(new URL("/admin/login", request.url))
+      return NextResponse.redirect(new URL("/login", request.url))
     }
 
-    const payload = verifyToken(token)
+    const payload = await verifyTokenEdge(token)
     if (!payload || payload.role !== "admin") {
-      return NextResponse.redirect(new URL("/admin/login", request.url))
+      return NextResponse.redirect(new URL("/login", request.url))
     }
   }
 
@@ -28,9 +28,7 @@ export function middleware(request: NextRequest) {
     if (!token) {
       return NextResponse.json({ success: false, message: "Authentication required" }, { status: 401 })
     }
-
-    const payload = verifyToken(token)
-    console.log("payload_middleware: ", payload)
+    const payload = await verifyTokenEdge(token)
     if (!payload) {
       return NextResponse.json({ success: false, message: "Invalid token" }, { status: 401 })
     }

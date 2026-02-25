@@ -36,8 +36,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(createErrorResponse("Invalid email or password"), { status: HTTP_STATUS.UNAUTHORIZED })
     }
 
+    if (!user.accountVerified) {
+      user.accountVerified = true
+    }
+
     // Generate JWT token
     const token = generateToken(user)
+
+    user.refreshToken = token;
+    await user.save();
 
     // Set HTTP-only cookie
     const cookieStore = cookies()
@@ -45,7 +52,7 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60, // 7 days
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       path: "/",
     })
 
@@ -64,7 +71,6 @@ export async function POST(request: NextRequest) {
       { status: HTTP_STATUS.OK },
     )
   } catch (error: any) {
-    console.error("Login error:", error)
     return NextResponse.json(createErrorResponse("Internal server error"), {
       status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
     })

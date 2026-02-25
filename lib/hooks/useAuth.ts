@@ -6,7 +6,7 @@ import { useAuth as useAuthContext } from "@/lib/contexts/AuthContext"
 export const useAuth = useAuthContext
 
 // Additional auth-related hooks
-export function useRequireAuth(redirectTo = "/admin/login") {
+export function useRequireAuth(redirectTo = "/login") {
   const auth = useAuthContext()
 
   if (!auth.isAuthenticated && !auth.loading) {

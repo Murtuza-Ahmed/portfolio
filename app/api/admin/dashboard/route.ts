@@ -87,7 +87,6 @@ export async function GET(request: NextRequest) {
       status: HTTP_STATUS.OK,
     })
   } catch (error: any) {
-    console.error("Get dashboard stats error:", error)
     return NextResponse.json(createErrorResponse("Failed to retrieve dashboard statistics"), {
       status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
     })

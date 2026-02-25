@@ -24,12 +24,6 @@ const sampleUsers = [
     password: ADMIN_PASSWORD,
     role: "admin" as const,
   },
-  // {
-  //   name: "John Doe",
-  //   email: "john@example.com",
-  //   password: "User123!@#",
-  //   role: "user" as const,
-  // },
 ]
 
 const sampleProjects = [

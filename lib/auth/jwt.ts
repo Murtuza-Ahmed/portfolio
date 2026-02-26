@@ -1,11 +1,23 @@
 import jwt, { Secret, SignOptions } from "jsonwebtoken"
 import type { User } from "@/lib/types"
+import { jwtVerify } from "jose"
 
 const JWT_SECRET = process.env.JWT_SECRET!
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN! || "7d"
 
 if (!JWT_SECRET) {
   throw new Error("Please define the JWT_SECRET environment variable inside .env.local")
+}
+
+const secret = new TextEncoder().encode(process.env.JWT_SECRET!)
+
+export async function verifyTokenEdge(token: string) {
+  try {
+    const { payload } = await jwtVerify(token, secret)
+    return payload
+  } catch {
+    return null
+  }
 }
 
 export interface JWTPayload {
@@ -27,11 +39,9 @@ export function generateToken(user: User): string {
 }
 
 export function verifyToken(token: string): JWTPayload | null | any {
-  console.log("verifyToken_JWT: ", token)
   try {
     return jwt.verify(token, JWT_SECRET) as JWTPayload
   } catch (error) {
-    console.error("JWT verification failed:", error)
     return null
   }
 }
@@ -40,7 +50,6 @@ export function decodeToken(token: string): JWTPayload | null {
   try {
     return jwt.decode(token) as JWTPayload
   } catch (error) {
-    console.error("JWT decode failed:", error)
     return null
   }
 }

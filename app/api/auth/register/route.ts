@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     const { name, email, password } = body
 
     // Check if user already exists
-    const existingUser = await User.findOne({ email })
+    const existingUser = await User.exists({ email })
     if (existingUser) {
       return NextResponse.json(createErrorResponse("User with this email already exists"), {
         status: HTTP_STATUS.CONFLICT,
@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
       email,
       password: hashedPassword,
       role: "admin", // Default role
+      accountVerified: false,
     })
 
     await user.save()
@@ -57,7 +58,6 @@ export async function POST(request: NextRequest) {
       { status: HTTP_STATUS.CREATED },
     )
   } catch (error: any) {
-    console.error("Registration error:", error)
     return NextResponse.json(createErrorResponse("Internal server error"), {
       status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
     })

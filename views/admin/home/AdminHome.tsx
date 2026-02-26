@@ -23,8 +23,8 @@ export default function AdminHome() {
       if (response.data.success) {
         setStats(response.data.data);
       }
-    } catch (error) {
-      console.error("Failed to fetch dashboard stats:", error);
+    } catch (error: any) {
+      alert("Failed to fetch dashboard stats: " + (error.message || error));
     } finally {
       setLoading(false);
     }

@@ -1,8 +1,8 @@
-import mongoose, { Schema, type Document } from "mongoose"
+import mongoose, { Schema, type Document, Types } from "mongoose"
 import type { User as UserType } from "@/lib/types"
 
 export interface UserDocument extends Omit<UserType, "_id">, Document {
-  _id: string
+  _id: Types.ObjectId
 }
 
 const UserSchema = new Schema<UserDocument>(
@@ -37,6 +37,12 @@ const UserSchema = new Schema<UserDocument>(
     avatar: {
       type: String,
       default: "",
+    },
+    refreshToken: { type: String },
+    accountVerified: {
+      type: Boolean,
+      default: false,
+      required: true
     },
   },
   {

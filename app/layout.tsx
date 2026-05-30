@@ -16,10 +16,13 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
 });
 
+const baseUrl = new URL("https://portfolio-murtuza-ahmed.vercel.app");
+
 export const metadata: Metadata = {
+  metadataBase: baseUrl,
   title: {
-    default: "Murtuza - MERN Stack Developer",
-    template: "%s | Murtuza - MERN Stack Developer",
+    default: "Murtuza Ahmed - MERN Stack Developer",
+    template: "%s | Murtuza Ahmed - MERN Stack Developer",
   },
   description:
     "Full-stack MERN developer specializing in modern web applications with React, Node.js, MongoDB, and Express. Building scalable, user-focused solutions.",
@@ -35,14 +38,20 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Murtuza Ahmed" }],
   creator: "Murtuza Ahmed",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://portfolio-murtuza-ahmed.vercel.app/ ",
+    url: baseUrl.toString(),
     title: "Murtuza Ahmed - MERN Stack Developer",
     description:
       "Full-stack MERN developer specializing in modern web applications with React, Node.js, MongoDB, and Express.",
     siteName: "Murtuza Ahmed Portfolio",
+    images: [
+      new URL("/professional-developer-portrait.png", baseUrl).toString(),
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -50,6 +59,9 @@ export const metadata: Metadata = {
     description:
       "Full-stack MERN developer specializing in modern web applications with React, Node.js, MongoDB, and Express.",
     creator: "@murtuza_ahmed",
+    images: [
+      new URL("/professional-developer-portrait.png", baseUrl).toString(),
+    ],
   },
   robots: {
     index: true,

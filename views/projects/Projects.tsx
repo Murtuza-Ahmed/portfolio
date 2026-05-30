@@ -210,7 +210,7 @@ const categories = ["All", "Full Stack", "Frontend", "Backend"];
 
 function ProjectCard({ project }: { project: (typeof projects)[0] }) {
   return (
-    <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+    <Card className="group overflow-hidden glass-card hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
       <CardHeader className="p-0">
         <div className="relative overflow-hidden">
           <Image
@@ -329,7 +329,7 @@ export default function Projects() {
   return (
     <div className="container max-w-7xl mx-auto px-4 py-12 space-y-16">
       {/* Hero Section */}
-      <section className="text-center space-y-6">
+      <section className="text-center space-y-6 page-section page-section-delay-1">
         <h1 className="text-4xl md:text-5xl font-bold">My Projects</h1>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
           Here's a collection of projects I've worked on, showcasing my
@@ -338,7 +338,7 @@ export default function Projects() {
       </section>
 
       {/* Featured Projects */}
-      <section className="space-y-8">
+      <section className="space-y-8 page-section page-section-delay-2">
         <div className="text-center space-y-4">
           <h2 className="text-3xl font-bold">Featured Projects</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -355,7 +355,7 @@ export default function Projects() {
       </section>
 
       {/* All Projects with Tabs */}
-      <section className="space-y-8">
+      <section className="space-y-8 page-section page-section-delay-3">
         <div className="text-center space-y-4">
           <h2 className="text-3xl font-bold">All Projects</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -390,7 +390,7 @@ export default function Projects() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-muted/30 rounded-lg">
+      <section className="py-16 bg-muted/30 rounded-lg page-section page-section-delay-4">
         <div className="text-center space-y-8">
           <h2 className="text-3xl font-bold">Project Statistics</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -427,7 +427,7 @@ export default function Projects() {
       </section>
 
       {/* Call to Action */}
-      <section className="text-center space-y-6 py-12">
+      <section className="text-center space-y-6 py-12 page-section page-section-delay-5">
         <h2 className="text-3xl font-bold">Interested in Working Together?</h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           I'm always excited to take on new challenges and create amazing

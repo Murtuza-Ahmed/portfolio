@@ -104,7 +104,7 @@ export const filterSchema = yup.object({
   status: yup.string().optional(),
   role: yup.string().oneOf(["admin", "user"], "Invalid role").optional(),
   featured: yup.boolean().optional(),
-  technologies: yup.array().of(yup.string()).optional(),
+  technologies: yup.array().of(yup.string().required()).optional(),
   dateFrom: yup.date().optional(),
   dateTo: yup.date().optional(),
 })

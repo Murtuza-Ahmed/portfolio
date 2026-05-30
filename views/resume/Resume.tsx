@@ -106,15 +106,8 @@ const skills = {
     "HTML/CSS",
     "JavaScript",
   ],
-  Backend: [
-    "Node.js",
-    "Express.js",
-    "RESTful APIs",
-    "Microservices",
-  ],
-  Database: [
-    "MongoDB",
-  ],
+  Backend: ["Node.js", "Express.js", "RESTful APIs", "Microservices"],
+  Database: ["MongoDB"],
   "Tools & DevOps": ["Git", "Docker", "Vercel", "CI/CD", "Jest"],
 };
 
@@ -140,7 +133,7 @@ export default function Resume() {
   return (
     <div className="container max-w-4xl mx-auto px-4 py-12 space-y-12">
       {/* Header */}
-      <section className="text-center space-y-6">
+      <section className="text-center space-y-6 page-section page-section-delay-1">
         <h1 className="text-4xl md:text-5xl font-bold">Resume</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           Download my resume or explore my professional journey, skills, and
@@ -153,7 +146,7 @@ export default function Resume() {
       </section>
 
       {/* Contact Info */}
-      <Card>
+      <Card className="page-section page-section-delay-2 glass-card">
         <CardHeader>
           <CardTitle className="text-2xl">Contact Information</CardTitle>
         </CardHeader>
@@ -188,7 +181,7 @@ export default function Resume() {
       </Card>
 
       {/* Professional Summary */}
-      <Card>
+      <Card className="page-section page-section-delay-3 glass-card">
         <CardHeader>
           <CardTitle className="text-2xl">Professional Summary</CardTitle>
         </CardHeader>
@@ -207,7 +200,7 @@ export default function Resume() {
       </Card>
 
       {/* Work Experience */}
-      <Card>
+      <Card className="page-section page-section-delay-4 glass-card">
         <CardHeader>
           <CardTitle className="text-2xl flex items-center">
             <Building className="mr-2 h-6 w-6" />
@@ -246,7 +239,7 @@ export default function Resume() {
                   <ul className="space-y-2 text-muted-foreground">
                     {job.description.map((item, i) => (
                       <li key={i} className="flex items-start">
-                        <span className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0" />
+                        <span className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 shrink-0" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -267,7 +260,7 @@ export default function Resume() {
       </Card>
 
       {/* Education */}
-      <Card>
+      <Card className="page-section page-section-delay-5 glass-card">
         <CardHeader>
           <CardTitle className="text-2xl flex items-center">
             <GraduationCap className="mr-2 h-6 w-6" />
@@ -305,7 +298,7 @@ export default function Resume() {
                   <ul className="space-y-2 text-muted-foreground">
                     {edu.achievements.map((achievement, i) => (
                       <li key={i} className="flex items-start">
-                        <span className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0" />
+                        <span className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 shrink-0" />
                         <span>{achievement}</span>
                       </li>
                     ))}
@@ -318,7 +311,7 @@ export default function Resume() {
       </Card>
 
       {/* Skills */}
-      <Card>
+      <Card className="page-section page-section-delay-6 glass-card">
         <CardHeader>
           <CardTitle className="text-2xl">Technical Skills</CardTitle>
         </CardHeader>
@@ -341,7 +334,7 @@ export default function Resume() {
       </Card>
 
       {/* Certifications */}
-      <Card>
+      <Card className="page-section page-section-delay-7 glass-card">
         <CardHeader>
           <CardTitle className="text-2xl flex items-center">
             <Award className="mr-2 h-6 w-6" />
@@ -369,7 +362,7 @@ export default function Resume() {
       </Card>
 
       {/* Call to Action */}
-      <section className="text-center space-y-6 py-12 bg-muted/30 rounded-lg">
+      <section className="text-center space-y-6 py-12 bg-muted/30 rounded-lg page-section page-section-delay-8">
         <h2 className="text-3xl font-bold">Let's Work Together</h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           I'm always open to discussing new opportunities and exciting projects.

@@ -124,7 +124,7 @@ export default function Contact() {
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -182,7 +182,7 @@ export default function Contact() {
   return (
     <div className="container max-w-6xl mx-auto px-4 py-12 space-y-16">
       {/* Hero Section */}
-      <section className="text-center space-y-6">
+      <section className="text-center space-y-6 page-section page-section-delay-1">
         <h1 className="text-4xl md:text-5xl font-bold">Get In Touch</h1>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
           I'm always excited to discuss new projects, creative ideas, or
@@ -193,7 +193,7 @@ export default function Contact() {
 
       <div className="grid lg:grid-cols-2 gap-12">
         {/* Contact Form */}
-        <Card>
+        <Card className="page-section page-section-delay-2 glass-card">
           <CardHeader>
             <CardTitle className="text-2xl">Send Me a Message</CardTitle>
           </CardHeader>
@@ -298,7 +298,7 @@ export default function Contact() {
         </Card>
 
         {/* Contact Information */}
-        <div className="space-y-8">
+        <div className="space-y-8 page-section page-section-delay-3">
           <Card>
             <CardHeader>
               <CardTitle className="text-2xl">Contact Information</CardTitle>
@@ -341,7 +341,7 @@ export default function Contact() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="page-section page-section-delay-4 glass-card">
             <CardHeader>
               <CardTitle className="text-2xl">Follow Me</CardTitle>
             </CardHeader>
@@ -368,7 +368,7 @@ export default function Contact() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="page-section page-section-delay-5 glass-card">
             <CardHeader>
               <CardTitle className="text-2xl">Let's Collaborate</CardTitle>
             </CardHeader>
@@ -402,7 +402,7 @@ export default function Contact() {
       </div>
 
       {/* FAQ Section */}
-      <section className="space-y-8">
+      <section className="space-y-8 page-section page-section-delay-6">
         <div className="text-center space-y-4">
           <h2 className="text-3xl font-bold">Frequently Asked Questions</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">

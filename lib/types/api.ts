@@ -27,8 +27,8 @@ export interface FilterParams {
   role?: string
   featured?: boolean
   technologies?: string[]
-  dateFrom?: string
-  dateTo?: string
+  dateFrom?: string | Date
+  dateTo?: string | Date
 }
 
 // API endpoint response types

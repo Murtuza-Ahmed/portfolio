@@ -99,7 +99,7 @@ export default function About() {
   return (
     <div className="container max-w-6xl mx-auto px-4 py-12 space-y-16">
       {/* Hero Section */}
-      <section className="text-center space-y-6">
+      <section className="text-center space-y-6 page-section page-section-delay-1">
         <div className="relative w-32 h-32 mx-auto">
           <Image
             src="/my-image.png"
@@ -121,8 +121,8 @@ export default function About() {
       </section>
 
       {/* Bio Section */}
-      <section className="grid lg:grid-cols-2 gap-12 items-start">
-        <div className="space-y-6">
+      <section className="grid lg:grid-cols-2 gap-12 items-start page-section page-section-delay-2">
+        <div className="space-y-6 page-section page-section-delay-3">
           <h2 className="text-3xl font-bold">My Journey</h2>
           <div className="space-y-4 text-muted-foreground leading-relaxed">
             <p>
@@ -148,7 +148,7 @@ export default function About() {
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 page-section page-section-delay-4">
           <h3 className="text-2xl font-semibold">Quick Facts</h3>
           <div className="grid grid-cols-2 gap-4">
             <Card>
@@ -186,7 +186,7 @@ export default function About() {
       <Separator />
 
       {/* Skills Section */}
-      <section className="space-y-8">
+      <section className="space-y-8 page-section page-section-delay-1">
         <div className="text-center space-y-4">
           <h2 className="text-3xl font-bold">Technical Skills</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -197,7 +197,7 @@ export default function About() {
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* Skills with Progress Bars */}
-          <div className="space-y-6">
+          <div className="space-y-6 page-section page-section-delay-2">
             <h3 className="text-xl font-semibold">Proficiency Levels</h3>
             <div className="space-y-4">
               {skills.map((skill) => (
@@ -243,7 +243,7 @@ export default function About() {
       <Separator />
 
       {/* Values Section */}
-      <section className="space-y-8">
+      <section className="space-y-8 page-section page-section-delay-2">
         <div className="text-center space-y-4">
           <h2 className="text-3xl font-bold">What Drives Me</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -280,7 +280,7 @@ export default function About() {
       <Separator />
 
       {/* Interests Section */}
-      <section className="space-y-8">
+      <section className="space-y-8 page-section page-section-delay-3">
         <div className="text-center space-y-4">
           <h2 className="text-3xl font-bold">Beyond Code</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -311,7 +311,7 @@ export default function About() {
       </section>
 
       {/* Call to Action */}
-      <section className="text-center space-y-6 py-12 bg-muted/30 rounded-lg">
+      <section className="text-center space-y-6 py-12 bg-muted/30 rounded-lg page-section page-section-delay-4">
         <h2 className="text-3xl font-bold">Let's Work Together</h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           I'm always excited to take on new challenges and collaborate with

@@ -4,74 +4,74 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: rgb(255, 255, 255);
-  --foreground: rgb(37, 37, 37);
+  --background: rgb(248, 250, 252);
+  --foreground: rgb(15, 23, 42);
   --card: rgb(255, 255, 255);
-  --card-foreground: rgb(37, 37, 37);
+  --card-foreground: rgb(15, 23, 42);
   --popover: rgb(255, 255, 255);
-  --popover-foreground: rgb(37, 37, 37);
-  --primary: rgb(52, 52, 52);
-  --primary-foreground: rgb(251, 251, 251);
-  --secondary: rgb(247, 247, 247);
-  --secondary-foreground: rgb(52, 52, 52);
-  --muted: rgb(247, 247, 247);
-  --muted-foreground: rgb(142, 142, 142);
-  --accent: rgb(247, 247, 247);
-  --accent-foreground: rgb(52, 52, 52);
-  --destructive: rgb(181, 44, 39);
-  --destructive-foreground: rgb(181, 44, 39);
-  --border: rgb(236, 236, 236);
-  --input: rgb(236, 236, 236);
-  --ring: rgb(181, 181, 181);
-  --chart-1: rgb(255, 171, 77);
-  --chart-2: rgb(68, 144, 255);
-  --chart-3: rgb(53, 86, 255);
-  --chart-4: rgb(255, 215, 92);
-  --chart-5: rgb(255, 200, 76);
-  --radius: 0.625rem;
-  --sidebar: rgb(251, 251, 251);
-  --sidebar-foreground: rgb(37, 37, 37);
-  --sidebar-primary: rgb(52, 52, 52);
-  --sidebar-primary-foreground: rgb(251, 251, 251);
-  --sidebar-accent: rgb(247, 247, 247);
-  --sidebar-accent-foreground: rgb(52, 52, 52);
-  --sidebar-border: rgb(236, 236, 236);
-  --sidebar-ring: rgb(181, 181, 181);
+  --popover-foreground: rgb(15, 23, 42);
+  --primary: rgb(23, 63, 161);
+  --primary-foreground: rgb(255, 255, 255);
+  --secondary: rgb(14, 165, 233);
+  --secondary-foreground: rgb(15, 23, 42);
+  --muted: rgb(241, 245, 249);
+  --muted-foreground: rgb(71, 85, 105);
+  --accent: rgb(255, 181, 71);
+  --accent-foreground: rgb(15, 23, 42);
+  --destructive: rgb(220, 38, 38);
+  --destructive-foreground: rgb(255, 255, 255);
+  --border: rgb(226, 232, 240);
+  --input: rgb(255, 255, 255);
+  --ring: rgb(148, 163, 184);
+  --chart-1: rgb(59, 130, 246);
+  --chart-2: rgb(14, 165, 233);
+  --chart-3: rgb(234, 179, 8);
+  --chart-4: rgb(168, 85, 247);
+  --chart-5: rgb(16, 185, 129);
+  --radius: 0.75rem;
+  --sidebar: rgb(255, 255, 255);
+  --sidebar-foreground: rgb(15, 23, 42);
+  --sidebar-primary: rgb(23, 63, 161);
+  --sidebar-primary-foreground: rgb(255, 255, 255);
+  --sidebar-accent: rgb(248, 250, 252);
+  --sidebar-accent-foreground: rgb(15, 23, 42);
+  --sidebar-border: rgb(226, 232, 240);
+  --sidebar-ring: rgb(148, 163, 184);
 }
 
 .dark {
-  --background: rgb(37, 37, 37);
-  --foreground: rgb(251, 251, 251);
-  --card: rgb(37, 37, 37);
-  --card-foreground: rgb(251, 251, 251);
-  --popover: rgb(37, 37, 37);
-  --popover-foreground: rgb(251, 251, 251);
-  --primary: rgb(251, 251, 251);
-  --primary-foreground: rgb(52, 52, 52);
-  --secondary: rgb(69, 69, 69);
-  --secondary-foreground: rgb(251, 251, 251);
-  --muted: rgb(69, 69, 69);
-  --muted-foreground: rgb(181, 181, 181);
-  --accent: rgb(69, 69, 69);
-  --accent-foreground: rgb(251, 251, 251);
-  --destructive: rgb(142, 36, 34);
-  --destructive-foreground: rgb(162, 54, 51);
-  --border: rgb(69, 69, 69);
-  --input: rgb(69, 69, 69);
-  --ring: rgb(112, 112, 112);
-  --chart-1: rgb(98, 116, 255);
-  --chart-2: rgb(92, 206, 212);
-  --chart-3: rgb(255, 200, 76);
-  --chart-4: rgb(173, 105, 255);
-  --chart-5: rgb(255, 158, 105);
-  --sidebar: rgb(52, 52, 52);
-  --sidebar-foreground: rgb(251, 251, 251);
-  --sidebar-primary: rgb(98, 116, 255);
-  --sidebar-primary-foreground: rgb(251, 251, 251);
-  --sidebar-accent: rgb(69, 69, 69);
-  --sidebar-accent-foreground: rgb(251, 251, 251);
-  --sidebar-border: rgb(69, 69, 69);
-  --sidebar-ring: rgb(112, 112, 112);
+  --background: rgb(15, 23, 42);
+  --foreground: rgb(241, 245, 249);
+  --card: rgb(30, 41, 59);
+  --card-foreground: rgb(241, 245, 249);
+  --popover: rgb(30, 41, 59);
+  --popover-foreground: rgb(241, 245, 249);
+  --primary: rgb(59, 130, 246);
+  --primary-foreground: rgb(255, 255, 255);
+  --secondary: rgb(14, 165, 233);
+  --secondary-foreground: rgb(255, 255, 255);
+  --muted: rgb(15, 23, 42);
+  --muted-foreground: rgb(148, 163, 184);
+  --accent: rgb(248, 113, 113);
+  --accent-foreground: rgb(255, 255, 255);
+  --destructive: rgb(248, 113, 113);
+  --destructive-foreground: rgb(255, 255, 255);
+  --border: rgb(55, 65, 81);
+  --input: rgb(30, 41, 59);
+  --ring: rgb(71, 85, 105);
+  --chart-1: rgb(96, 165, 250);
+  --chart-2: rgb(56, 189, 248);
+  --chart-3: rgb(245, 158, 11);
+  --chart-4: rgb(192, 132, 252);
+  --chart-5: rgb(52, 211, 153);
+  --sidebar: rgb(30, 41, 59);
+  --sidebar-foreground: rgb(241, 245, 249);
+  --sidebar-primary: rgb(96, 165, 250);
+  --sidebar-primary-foreground: rgb(255, 255, 255);
+  --sidebar-accent: rgb(15, 23, 42);
+  --sidebar-accent-foreground: rgb(241, 245, 249);
+  --sidebar-border: rgb(55, 65, 81);
+  --sidebar-ring: rgb(71, 85, 105);
 }
 
 @theme inline {
@@ -113,11 +113,141 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@layer utilities {
+  .glass-card {
+    @apply rounded-3xl border border-border/60 bg-white/80 shadow-xl shadow-slate-900/5 backdrop-blur-xl;
+    transform-style: preserve-3d;
+    transition: transform 0.35s ease-out, box-shadow 0.35s ease-out;
+  }
+
+  .glass-card:hover {
+    transform: perspective(1000px) translateZ(4px) rotateX(1deg) rotateY(-1deg);
+  }
+
+  .glass-card-dark {
+    @apply rounded-3xl border border-slate-700/70 bg-slate-900/80 shadow-xl shadow-slate-950/20 backdrop-blur-xl;
+    transform-style: preserve-3d;
+    transition: transform 0.35s ease-out, box-shadow 0.35s ease-out;
+  }
+
+  .hero-3d-card {
+    @apply rounded-4xl border border-border/50 bg-white/90 shadow-2xl shadow-slate-900/10 backdrop-blur-xl;
+    transform-style: preserve-3d;
+    transition: transform 0.35s ease-out, box-shadow 0.35s ease-out;
+  }
+
+  .hero-3d-card:hover {
+    transform: perspective(1000px) translateZ(14px) rotateX(2deg) rotateY(-3deg);
+  }
+
+  .page-section {
+    animation: fade-in-up 0.8s ease-out both;
+  }
+
+  .page-section-delay-1 {
+    animation-delay: 0.15s;
+  }
+
+  .page-section-delay-2 {
+    animation-delay: 0.3s;
+  }
+
+  .page-section-delay-3 {
+    animation-delay: 0.45s;
+  }
+
+  .page-section-delay-4 {
+    animation-delay: 0.6s;
+  }
+
+  .page-section-delay-5 {
+    animation-delay: 0.75s;
+  }
+
+  .page-section-delay-6 {
+    animation-delay: 0.9s;
+  }
+
+  .page-section-delay-7 {
+    animation-delay: 1.05s;
+  }
+
+  .page-section-delay-8 {
+    animation-delay: 1.2s;
+  }
+
+  .glass-card-dark:hover {
+    transform: perspective(1000px) translateZ(4px) rotateX(1deg) rotateY(-1deg);
+  }
+
+  .tilt-card {
+    transform-style: preserve-3d;
+    transition: transform 0.35s ease-out, box-shadow 0.35s ease-out;
+  }
+
+  .tilt-card:hover {
+    transform: perspective(1000px) translateZ(12px) rotateX(2deg) rotateY(-2deg);
+  }
+
+  .hero-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.7s ease-out both;
+  }
+
+  .animate-slide-in-left {
+    animation: slide-in-left 0.8s ease-out both;
+  }
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply min-h-screen bg-background text-foreground antialiased;
   }
 }

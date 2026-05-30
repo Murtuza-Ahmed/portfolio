@@ -1,9 +1,7 @@
 import mongoose, { Schema, type Document } from "mongoose"
 import type { ContactMessage as ContactMessageType } from "@/lib/types"
 
-export interface ContactMessageDocument extends Omit<ContactMessageType, "_id">, Document {
-  _id: string
-}
+export interface ContactMessageDocument extends Omit<ContactMessageType, "_id">, Document { }
 
 const ContactMessageSchema = new Schema<ContactMessageDocument>(
   {

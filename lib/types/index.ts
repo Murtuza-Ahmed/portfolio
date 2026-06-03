@@ -90,3 +90,138 @@ export interface UserForm {
   role: "admin" | "user"
   password?: string
 }
+
+export interface Settings {
+  _id: string
+  siteName: string
+  siteDescription: string
+  socialLinks: {
+    github: string
+    linkedin: string
+    twitter: string
+  }
+  contactEmail: string
+  contactSuccessMessage: string
+  theme: "light" | "dark" | "auto"
+  accentColor: string
+  featuredProjectsCount: number
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface Home {
+  _id: string
+  heroImage: string
+  heroTitle: string
+  heroSubtitle: string
+  heroDescription: string
+  ctaButtonText: string
+  ctaButtonLink: string
+  featuredProjectsCount: number
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface About {
+  _id: string
+  profileImage: string
+  bio: string
+  interests: string[]
+  values: string[]
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface Skill {
+  _id: string
+  name: string
+  proficiency: number
+  category: "Frontend" | "Backend" | "Database" | "Tools" | "DevOps" | "Other"
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface Experience {
+  _id: string
+  jobTitle: string
+  company: string
+  startDate: Date
+  endDate?: Date | null
+  description: string
+  technologies: string[]
+  companyLogo?: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface Education {
+  _id: string
+  school: string
+  degree: string
+  field: string
+  startDate: Date
+  endDate?: Date
+  achievements: string[]
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface Certification {
+  _id: string
+  name: string
+  issuer: string
+  date: Date
+  url?: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+// Form interfaces
+export interface HomeForm {
+  heroImage: string
+  heroTitle: string
+  heroSubtitle: string
+  heroDescription: string
+  ctaButtonText: string
+  ctaButtonLink: string
+  featuredProjectsCount: number
+}
+
+export interface AboutForm {
+  profileImage: string
+  bio: string
+  interests: string[]
+  values: string[]
+}
+
+export interface SkillForm {
+  name: string
+  proficiency: number
+  category: "Frontend" | "Backend" | "Database" | "Tools" | "DevOps" | "Other"
+}
+
+export interface ExperienceForm {
+  jobTitle: string
+  company: string
+  startDate: Date
+  endDate?: Date | null
+  description: string
+  technologies: string[]
+  companyLogo?: string
+}
+
+export interface EducationForm {
+  school: string
+  degree: string
+  field: string
+  startDate: Date
+  endDate?: Date
+  achievements: string[]
+}
+
+export interface CertificationForm {
+  name: string
+  issuer: string
+  date: Date
+  url?: string
+}

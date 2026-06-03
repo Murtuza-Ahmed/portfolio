@@ -1,8 +1,13 @@
 import mongoose from "mongoose"
 import { config } from "dotenv"
 import User from "../models/User"
-import Project from "../models/Project"
-import ContactMessage from "../models/ContactMessage"
+import Settings from "../models/Settings"
+import Home from "../models/Home"
+import About from "../models/About"
+import Skill from "../models/Skill"
+import Experience from "../models/Experience"
+import Education from "../models/Education"
+import Certification from "../models/Certification"
 import { hashPassword } from "../lib/auth/password"
 
 // Load environment variables
@@ -26,120 +31,112 @@ const sampleUsers = [
   },
 ]
 
-const sampleProjects = [
+const defaultSettings = {
+  siteName: "My Portfolio",
+  siteDescription: "Welcome to my portfolio",
+  socialLinks: {
+    github: "https://github.com/Murtuza-Ahmed",
+    linkedin: "https://www.linkedin.com/in/murtuza-ahmed-36012628b/",
+    twitter: "https://x.com/MurtuzaAhm87472",
+  },
+  contactEmail: ADMIN_EMAIL,
+  contactSuccessMessage: "Thank you for your message! I'll get back to you soon.",
+  theme: "auto" as const,
+  accentColor: "#3b82f6",
+  featuredProjectsCount: 3,
+}
+
+const defaultHome = {
+  heroImage: "https://via.placeholder.com/1200x600",
+  heroTitle: "Simple, smooth, premium web experiences.",
+  heroSubtitle: "Hello, I'm a product-minded developer",
+  heroDescription: "I build elegant MERN applications with clear structure, thoughtful motion, and a polished interface that feels like a top-tier product.",
+  ctaButtonText: "Hire Me",
+  ctaButtonLink: "/contact",
+  featuredProjectsCount: 3,
+}
+
+const defaultAbout = {
+  profileImage: "https://via.placeholder.com/400x400",
+  bio: "I'm a passionate MERN Stack Developer with over 1.5 years of experience creating modern, scalable web applications. I love turning complex problems into simple, beautiful, and intuitive solutions.",
+  interests: ["Coffee Brewing", "Photography", "Music Production", "Reading"],
+  values: ["Quality First", "Collaboration", "Continuous Learning", "User-Centric"],
+}
+
+const sampleSkills = [
+  { name: "React", proficiency: 92, category: "Frontend" as const },
+  { name: "Next.js", proficiency: 90, category: "Frontend" as const },
+  { name: "TypeScript", proficiency: 85, category: "Frontend" as const },
+  { name: "Tailwind CSS", proficiency: 88, category: "Frontend" as const },
+  { name: "Node.js", proficiency: 80, category: "Backend" as const },
+  { name: "Express.js", proficiency: 80, category: "Backend" as const },
+  { name: "MongoDB", proficiency: 82, category: "Database" as const },
+  { name: "REST APIs", proficiency: 85, category: "Backend" as const },
+  { name: "Git", proficiency: 88, category: "Tools" as const },
+  { name: "Docker", proficiency: 70, category: "DevOps" as const },
+]
+
+const sampleExperiences = [
   {
-    title: "E-Commerce Platform",
-    description: "A full-stack e-commerce platform with React, Node.js, and MongoDB",
-    longDescription:
-      "A comprehensive e-commerce solution featuring user authentication, product catalog, shopping cart, payment integration with Stripe, order management, and admin dashboard. Built with React, Node.js, Express, and MongoDB.",
-    image: "/ecommerce-platform.png",
-    technologies: ["React", "Node.js", "MongoDB", "Express", "Stripe", "JWT", "Tailwind CSS"],
-    githubUrl: "https://github.com/johndoe/ecommerce-platform",
-    liveUrl: "https://ecommerce-demo.vercel.app",
-    featured: true,
-    status: "completed" as const,
+    jobTitle: "Senior MERN Stack Developer",
+    company: "Suffah Tech",
+    startDate: new Date("2024-10-01"),
+    endDate: null,
+    description: "Led development of scalable applications, implemented CI/CD pipelines, and mentored junior developers.",
+    technologies: ["React", "Node.js", "MongoDB", "TypeScript", "Express.js"],
+    companyLogo: "",
   },
   {
-    title: "Task Management App",
-    description: "A collaborative task management application with real-time updates",
-    longDescription:
-      "A modern task management application with drag-and-drop functionality, real-time collaboration, team management, and progress tracking. Features include Kanban boards, due dates, file attachments, and notifications.",
-    image: "/task-management-app.png",
-    technologies: ["Next.js", "TypeScript", "Socket.io", "PostgreSQL", "Prisma", "Tailwind CSS"],
-    githubUrl: "https://github.com/johndoe/task-manager",
-    liveUrl: "https://taskmanager-demo.vercel.app",
-    featured: true,
-    status: "active" as const,
-  },
-  {
-    title: "Social Media Dashboard",
-    description: "Analytics dashboard for social media management",
-    longDescription:
-      "A comprehensive social media analytics dashboard that aggregates data from multiple platforms. Features include post scheduling, engagement analytics, audience insights, and automated reporting.",
-    image: "/placeholder-pauuc.png",
-    technologies: ["React", "D3.js", "Node.js", "Redis", "MongoDB", "Chart.js"],
-    githubUrl: "https://github.com/johndoe/social-dashboard",
-    liveUrl: "https://social-dashboard-demo.vercel.app",
-    featured: false,
-    status: "completed" as const,
-  },
-  {
-    title: "Weather App",
-    description: "Real-time weather application with location-based forecasts",
-    longDescription:
-      "A responsive weather application that provides current weather conditions, 7-day forecasts, and weather alerts. Features include geolocation, favorite locations, and weather maps integration.",
-    image: "/weather-app-interface.png",
-    technologies: ["React", "OpenWeather API", "Geolocation API", "CSS Modules"],
-    githubUrl: "https://github.com/johndoe/weather-app",
-    liveUrl: "https://weather-app-demo.vercel.app",
-    featured: false,
-    status: "active" as const,
-  },
-  {
-    title: "Blog CMS",
-    description: "Content management system for bloggers and content creators",
-    longDescription:
-      "A full-featured content management system with rich text editing, media management, SEO optimization, and multi-author support. Includes comment system, categories, tags, and analytics.",
-    image: "/blog-cms-interface.png",
-    technologies: ["Next.js", "MDX", "Sanity", "TypeScript", "Tailwind CSS"],
-    githubUrl: "https://github.com/johndoe/blog-cms",
-    featured: false,
-    status: "archived" as const,
-  },
-  {
-    title: "Expense Tracker",
-    description: "Personal finance management application",
-    longDescription:
-      "A comprehensive expense tracking application with budget management, category-based spending analysis, recurring transactions, and financial goal tracking. Features include data visualization and export capabilities.",
-    image: "/expense-tracker-app.png",
-    technologies: ["React Native", "Node.js", "MongoDB", "Chart.js", "JWT"],
-    githubUrl: "https://github.com/johndoe/expense-tracker",
-    featured: false,
-    status: "active" as const,
+    jobTitle: "WordPress Developer",
+    company: "Tek Gravity",
+    startDate: new Date("2024-08-01"),
+    endDate: new Date("2024-10-01"),
+    description: "Developed WordPress sites and supported team members with their daily tasks.",
+    technologies: ["WordPress", "PHP", "MySQL"],
+    companyLogo: "",
   },
 ]
 
-const sampleMessages = [
+const sampleEducation = [
   {
-    name: "Alice Johnson",
-    email: "alice@company.com",
-    subject: "Project Collaboration Opportunity",
-    message:
-      "Hi John, I came across your portfolio and I'm impressed with your work. We have an exciting project that would be perfect for your skills. Would you be interested in discussing a potential collaboration?",
-    status: "unread" as const,
+    school: "SMIT",
+    degree: "Web and Mobile App Development",
+    field: "Full Stack Development",
+    startDate: new Date("2022-01-01"),
+    endDate: new Date("2023-01-01"),
+    achievements: ["Completed intensive bootcamp", "Built multiple full-stack projects"],
   },
   {
-    name: "Bob Wilson",
-    email: "bob@startup.io",
-    subject: "Full-Stack Developer Position",
-    message:
-      "Hello, we're a growing startup looking for a talented full-stack developer. Your experience with the MERN stack is exactly what we need. Are you open to new opportunities?",
-    status: "read" as const,
+    school: "Suffah Institute of Technology",
+    degree: "Full Stack Web Development Certification",
+    field: "Full Stack Development",
+    startDate: new Date("2023-01-01"),
+    endDate: new Date("2023-12-31"),
+    achievements: ["Built 5+ production projects", "Earned developer certification"],
+  },
+]
+
+const sampleCertifications = [
+  {
+    name: "SMIT Certified Developer",
+    issuer: "Web & Mobile App Development",
+    date: new Date("2023-01-01"),
+    url: "",
   },
   {
-    name: "Carol Davis",
-    email: "carol@agency.com",
-    subject: "Website Development Inquiry",
-    message:
-      "We need a modern, responsive website for our digital agency. After reviewing your portfolio, we believe you'd be a great fit for this project. Can we schedule a call to discuss the details?",
-    status: "replied" as const,
-  },
-  {
-    name: "David Brown",
-    email: "david@tech.com",
-    subject: "Technical Consultation",
-    message:
-      "I'm working on a complex web application and could use some expert advice on architecture decisions. Would you be available for a technical consultation session?",
-    status: "unread" as const,
+    name: "Full Stack Web Development Certification",
+    issuer: "Suffah Institute of Technology",
+    date: new Date("2024-01-01"),
+    url: "",
   },
 ]
 
 async function connectDB() {
   try {
     await mongoose.connect(MONGODB_URI)
-    console.log("✅ Connected to MongoDB")
+    console.log("Connected to MongoDB")
   } catch (error) {
-    console.error("❌ MongoDB connection error:", error)
+    console.error("MongoDB connection error:", error)
     process.exit(1)
   }
 }
@@ -147,11 +144,16 @@ async function connectDB() {
 async function clearDatabase() {
   try {
     await User.deleteMany({})
-    await Project.deleteMany({})
-    await ContactMessage.deleteMany({})
-    console.log("🗑️  Cleared existing data")
+    await Settings.deleteMany({})
+    await Home.deleteMany({})
+    await About.deleteMany({})
+    await Skill.deleteMany({})
+    await Experience.deleteMany({})
+    await Education.deleteMany({})
+    await Certification.deleteMany({})
+    console.log("Cleared existing data")
   } catch (error) {
-    console.error("❌ Error clearing database:", error)
+    console.error("Error clearing database:", error)
     throw error
   }
 }
@@ -169,58 +171,120 @@ async function seedUsers() {
     )
 
     await User.insertMany(users)
-    console.log(`✅ Seeded ${users.length} users`)
+    console.log(`Seeded ${users.length} users`)
   } catch (error) {
-    console.error("❌ Error seeding users:", error)
+    console.error("Error seeding users:", error)
     throw error
   }
 }
 
-async function seedProjects() {
+async function seedSettings() {
   try {
-    await Project.insertMany(sampleProjects)
-    console.log(`✅ Seeded ${sampleProjects.length} projects`)
+    await Settings.insertMany([defaultSettings])
+    console.log("Seeded default settings")
   } catch (error) {
-    console.error("❌ Error seeding projects:", error)
+    console.error("Error seeding settings:", error)
     throw error
   }
 }
 
-async function seedMessages() {
+async function seedHome() {
   try {
-    await ContactMessage.insertMany(sampleMessages)
-    console.log(`✅ Seeded ${sampleMessages.length} contact messages`)
+    await Home.insertMany([defaultHome])
+    console.log("Seeded home content")
   } catch (error) {
-    console.error("❌ Error seeding messages:", error)
+    console.error("Error seeding home:", error)
+    throw error
+  }
+}
+
+async function seedAbout() {
+  try {
+    await About.insertMany([defaultAbout])
+    console.log("Seeded about content")
+  } catch (error) {
+    console.error("Error seeding about:", error)
+    throw error
+  }
+}
+
+async function seedSkills() {
+  try {
+    await Skill.insertMany(sampleSkills)
+    console.log(`Seeded ${sampleSkills.length} skills`)
+  } catch (error) {
+    console.error("Error seeding skills:", error)
+    throw error
+  }
+}
+
+async function seedExperience() {
+  try {
+    await Experience.insertMany(sampleExperiences)
+    console.log(`Seeded ${sampleExperiences.length} experiences`)
+  } catch (error) {
+    console.error("Error seeding experience:", error)
+    throw error
+  }
+}
+
+async function seedEducation() {
+  try {
+    await Education.insertMany(sampleEducation)
+    console.log(`Seeded ${sampleEducation.length} education entries`)
+  } catch (error) {
+    console.error("Error seeding education:", error)
+    throw error
+  }
+}
+
+async function seedCertifications() {
+  try {
+    await Certification.insertMany(sampleCertifications)
+    console.log(`Seeded ${sampleCertifications.length} certifications`)
+  } catch (error) {
+    console.error("Error seeding certifications:", error)
     throw error
   }
 }
 
 async function main() {
-  console.log("🌱 Starting database seeding...")
+  console.log("Starting database seeding...")
 
   await connectDB()
   await clearDatabase()
   await seedUsers()
-  await seedProjects()
-  await seedMessages()
+  await seedSettings()
+  await seedHome()
+  await seedAbout()
+  await seedSkills()
+  await seedExperience()
+  await seedEducation()
+  await seedCertifications()
 
   console.log("🎉 Database seeding completed successfully!")
   console.log("\n📋 Summary:")
-  console.log(`   • ${sampleUsers.length} users created`)
-  console.log(`   • ${sampleProjects.length} projects created`)
-  console.log(`   • ${sampleMessages.length} contact messages created`)
+  console.log(`   • ${sampleUsers.length} admin user created`)
+  console.log(`   • Default settings configured`)
+  console.log(`   • Home content seeded`)
+  console.log(`   • About content seeded`)
+  console.log(`   • ${sampleSkills.length} skills seeded`)
+  console.log(`   • ${sampleExperiences.length} experiences seeded`)
+  console.log(`   • ${sampleEducation.length} education entries seeded`)
+  console.log(`   • ${sampleCertifications.length} certifications seeded`)
   console.log("\n🔐 Admin Credentials:")
   console.log(`   Email: ${ADMIN_EMAIL}`)
   console.log(`   Password: ${ADMIN_PASSWORD}`)
-  console.log("\n🚀 You can now start the application and log in to the admin panel!")
+  console.log("\n🚀 All portfolio data is now in the database!")
+  console.log("You can now manage everything from the admin panel!")
 
   await mongoose.disconnect()
-  console.log("✅ Disconnected from MongoDB")
+  console.log("Disconnected from MongoDB")
 }
 
 // Handle errors
 main().catch((error) => {
-  console.error("❌ Seeding failed:", error)
+  console.error("Seeding failed:", error)
   process.exit(1)
 })
+

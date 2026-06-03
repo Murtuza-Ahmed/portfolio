@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,72 +13,60 @@ import {
   Code2,
   Briefcase,
   Sparkles,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-
-const skills = [
-  "React",
-  "Next.js",
-  "TypeScript",
-  "Node.js",
-  "Express",
-  "MongoDB",
-  "Tailwind CSS",
-  "REST APIs",
-  "UI/UX Design",
-];
-
-const projects = [
-  {
-    title: "E-commerce Platform",
-    description:
-      "A modern shopping experience with product search, cart, and checkout flows.",
-    image: "/ecommerce-platform.png",
-    badges: ["React", "Node.js", "MongoDB"],
-    live: "https://example.com",
-    github: "https://github.com/Murtuza-Ahmed/ecommerce-platform",
-  },
-  {
-    title: "Expense Tracker App",
-    description:
-      "Track spending, categorize expenses, and visualize your financial health.",
-    image: "/expense-tracker-app.png",
-    badges: ["Next.js", "Tailwind", "API"],
-    live: "https://example.com",
-    github: "https://github.com/Murtuza-Ahmed/expense-tracker",
-  },
-  {
-    title: "Weather Dashboard",
-    description:
-      "Responsive weather insights with city search and forecast details.",
-    image: "/weather-app-interface.png",
-    badges: ["React", "APIs", "Responsive"],
-    live: "https://example.com",
-    github: "https://github.com/Murtuza-Ahmed/weather-dashboard",
-  },
-];
-
-const experience = [
-  {
-    role: "Frontend Engineer",
-    company: "Freelance",
-    period: "2024 — Present",
-    details:
-      "Designing polished web interfaces and delivering optimized React applications for startups and small businesses.",
-  },
-  {
-    role: "MERN Developer",
-    company: "Personal Projects",
-    period: "2023 — Present",
-    details:
-      "Building full-stack applications with authentication, REST APIs, and responsive UX.",
-  },
-];
+import type { Home as HomeType, Skill, Experience, Project } from "@/lib/types";
 
 export default function Home() {
+  const [home, setHome] = useState<HomeType | null>(null);
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [experience, setExperience] = useState<Experience[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [homeRes, skillsRes, experienceRes, projectsRes] =
+          await Promise.all([
+            fetch("/api/home"),
+            fetch("/api/skills?limit=100"),
+            fetch("/api/experience?limit=100"),
+            fetch("/api/projects?limit=3"),
+          ]);
+
+        const homeData = await homeRes.json();
+        const skillsData = await skillsRes.json();
+        const experienceData = await experienceRes.json();
+        const projectsData = await projectsRes.json();
+
+        if (homeData.data) setHome(homeData.data);
+        if (skillsData.data) setSkills(skillsData.data.slice(0, 4));
+        if (experienceData.data) setExperience(experienceData.data);
+        if (projectsData.data) setProjects(projectsData.data);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
+      {/* Hero Section */}
       <section id="top" className="relative overflow-hidden px-4 py-20">
         <div className="absolute inset-x-0 top-0 h-72 bg-linear-to-b from-primary/10 via-transparent to-transparent" />
         <div className="container mx-auto max-w-6xl">
@@ -91,15 +80,16 @@ export default function Home() {
               </Badge>
               <div className="space-y-4">
                 <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
-                  Hello, I'm a product-minded developer
+                  {home?.heroSubtitle ||
+                    "Hello, I'm a product-minded developer"}
                 </p>
                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-tight tracking-tight">
-                  Simple, smooth, premium web experiences.
+                  {home?.heroTitle ||
+                    "Simple, smooth, premium web experiences."}
                 </h1>
                 <p className="max-w-2xl text-base md:text-lg leading-8 text-muted-foreground">
-                  I build elegant MERN applications with clear structure,
-                  thoughtful motion, and a polished interface that feels like a
-                  top-tier product.
+                  {home?.heroDescription ||
+                    "I build elegant MERN applications with clear structure, thoughtful motion, and a polished interface that feels like a top-tier product."}
                 </p>
               </div>
 
@@ -109,8 +99,8 @@ export default function Home() {
                   size="lg"
                   className="group transition-transform hover:-translate-y-0.5 hover:scale-[1.02]"
                 >
-                  <Link href="/contact">
-                    Hire Me
+                  <Link href={home?.ctaButtonLink || "/contact"}>
+                    {home?.ctaButtonText || "Hire Me"}
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </Button>
@@ -127,10 +117,10 @@ export default function Home() {
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 {skills.slice(0, 4).map((skill) => (
                   <div
-                    key={skill}
+                    key={skill._id}
                     className="glass-card tilt-card p-4 text-center"
                   >
-                    <p className="text-sm font-semibold">{skill}</p>
+                    <p className="text-sm font-semibold">{skill.name}</p>
                   </div>
                 ))}
               </div>
@@ -193,6 +183,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* About Section */}
       <section
         id="about"
         className="px-4 py-20 page-section page-section-delay-1"
@@ -245,6 +236,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Skills Section */}
       <section
         id="skills"
         className="bg-muted/30 px-4 py-20 page-section page-section-delay-2"
@@ -261,19 +253,31 @@ export default function Home() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {skills.map((skill) => (
               <div
-                key={skill}
+                key={skill._id}
                 className="glass-card p-6 transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
-                <h3 className="font-semibold">{skill}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Reliable, modern tooling for product-grade apps.
+                <h3 className="font-semibold">{skill.name}</h3>
+                <div className="mt-4 w-full bg-muted rounded-full h-2">
+                  <div
+                    className="bg-primary rounded-full h-2 transition-all"
+                    style={{ width: `${skill.proficiency}%` }}
+                  />
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {skill.proficiency}% proficiency • {skill.category}
                 </p>
               </div>
             ))}
           </div>
+          <div className="mt-8 text-center">
+            <Button asChild variant="outline">
+              <Link href="/about">View All Skills</Link>
+            </Button>
+          </div>
         </div>
       </section>
 
+      {/* Projects Section */}
       <section
         id="projects"
         className="px-4 py-20 page-section page-section-delay-3"
@@ -288,7 +292,7 @@ export default function Home() {
           <div className="grid gap-6 lg:grid-cols-3">
             {projects.map((project) => (
               <Card
-                key={project.title}
+                key={project._id}
                 className="group tilt-card overflow-hidden border border-border/70 bg-background transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <Image
@@ -307,45 +311,49 @@ export default function Home() {
                     {project.description}
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {project.badges.map((badge) => (
+                    {project.technologies.map((tech) => (
                       <Badge
-                        key={badge}
+                        key={tech}
                         variant="outline"
                         className="text-xs py-2 px-3"
                       >
-                        {badge}
+                        {tech}
                       </Badge>
                     ))}
                   </div>
                   <div className="flex flex-wrap gap-3 pt-4">
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="sm"
-                      className="transition-transform hover:-translate-y-0.5"
-                    >
-                      <Link
-                        href={project.live}
-                        target="_blank"
-                        rel="noreferrer"
+                    {project.liveUrl && (
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="transition-transform hover:-translate-y-0.5"
                       >
-                        Live Demo
-                      </Link>
-                    </Button>
-                    <Button
-                      asChild
-                      variant="ghost"
-                      size="sm"
-                      className="transition-transform hover:-translate-y-0.5"
-                    >
-                      <Link
-                        href={project.github}
-                        target="_blank"
-                        rel="noreferrer"
+                        <Link
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Live Demo
+                        </Link>
+                      </Button>
+                    )}
+                    {project.githubUrl && (
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="sm"
+                        className="transition-transform hover:-translate-y-0.5"
                       >
-                        GitHub
-                      </Link>
-                    </Button>
+                        <Link
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          GitHub
+                        </Link>
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -354,6 +362,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Experience Section */}
       <section
         id="experience"
         className="bg-muted/30 px-4 py-20 page-section page-section-delay-1"
@@ -370,20 +379,25 @@ export default function Home() {
           <div className="grid gap-6 lg:grid-cols-2">
             {experience.map((item) => (
               <div
-                key={item.role}
+                key={item._id}
                 className="glass-card tilt-card p-6 transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <div className="flex items-center justify-between gap-4">
                   <div>
-                    <h3 className="text-xl font-semibold">{item.role}</h3>
+                    <h3 className="text-xl font-semibold">{item.jobTitle}</h3>
                     <p className="text-sm text-muted-foreground">
                       {item.company}
                     </p>
                   </div>
-                  <Badge variant="secondary">{item.period}</Badge>
+                  <Badge variant="secondary">
+                    {new Date(item.startDate).getFullYear()} -{" "}
+                    {item.endDate
+                      ? new Date(item.endDate).getFullYear()
+                      : "Present"}
+                  </Badge>
                 </div>
                 <p className="mt-4 text-muted-foreground leading-7">
-                  {item.details}
+                  {item.description}
                 </p>
               </div>
             ))}
@@ -391,6 +405,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Contact Section */}
       <section
         id="contact"
         className="px-4 py-20 page-section page-section-delay-2"
@@ -401,11 +416,11 @@ export default function Home() {
               Contact
             </p>
             <h2 className="mt-4 text-3xl md:text-4xl font-bold">
-              Let’s create something exceptional.
+              Let's create something exceptional.
             </h2>
             <p className="mt-4 text-muted-foreground leading-8">
               If you'd like a portfolio with clean structure, polished motion,
-              and fast performance, I’m ready to help.
+              and fast performance, I'm ready to help.
             </p>
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Button

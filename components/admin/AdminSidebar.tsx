@@ -12,6 +12,7 @@ import {
   LogOut,
   Menu,
   Settings,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -35,6 +36,11 @@ const navigation = [
     name: "Messages",
     href: "/messages",
     icon: MessageSquare,
+  },
+  {
+    name: "Content",
+    href: "/content",
+    icon: BookOpen,
   },
   {
     name: "Settings",

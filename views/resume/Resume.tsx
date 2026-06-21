@@ -106,8 +106,8 @@ const skills = {
     "HTML/CSS",
     "JavaScript",
   ],
-  Backend: ["Node.js", "Express.js", "RESTful APIs", "Microservices"],
-  Database: ["MongoDB"],
+  Backend: ["Node.js", "NestJS", "Express.js", "RESTful APIs", "Microservices"],
+  Database: ["PostgreSQL", "MongoDB"],
   "Tools & DevOps": ["Git", "Docker", "Vercel", "CI/CD", "Jest"],
 };
 
@@ -188,13 +188,13 @@ export default function Resume() {
         <CardContent>
           <p className="text-muted-foreground leading-relaxed">
             Passionate Full Stack Developer with 1+ years of experience building
-            scalable web applications using the MERN stack. Proven track record
-            of delivering high-quality solutions that serve thousands of users
-            daily. Strong expertise in React, Node.js, MongoDB, and modern web
-            technologies. Experienced in leading development teams, implementing
-            DevOps practices, and mentoring junior developers. Committed to
-            writing clean, maintainable code and staying current with industry
-            best practices.
+            scalable web applications using React, Node.js, NestJS, PostgreSQL,
+            and MongoDB. Proven track record of delivering production-ready
+            solutions and improving deployment workflows using Docker and CI/CD.
+            Strong expertise in TypeScript, modern frontend frameworks, and
+            backend architecture. Experienced in mentoring developers and
+            implementing DevOps best practices. Committed to writing clean,
+            maintainable code and staying current with industry standards.
           </p>
         </CardContent>
       </Card>

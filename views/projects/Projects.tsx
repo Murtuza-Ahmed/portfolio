@@ -22,10 +22,8 @@ const projects = [
     image: "/ecommerce-platform-screenshot.png",
     technologies: ["React", "Node.js", "MongoDB", "Express", "Stripe", "JWT"],
     category: "Full Stack",
-    liveUrl: "",
-    githubUrl: "",
-    // liveUrl: "https://ecommerce-demo.vercel.app",
-    // githubUrl: "https://github.com/johndoe/ecommerce-platform",
+    liveUrl: "https://e-commerce-frontend-seven-rho.vercel.app/",
+    githubUrl: "https://github.com/Murtuza-Ahmed/e-commerce-frontend",
     featured: true,
     stats: {
       stars: 45,

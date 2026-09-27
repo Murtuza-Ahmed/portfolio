@@ -2,9 +2,10 @@
 
 A complete full-stack web application built with Next.js, TypeScript, MongoDB, and Material-UI. Features include user authentication, admin panel, project management, and contact form functionality.
 
-## 🚀 Features
+## Features
 
 ### Frontend
+
 - **Modern UI**: Built with Next.js 14, TypeScript, and Tailwind CSS
 - **Material-UI Integration**: Professional components with custom styling
 - **Responsive Design**: Mobile-first approach with responsive layouts
@@ -12,6 +13,7 @@ A complete full-stack web application built with Next.js, TypeScript, MongoDB, a
 - **SEO Optimized**: Meta tags, Open Graph, and structured data
 
 ### Backend
+
 - **RESTful API**: Complete CRUD operations for all entities
 - **Authentication**: JWT-based auth with role-based access control
 - **Database**: MongoDB with Mongoose ODM
@@ -19,13 +21,14 @@ A complete full-stack web application built with Next.js, TypeScript, MongoDB, a
 - **Security**: Password hashing, CORS protection, and rate limiting
 
 ### Admin Panel
+
 - **Dashboard**: Statistics and analytics overview
 - **User Management**: CRUD operations for user accounts
 - **Project Management**: Portfolio project management with image uploads
 - **Message Management**: Contact form submission handling
 - **Settings**: Application configuration and preferences
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend**: Next.js 14, React 19, TypeScript, Tailwind CSS
 - **UI Components**: Material-UI (MUI), Radix UI, Lucide Icons
@@ -34,7 +37,7 @@ A complete full-stack web application built with Next.js, TypeScript, MongoDB, a
 - **Validation**: Yup, React Hook Form
 - **Development**: ESLint, Prettier, TypeScript
 
-## 📋 Prerequisites
+## Prerequisites
 
 Before running this project, make sure you have:
 
@@ -42,7 +45,7 @@ Before running this project, make sure you have:
 - MongoDB installed and running (local or cloud)
 - Git for version control
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Clone the Repository
 
@@ -68,14 +71,18 @@ cp .env.example .env.local
 Update `.env.local` with your configuration:
 
 \`\`\`env
+
 # Database
+
 MONGODB_URI=mongodb://localhost:27017/fullstack-mern-project
 
 # JWT
+
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 JWT_EXPIRES_IN=7d
 
 # Admin Credentials
+
 ADMIN_EMAIL=admin@example.com
 ADMIN_PASSWORD=Admin123!@#
 \`\`\`
@@ -85,7 +92,9 @@ ADMIN_PASSWORD=Admin123!@#
 Start MongoDB and seed the database:
 
 \`\`\`bash
+
 # Seed the database with sample data
+
 npm run seed
 \`\`\`
 
@@ -113,39 +122,16 @@ npm run seed
 \`\`\`
 
 **Default Admin Credentials:**
+
 - Email: `admin@example.com`
 - Password: `Admin123!@#`
 
-## 📁 Project Structure
-
-\`\`\`
-├── app/                    # Next.js app directory
-│   ├── admin/             # Admin panel pages
-│   ├── api/               # API routes
-│   ├── projects/          # Public projects page
-│   ├── contact/           # Contact page
-│   └── layout.tsx         # Root layout
-├── components/            # Reusable components
-│   ├── admin/            # Admin-specific components
-│   ├── auth/             # Authentication components
-│   └── ui/               # UI components
-├── lib/                  # Utility libraries
-│   ├── auth/             # Authentication utilities
-│   ├── contexts/         # React contexts
-│   ├── database/         # Database connection
-│   ├── types/            # TypeScript types
-│   ├── utils/            # Helper functions
-│   └── validations/      # Validation schemas
-├── models/               # Mongoose models
-├── scripts/              # Database scripts
-└── middleware.ts         # Next.js middleware
-\`\`\`
-
-## 🔐 Authentication & Authorization
+## Authentication & Authorization
 
 The application implements a complete authentication system:
 
 ### Features
+
 - **JWT-based authentication** with HTTP-only cookies
 - **Role-based access control** (admin/user roles)
 - **Protected routes** with middleware
@@ -153,35 +139,40 @@ The application implements a complete authentication system:
 - **Session management** with automatic token refresh
 
 ### Admin Access
+
 - Access the admin panel at `/admin`
 - Use the seeded admin credentials to log in
 - Admin users have full CRUD access to all resources
 
-## 🎨 UI/UX Design
+## UI/UX Design
 
 The application follows modern design principles:
 
 ### Design System
+
 - **Color Palette**: Carefully selected colors with dark/light mode support
 - **Typography**: Inter for body text, JetBrains Mono for code
 - **Spacing**: Consistent spacing scale using Tailwind CSS
 - **Components**: Material-UI components with custom Tailwind styling
 
 ### Responsive Design
+
 - **Mobile-first** approach
 - **Breakpoint system**: sm, md, lg, xl breakpoints
 - **Flexible layouts** with CSS Grid and Flexbox
 - **Touch-friendly** interactions on mobile devices
 
-## 🔧 API Documentation
+## API Documentation
 
 ### Authentication Endpoints
+
 - `POST /api/auth/login` - User login
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/logout` - User logout
 - `GET /api/auth/me` - Get current user
 
 ### Admin Endpoints
+
 - `GET /api/admin/dashboard` - Dashboard statistics
 - `GET /api/admin/users` - List users (with pagination)
 - `POST /api/admin/users` - Create user
@@ -189,13 +180,14 @@ The application follows modern design principles:
 - `DELETE /api/admin/users/[id]` - Delete user
 
 ### Public Endpoints
+
 - `GET /api/projects` - List public projects
 - `GET /api/projects/[id]` - Get project details
 - `POST /api/contact` - Submit contact form
 
-## 🚀 Deployment
+## Deployment
 
-### Vercel Deployment (Recommended)
+### Vercel Deployment
 
 1. **Connect to Vercel**:
    \`\`\`bash
@@ -222,28 +214,31 @@ ADMIN_EMAIL=your-admin@email.com
 ADMIN_PASSWORD=your-secure-admin-password
 \`\`\`
 
-## 🧪 Testing
+## Testing
 
 Run the development server and test the following:
 
 ### Frontend Testing
+
 - Navigate through all pages
 - Test responsive design on different screen sizes
 - Verify dark/light mode switching
 - Test form submissions and validation
 
 ### Admin Panel Testing
+
 - Log in with admin credentials
 - Test CRUD operations for users, projects, and messages
 - Verify pagination and search functionality
 - Test role-based access control
 
 ### API Testing
+
 - Use tools like Postman or curl to test API endpoints
 - Verify authentication and authorization
 - Test error handling and validation
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -251,11 +246,11 @@ Run the development server and test the following:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## Support
 
 If you encounter any issues or have questions:
 
@@ -263,7 +258,7 @@ If you encounter any issues or have questions:
 2. Create a new issue with detailed information
 3. Include error messages, screenshots, and steps to reproduce
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Next.js](https://nextjs.org/) for the amazing React framework
 - [Material-UI](https://mui.com/) for the component library

@@ -20,7 +20,100 @@ import {
   Github,
   Loader2,
 } from "lucide-react";
-import type { Experience, Education, Certification, Skill } from "@/lib/types";
+
+const workExperience = [
+  {
+    company: "Suffah Tech",
+    position: "Senior MERN Stack Developer",
+    location: "Pakistan Bazar Sec, 11 ½, Orangi Town, Karachi, 75800, Pakistan",
+    duration: "Oct 2024 - Present",
+    type: "Full-time",
+    description: [
+      "Led development of a microservices architecture serving 100k+ daily active users",
+      "Implemented CI/CD pipelines reducing deployment time by 60%",
+      "Mentored 3 junior developers and conducted code reviews",
+      "Built responsive web applications using React, Node.js, and MongoDB",
+    ],
+    technologies: [
+      "React",
+      "Node.js",
+      "MongoDB",
+      // "AWS",
+      // "Docker",
+      "TypeScript",
+      "Next.js",
+      "Express.js",
+      "Redux",
+    ],
+  },
+  {
+    company: "Tek Gravity",
+    position: "Word Press",
+    location: "Remote",
+    duration: "Aug 2024 - Oct 2024",
+    type: "Full-time",
+    description: [
+      "Supported staff members in their daily tasks, reducing workload burden and allowing for increased focus on higher-priority assignments",
+      "Gained valuable experience working within a specific industry, applying learned concepts directly into relevant work situations.",
+    ],
+    technologies: ["Word Press"],
+  },
+];
+
+const education = [
+  {
+    institution: "SMIT",
+    degree: "1 Year Course: Web and Mobile App Development",
+    location: "Gulshan Iqbal",
+    duration: "2022 - 2023",
+    // gpa: "3.8/4.0",
+    achievements: [
+      "Dean's List for 3 semesters",
+      "President of Computer Science Club",
+      "Completed senior capstone project on machine learning applications",
+    ],
+  },
+  {
+    institution: "Suffah Institute of Technology",
+    degree: "Full Stack Web Development Certification",
+    location: "sector 11, Orangi Town",
+    duration: "2023",
+    achievements: [
+      // "Completed 300+ hours of coursework",
+      "Built 5 full-stack projects",
+      "Earned certifications in Frontend and Backend development",
+    ],
+  },
+];
+
+const certifications = [
+  {
+    name: "SMIT Certified Developer",
+    issuer: "Web & Mobile App Development",
+    date: "2023",
+    credentialId: "WMA",
+  },
+  {
+    name: "SIT Developer Certification",
+    issuer: "Full Stack Development",
+    date: "2024",
+    credentialId: "FSD",
+  },
+];
+
+const skills = {
+  Frontend: [
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Tailwind CSS",
+    "HTML/CSS",
+    "JavaScript",
+  ],
+  Backend: ["Node.js", "NestJS", "Express.js", "RESTful APIs", "Microservices"],
+  Database: ["PostgreSQL", "MongoDB"],
+  "Tools & DevOps": ["Git", "Docker", "Vercel", "CI/CD", "Jest"],
+};
 
 function TimelineItem({
   children,
@@ -153,13 +246,13 @@ export default function Resume() {
         <CardContent>
           <p className="text-muted-foreground leading-relaxed">
             Passionate Full Stack Developer with 1+ years of experience building
-            scalable web applications using the MERN stack. Proven track record
-            of delivering high-quality solutions that serve thousands of users
-            daily. Strong expertise in React, Node.js, MongoDB, and modern web
-            technologies. Experienced in leading development teams, implementing
-            DevOps practices, and mentoring junior developers. Committed to
-            writing clean, maintainable code and staying current with industry
-            best practices.
+            scalable web applications using React, Node.js, NestJS, PostgreSQL,
+            and MongoDB. Proven track record of delivering production-ready
+            solutions and improving deployment workflows using Docker and CI/CD.
+            Strong expertise in TypeScript, modern frontend frameworks, and
+            backend architecture. Experienced in mentoring developers and
+            implementing DevOps best practices. Committed to writing clean,
+            maintainable code and staying current with industry standards.
           </p>
         </CardContent>
       </Card>

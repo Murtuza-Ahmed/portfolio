@@ -17,7 +17,58 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import type { Home as HomeType, Skill, Experience, Project } from "@/lib/types";
+import { TypeAnimation } from "react-type-animation";
+const techStack = [
+  { name: "React", icon: "⚛️" },
+  { name: "Next.js", icon: "▲" },
+  { name: "TypeScript", icon: "🔷" },
+  { name: "Node.js", icon: "🟢" },
+  { name: "NestJS", icon: "🧩" },
+  { name: "MongoDB", icon: "🍃" },
+  { name: "PostgreSQL", icon: "🐘" },
+  { name: "Docker", icon: "🐳" },
+];
+
+// Derived simple skills list used in hero preview cards
+// const skills = techStack.map((t) => t.name);
+const projects = [
+  {
+    title: "E-commerce Platform",
+    description:
+      "A modern shopping experience with product search, cart, and checkout flows.",
+    image: "/ecommerce-platform.png",
+    badges: ["React", "Node.js", "MongoDB"],
+    live: "https://example.com",
+    github: "https://github.com/Murtuza-Ahmed/ecommerce-platform",
+  },
+  {
+    title: "Expense Tracker App",
+    description:
+      "Creating robust APIs and server-side applications with Node.js and NestJS. I design scalable services backed by PostgreSQL or MongoDB and containerize deployments with Docker.",
+  },
+  {
+    title: "Weather Dashboard",
+    description:
+      "Designing and implementing efficient database schemas and migrations for MongoDB and PostgreSQL. Familiar with ORMs and data modeling for production workloads.",
+  },
+];
+
+const experience = [
+  {
+    role: "Frontend Engineer",
+    company: "Freelance",
+    period: "2024 — Present",
+    details:
+      "Designing polished web interfaces and delivering optimized React applications for startups and small businesses.",
+  },
+  {
+    role: "MERN Developer",
+    company: "Personal Projects",
+    period: "2023 — Present",
+    details:
+      "Building full-stack applications with authentication, REST APIs, and responsive UX.",
+  },
+];
 
 export default function Home() {
   const [home, setHome] = useState<HomeType | null>(null);
@@ -79,18 +130,55 @@ export default function Home() {
                 Premium MERN Portfolio
               </Badge>
               <div className="space-y-4">
-                <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
-                  {home?.heroSubtitle ||
-                    "Hello, I'm a product-minded developer"}
+                <Badge variant="outline" className="w-fit">
+                  Available for new opportunities
+                </Badge>
+                <h2 className="text-4xl text-black dark:text-white md:text-6xl lg:text-7xl font-bold tracking-tight">
+                  Hi, I'm <span className="dark:text-white">Murtuza Ahmed</span>
+                </h2>
+                <h3 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-muted-foreground">
+                  <TypeAnimation
+                    sequence={[
+                      "MERN Stack Developer",
+                      1000,
+                      "Full Stack Developer",
+                      1000,
+                      "Frontend Developer",
+                      1000,
+                      "Backend Developer",
+                      1000,
+                    ]}
+                    wrapper="span"
+                    speed={50}
+                    repeat={Infinity}
+                    className="text-2xl md:text-3xl lg:text-4xl font-semibold text-muted-foreground"
+                  />
+                </h3>
+                <p className="text-base md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+                  I craft modern, scalable web applications using React,
+                  Next.js, Node.js, NestJS, PostgreSQL, MongoDB, and Docker.
+                  Passionate about creating seamless user experiences and
+                  production-ready backend solutions.
                 </p>
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-tight tracking-tight">
-                  {home?.heroTitle ||
-                    "Simple, smooth, premium web experiences."}
-                </h1>
-                <p className="max-w-2xl text-base md:text-lg leading-8 text-muted-foreground">
-                  {home?.heroDescription ||
-                    "I build elegant MERN applications with clear structure, thoughtful motion, and a polished interface that feels like a top-tier product."}
+              </div>
+
+              {/* Tech Stack */}
+              <div className="space-y-4">
+                <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                  Tech Stack
                 </p>
+                <div className="flex flex-wrap gap-3">
+                  {techStack.map((tech) => (
+                    <Badge
+                      key={tech.name}
+                      variant="secondary"
+                      className="text-sm py-2 px-4"
+                    >
+                      {/* <span className="mr-2">{tech.icon}</span> */}
+                      {tech.name}
+                    </Badge>
+                  ))}
+                </div>
               </div>
 
               <div className="flex flex-col gap-4 sm:flex-row">
@@ -113,20 +201,9 @@ export default function Home() {
                   <Link href="/projects">View Work</Link>
                 </Button>
               </div>
-
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                {skills.slice(0, 4).map((skill) => (
-                  <div
-                    key={skill._id}
-                    className="glass-card tilt-card p-4 text-center"
-                  >
-                    <p className="text-sm font-semibold">{skill.name}</p>
-                  </div>
-                ))}
-              </div>
             </div>
 
-            <div className="relative animate-slide-in-left page-section page-section-delay-1">
+            <div className="relative animate-slide-in-left page-section page-section-delay-1 mt-0 lg:mt-10">
               <div className="hero-3d-card tilt-card flex h-full flex-col justify-between p-6 shadow-xl shadow-slate-900/5">
                 <div className="space-y-6">
                   <div className="flex items-center justify-between gap-4 rounded-3xl bg-linear-to-r from-primary/10 to-accent/10 p-5">
@@ -236,47 +313,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Skills Section */}
-      <section
-        id="skills"
-        className="bg-muted/30 px-4 py-20 page-section page-section-delay-2"
-      >
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center space-y-4 mb-12">
-            <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
-              Skills
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold">
-              Technologies I rely on
-            </h2>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {skills.map((skill) => (
-              <div
-                key={skill._id}
-                className="glass-card p-6 transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg"
-              >
-                <h3 className="font-semibold">{skill.name}</h3>
-                <div className="mt-4 w-full bg-muted rounded-full h-2">
-                  <div
-                    className="bg-primary rounded-full h-2 transition-all"
-                    style={{ width: `${skill.proficiency}%` }}
-                  />
-                </div>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  {skill.proficiency}% proficiency • {skill.category}
-                </p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-8 text-center">
-            <Button asChild variant="outline">
-              <Link href="/about">View All Skills</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
       {/* Projects Section */}
       <section
         id="projects"
@@ -295,13 +331,20 @@ export default function Home() {
                 key={project._id}
                 className="group tilt-card overflow-hidden border border-border/70 bg-background transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  width={600}
-                  height={400}
-                  className="h-56 w-full object-cover transition duration-300 group-hover:scale-105"
-                />
+                {project.image ? (
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    width={600}
+                    height={400}
+                    className="h-56 w-full object-cover transition duration-300 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="h-56 w-full flex items-center justify-center bg-muted/20">
+                    <Briefcase className="h-12 w-12 text-muted-foreground" />
+                  </div>
+                )}
+
                 <CardContent className="p-6 space-y-4">
                   <div className="flex items-center gap-3 text-primary">
                     <Briefcase className="h-5 w-5" />
@@ -311,7 +354,7 @@ export default function Home() {
                     {project.description}
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {project.technologies.map((tech) => (
+                    {(project.badges || []).map((badge) => (
                       <Badge
                         key={tech}
                         variant="outline"
@@ -322,7 +365,7 @@ export default function Home() {
                     ))}
                   </div>
                   <div className="flex flex-wrap gap-3 pt-4">
-                    {project.liveUrl && (
+                    {project.live && (
                       <Button
                         asChild
                         variant="outline"
@@ -330,7 +373,7 @@ export default function Home() {
                         className="transition-transform hover:-translate-y-0.5"
                       >
                         <Link
-                          href={project.liveUrl}
+                          href={project.live}
                           target="_blank"
                           rel="noreferrer"
                         >
@@ -338,7 +381,8 @@ export default function Home() {
                         </Link>
                       </Button>
                     )}
-                    {project.githubUrl && (
+
+                    {project.github && (
                       <Button
                         asChild
                         variant="ghost"
@@ -346,7 +390,7 @@ export default function Home() {
                         className="transition-transform hover:-translate-y-0.5"
                       >
                         <Link
-                          href={project.githubUrl}
+                          href={project.github}
                           target="_blank"
                           rel="noreferrer"
                         >

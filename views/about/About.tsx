@@ -22,18 +22,33 @@ import {
   Loader2,
 } from "lucide-react";
 import Image from "next/image";
-import type { About as AboutType, Skill } from "@/lib/types";
+
+const skills = [
+  { name: "JavaScript/TypeScript", level: 85, category: "Frontend" },
+  { name: "React/Next.js", level: 92, category: "Frontend" },
+  { name: "HTML/CSS", level: 90, category: "Frontend" },
+  { name: "Tailwind CSS", level: 80, category: "Frontend" },
+  { name: "Node.js", level: 70, category: "Backend" },
+  { name: "NestJS", level: 65, category: "Backend" },
+  { name: "Express.js", level: 60, category: "Backend" },
+  { name: "MongoDB", level: 52, category: "Database" },
+  { name: "PostgreSQL", level: 65, category: "Database" },
+  { name: "Docker", level: 75, category: "Tools" },
+  { name: "Git/GitHub", level: 88, category: "Tools" },
+  { name: "Vercel", level: 30, category: "Tools" },
+  { name: "REST APIs", level: 75, category: "Backend" },
+];
 
 const defaultTechnologies = [
   { name: "React", icon: Code2, color: "text-blue-500" },
-  { name: "Node.js", icon: Server, color: "text-green-500" },
-  { name: "MongoDB", icon: Database, color: "text-green-600" },
-  { name: "TypeScript", icon: Code2, color: "text-blue-600" },
   { name: "Next.js", icon: Globe, color: "text-gray-800 dark:text-gray-200" },
-  { name: "JavaScript", icon: Code2, color: "text-blue-300" },
-  { name: "Express", icon: Server, color: "text-gray-600" },
-  { name: "Git", icon: GitBranch, color: "text-orange-500" },
+  { name: "TypeScript", icon: Code2, color: "text-blue-600" },
+  { name: "Node.js", icon: Server, color: "text-green-500" },
+  { name: "NestJS", icon: Server, color: "text-violet-500" },
+  { name: "MongoDB", icon: Database, color: "text-green-600" },
+  { name: "PostgreSQL", icon: Database, color: "text-indigo-600" },
   { name: "Docker", icon: Server, color: "text-blue-400" },
+  { name: "Git", icon: GitBranch, color: "text-orange-500" },
 ];
 
 const interestIcons: Record<string, any> = {
@@ -104,8 +119,9 @@ export default function About() {
         <div className="space-y-4">
           <h1 className="text-4xl md:text-5xl font-bold">About Me</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            {about?.bio ||
-              "I'm a passionate MERN Stack Developer with over 1.5 years of experience creating modern, scalable web applications."}
+            I'm a Full Stack Developer experienced in MERN and TypeScript-based
+            backends. I build scalable, production-ready applications using
+            React, Next.js, Node.js, NestJS, PostgreSQL, MongoDB, and Docker.
           </p>
         </div>
       </section>

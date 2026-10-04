@@ -11,6 +11,8 @@ import {
   HTTP_STATUS,
 } from "@/lib/utils/api"
 
+const CERTIFICATION_SORT_FIELDS = ["createdAt", "date", "name", "issuer"]
+
 export async function GET(request: NextRequest) {
   try {
     await connectDB()
@@ -22,7 +24,7 @@ export async function GET(request: NextRequest) {
     const filters = await filterSchema.validate(queryParams)
 
     const filterQuery = buildFilterQuery(filters)
-    const sortQuery = buildSortQuery(sortBy || "date", sortOrder)
+    const sortQuery = buildSortQuery(sortBy || "date", sortOrder, CERTIFICATION_SORT_FIELDS)
 
     const [certifications, totalCertifications] = await Promise.all([
       Certification.find(filterQuery)
@@ -52,15 +54,18 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
 
+    // Validate request body (strip unknown fields to prevent mass assignment,
+    // e.g. an attacker-supplied _id)
+    let certificationData: Record<string, unknown>
     try {
-      await certificationSchema.validate(body)
+      certificationData = (await certificationSchema.validate(body, { stripUnknown: true })) as Record<string, unknown>
     } catch (validationError: any) {
       return NextResponse.json(createErrorResponse("Validation failed", validationError.message), {
         status: HTTP_STATUS.BAD_REQUEST,
       })
     }
 
-    const certification = new Certification(body)
+    const certification = new Certification(certificationData)
     await certification.save()
 
     return NextResponse.json(createSuccessResponse(certification, "Certification created successfully"), {

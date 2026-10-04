@@ -36,8 +36,8 @@ export async function uploadImage(buffer: Buffer, filename: string): Promise<Upl
         resource_type: "auto",
       },
       (error, result) => {
-        if (error) reject(error)
-        else resolve(result as UploadResponse)
+        if (error || !result) reject(error ?? new Error("Cloudinary upload failed"))
+        else resolve(result as unknown as UploadResponse)
       },
     )
 

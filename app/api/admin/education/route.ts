@@ -11,6 +11,8 @@ import {
   HTTP_STATUS,
 } from "@/lib/utils/api"
 
+const EDUCATION_SORT_FIELDS = ["createdAt", "startDate", "school", "degree"]
+
 export async function GET(request: NextRequest) {
   try {
     await connectDB()
@@ -22,7 +24,7 @@ export async function GET(request: NextRequest) {
     const filters = await filterSchema.validate(queryParams)
 
     const filterQuery = buildFilterQuery(filters)
-    const sortQuery = buildSortQuery(sortBy || "startDate", sortOrder)
+    const sortQuery = buildSortQuery(sortBy || "startDate", sortOrder, EDUCATION_SORT_FIELDS)
 
     const [educations, totalEducations] = await Promise.all([
       Education.find(filterQuery)
@@ -52,15 +54,18 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
 
+    // Validate request body (strip unknown fields to prevent mass assignment,
+    // e.g. an attacker-supplied _id)
+    let educationData: Record<string, unknown>
     try {
-      await educationSchema.validate(body)
+      educationData = (await educationSchema.validate(body, { stripUnknown: true })) as Record<string, unknown>
     } catch (validationError: any) {
       return NextResponse.json(createErrorResponse("Validation failed", validationError.message), {
         status: HTTP_STATUS.BAD_REQUEST,
       })
     }
 
-    const education = new Education(body)
+    const education = new Education(educationData)
     await education.save()
 
     return NextResponse.json(createSuccessResponse(education, "Education created successfully"), {

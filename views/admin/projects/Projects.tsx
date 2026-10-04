@@ -1,11 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -16,20 +34,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Plus,
-  Search,
-  MoreHorizontal,
-  Edit,
-  Trash2,
-  ExternalLink,
-} from "lucide-react";
+import { Plus, Search, Edit, Trash2, ExternalLink } from "lucide-react";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 import axios from "axios";
 import { format } from "date-fns";
 import Image from "next/image";
@@ -37,12 +43,29 @@ import Link from "next/link";
 import type { Project } from "@/lib/types";
 import type { ProjectsResponse } from "@/lib/types/api";
 
+const emptyProjectForm = {
+  title: "",
+  description: "",
+  longDescription: "",
+  image: "",
+  technologies: "",
+  githubUrl: "",
+  liveUrl: "",
+  featured: false,
+  status: "active" as Project["status"],
+};
+
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [form, setForm] = useState(emptyProjectForm);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetchProjects();
@@ -75,9 +98,85 @@ export default function Projects() {
 
     try {
       await axios.delete(`/api/admin/projects/${projectId}`);
-      fetchProjects(); // Refresh the list
+      // If we deleted the last item on this page, go back a page;
+      // otherwise just refresh the list.
+      if (projects.length === 1 && currentPage > 1) {
+        setCurrentPage((prev) => prev - 1);
+      } else {
+        fetchProjects();
+      }
     } catch (error) {
       console.error("Failed to delete project:", error);
+    }
+  };
+
+  const openAddDialog = () => {
+    setEditingProject(null);
+    setForm(emptyProjectForm);
+    setFormError(null);
+    setDialogOpen(true);
+  };
+
+  const openEditDialog = (project: Project) => {
+    setEditingProject(project);
+    setForm({
+      title: project.title,
+      description: project.description,
+      longDescription: project.longDescription || "",
+      image: project.image,
+      technologies: project.technologies.join(", "),
+      githubUrl: project.githubUrl || "",
+      liveUrl: project.liveUrl || "",
+      featured: project.featured,
+      status: project.status,
+    });
+    setFormError(null);
+    setDialogOpen(true);
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setFormError(null);
+    setSaving(true);
+
+    const payload = {
+      title: form.title,
+      description: form.description,
+      longDescription: form.longDescription || undefined,
+      image: form.image,
+      technologies: form.technologies
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean),
+      githubUrl: form.githubUrl || undefined,
+      liveUrl: form.liveUrl || undefined,
+      featured: form.featured,
+      status: form.status,
+    };
+
+    const isEdit = !!editingProject;
+
+    try {
+      if (isEdit) {
+        await axios.put(
+          `/api/admin/projects/${editingProject._id}`,
+          payload
+        );
+      } else {
+        await axios.post("/api/admin/projects", payload);
+      }
+      setDialogOpen(false);
+      // After creating, jump back to page 1 so the new project is visible.
+      // (Changing the page triggers a refetch via useEffect.)
+      if (!isEdit && currentPage !== 1) {
+        setCurrentPage(1);
+      } else {
+        fetchProjects();
+      }
+    } catch (err: any) {
+      setFormError(err.response?.data?.message || "Failed to save project");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -110,7 +209,7 @@ export default function Projects() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>All Projects</CardTitle>
-                  <Button>
+                  <Button onClick={openAddDialog}>
                     <Plus className="mr-2 h-4 w-4" />
                     Add Project
                   </Button>
@@ -131,6 +230,7 @@ export default function Projects() {
               </CardHeader>
 
               <CardContent>
+                <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -158,7 +258,7 @@ export default function Projects() {
                     ) : (
                       projects.map((project) => (
                         <TableRow key={project._id}>
-                          <TableCell>
+                          <TableCell className="min-w-[220px]">
                             <div className="flex items-center space-x-3">
                               <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted">
                                 <Image
@@ -218,46 +318,50 @@ export default function Projects() {
                             )}
                           </TableCell>
                           <TableCell className="text-right">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                {project.liveUrl && (
-                                  <DropdownMenuItem asChild>
-                                    <Link
-                                      href={project.liveUrl}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                    >
-                                      <ExternalLink className="mr-2 h-4 w-4" />
-                                      View Live
-                                    </Link>
-                                  </DropdownMenuItem>
-                                )}
-                                <DropdownMenuItem>
-                                  <Edit className="mr-2 h-4 w-4" />
-                                  Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() =>
-                                    handleDeleteProject(project._id)
-                                  }
-                                  className="text-destructive"
+                            <div className="flex items-center justify-end gap-1">
+                              {project.liveUrl && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  asChild
+                                  title="View live site"
                                 >
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                                  <Link
+                                    href={project.liveUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <ExternalLink className="h-4 w-4" />
+                                  </Link>
+                                </Button>
+                              )}
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                title="Edit project"
+                                onClick={() => openEditDialog(project)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                title="Delete project"
+                                className="text-destructive hover:text-destructive"
+                                onClick={() =>
+                                  handleDeleteProject(project._id)
+                                }
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))
                     )}
                   </TableBody>
                 </Table>
+                </div>
 
                 {/* Pagination */}
                 {totalPages > 1 && (
@@ -296,6 +400,172 @@ export default function Projects() {
           </main>
         </div>
       </div>
+
+      {/* Add / Edit Project Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editingProject ? "Edit Project" : "Add Project"}
+            </DialogTitle>
+            <DialogDescription>
+              {editingProject
+                ? "Update the project details below."
+                : "Create a new portfolio project."}
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="project-title">Title</Label>
+              <Input
+                id="project-title"
+                value={form.title}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, title: e.target.value }))
+                }
+                placeholder="Project title"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="project-description">Description</Label>
+              <Textarea
+                id="project-description"
+                value={form.description}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, description: e.target.value }))
+                }
+                placeholder="Short description"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="project-long-description">
+                Long Description
+              </Label>
+              <Textarea
+                id="project-long-description"
+                value={form.longDescription}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    longDescription: e.target.value,
+                  }))
+                }
+                placeholder="Detailed description"
+                rows={4}
+              />
+            </div>
+
+            <ImageUpload
+              id="project-image"
+              label="Project Image"
+              value={form.image}
+              onChange={(url) => setForm((prev) => ({ ...prev, image: url }))}
+            />
+
+            <div className="space-y-2">
+              <Label htmlFor="project-technologies">
+                Technologies (comma-separated)
+              </Label>
+              <Input
+                id="project-technologies"
+                value={form.technologies}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, technologies: e.target.value }))
+                }
+                placeholder="React, Node.js, MongoDB"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="project-github">GitHub URL</Label>
+                <Input
+                  id="project-github"
+                  value={form.githubUrl}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, githubUrl: e.target.value }))
+                  }
+                  placeholder="https://github.com/username/repo"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="project-live">Live URL</Label>
+                <Input
+                  id="project-live"
+                  value={form.liveUrl}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, liveUrl: e.target.value }))
+                  }
+                  placeholder="https://example.com"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="project-status">Status</Label>
+                <Select
+                  value={form.status}
+                  onValueChange={(value) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      status: value as Project["status"],
+                    }))
+                  }
+                >
+                  <SelectTrigger id="project-status">
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                    <SelectItem value="archived">Archived</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-end pb-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="project-featured"
+                    checked={form.featured}
+                    onCheckedChange={(checked) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        featured: checked === true,
+                      }))
+                    }
+                  />
+                  <Label htmlFor="project-featured">Featured project</Label>
+                </div>
+              </div>
+            </div>
+
+            {formError && (
+              <p className="text-sm text-destructive">{formError}</p>
+            )}
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={saving}>
+                {saving
+                  ? "Saving..."
+                  : editingProject
+                    ? "Save Changes"
+                    : "Create Project"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </ProtectedRoute>
   );
 }

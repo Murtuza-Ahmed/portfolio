@@ -16,6 +16,7 @@ function getDefaultSettings() {
     },
     contactEmail: "",
     contactSuccessMessage: "Thank you for your message! I'll get back to you soon.",
+    emailNotifications: true,
     theme: "auto",
     accentColor: "#3b82f6",
     featuredProjectsCount: 3,
@@ -55,9 +56,10 @@ export async function PUT(request: NextRequest) {
 
     const body = await request.json()
 
-    // Validate request body
+    // Validate request body (strip unknown fields to prevent mass assignment)
+    let settingsData: Record<string, unknown>
     try {
-      await settingsSchema.validate(body)
+      settingsData = (await settingsSchema.validate(body, { stripUnknown: true })) as Record<string, unknown>
     } catch (validationError: any) {
       return NextResponse.json(createErrorResponse("Validation failed", validationError.message), {
         status: HTTP_STATUS.BAD_REQUEST,
@@ -72,11 +74,11 @@ export async function PUT(request: NextRequest) {
       const defaults = getDefaultSettings()
       settings = new Settings({
         ...defaults,
-        ...body,
+        ...settingsData,
       })
     } else {
       // Update existing settings
-      Object.assign(settings, body)
+      Object.assign(settings, settingsData)
     }
 
     await settings.save()

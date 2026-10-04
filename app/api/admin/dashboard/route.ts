@@ -5,6 +5,10 @@ import connectDB from "@/lib/database/connection"
 import User from "@/models/User"
 import Project from "@/models/Project"
 import ContactMessage from "@/models/ContactMessage"
+import Skill from "@/models/Skill"
+import Education from "@/models/Education"
+import Experience from "@/models/Experience"
+import Certification from "@/models/Certification"
 import { createSuccessResponse, createErrorResponse, HTTP_STATUS } from "@/lib/utils/api"
 import type { DashboardStats } from "@/lib/types/api"
 
@@ -25,6 +29,10 @@ export async function GET(request: NextRequest) {
       featuredProjects,
       unreadMessages,
       recentUsers,
+      totalSkills,
+      totalEducation,
+      totalExperience,
+      totalCertifications,
       projectsByStatus,
       messagesByStatus,
     ] = await Promise.all([
@@ -34,6 +42,10 @@ export async function GET(request: NextRequest) {
       Project.countDocuments({ featured: true }),
       ContactMessage.countDocuments({ status: "unread" }),
       User.countDocuments({ createdAt: { $gte: thirtyDaysAgo } }),
+      Skill.countDocuments(),
+      Education.countDocuments(),
+      Experience.countDocuments(),
+      Certification.countDocuments(),
       Project.aggregate([
         {
           $group: {
@@ -79,6 +91,10 @@ export async function GET(request: NextRequest) {
       featuredProjects,
       unreadMessages,
       recentUsers,
+      totalSkills,
+      totalEducation,
+      totalExperience,
+      totalCertifications,
       projectsByStatus: projectStatusCounts,
       messagesByStatus: messageStatusCounts,
     }

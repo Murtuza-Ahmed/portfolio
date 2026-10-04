@@ -2,11 +2,15 @@ import { type NextRequest, NextResponse } from "next/server"
 import connectDB from "@/lib/database/connection"
 import Experience from "@/models/Experience"
 import { experienceSchema } from "@/lib/validations/schemas"
-import { createSuccessResponse, createErrorResponse, HTTP_STATUS } from "@/lib/utils/api"
+import { createSuccessResponse, createErrorResponse, isValidObjectId, HTTP_STATUS } from "@/lib/utils/api"
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     await connectDB()
+
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid experience ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
 
     const experience = await Experience.findById(params.id)
     if (!experience) {
@@ -28,17 +32,23 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   try {
     await connectDB()
 
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid experience ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
+
     const body = await request.json()
 
+    // Validate request body (strip unknown fields to prevent mass assignment)
+    let experienceData: Record<string, unknown>
     try {
-      await experienceSchema.validate(body)
+      experienceData = (await experienceSchema.validate(body, { stripUnknown: true })) as Record<string, unknown>
     } catch (validationError: any) {
       return NextResponse.json(createErrorResponse("Validation failed", validationError.message), {
         status: HTTP_STATUS.BAD_REQUEST,
       })
     }
 
-    const experience = await Experience.findByIdAndUpdate(params.id, body, { new: true, runValidators: true })
+    const experience = await Experience.findByIdAndUpdate(params.id, experienceData, { new: true, runValidators: true })
     if (!experience) {
       return NextResponse.json(createErrorResponse("Experience not found"), { status: HTTP_STATUS.NOT_FOUND })
     }
@@ -58,14 +68,16 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   try {
     await connectDB()
 
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid experience ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
+
     const experience = await Experience.findByIdAndDelete(params.id)
     if (!experience) {
       return NextResponse.json(createErrorResponse("Experience not found"), { status: HTTP_STATUS.NOT_FOUND })
     }
 
-    return NextResponse.json(createSuccessResponse(null, "Experience deleted successfully"), {
-      status: HTTP_STATUS.OK,
-    })
+    return NextResponse.json(createSuccessResponse(null, "Experience deleted successfully"), { status: HTTP_STATUS.OK })
   } catch (error: any) {
     console.error("Delete experience error:", error)
     return NextResponse.json(createErrorResponse("Failed to delete experience"), {

@@ -22,12 +22,19 @@ export async function GET(request: NextRequest) {
 
     const sortQuery = buildSortQuery(sortBy || "name", sortOrder)
 
+    // Optional filter: ?skillType=technical|engineering
+    const filter: Record<string, unknown> = {}
+    const skillTypeParam = searchParams.get("skillType")
+    if (skillTypeParam === "technical" || skillTypeParam === "engineering") {
+      filter.skillType = skillTypeParam
+    }
+
     const [skills, totalSkills] = await Promise.all([
-      Skill.find()
+      Skill.find(filter)
         .sort(sortQuery)
         .skip((page - 1) * limit)
         .limit(limit),
-      Skill.countDocuments(),
+      Skill.countDocuments(filter),
     ])
 
     return NextResponse.json(

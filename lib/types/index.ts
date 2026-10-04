@@ -138,6 +138,7 @@ export interface Skill {
   name: string
   proficiency: number
   category: "Frontend" | "Backend" | "Database" | "Tools" | "DevOps" | "Other"
+  skillType: "technical" | "engineering"
   createdAt: Date
   updatedAt: Date
 }
@@ -199,6 +200,7 @@ export interface SkillForm {
   name: string
   proficiency: number
   category: "Frontend" | "Backend" | "Database" | "Tools" | "DevOps" | "Other"
+  skillType: "technical" | "engineering"
 }
 
 export interface ExperienceForm {

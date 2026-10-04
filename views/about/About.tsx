@@ -2,11 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
-import {
-  ForgeReveal,
-  ForgeEyebrow,
-  ForgeSectionHeader,
-} from "@/components/forge";
+import { ForgeReveal, ForgeEyebrow, ForgeSectionHeader } from "@/components/forge";
 import {
   Code2,
   Database,
@@ -63,6 +59,38 @@ const quickFacts = [
   { value: "5+", label: "Technologies" },
 ];
 
+function ProficiencyList({ items }: { items: Skill[] }) {
+  if (items.length === 0) {
+    return (
+      <p className="text-muted-foreground">
+        Skills added from the admin panel will appear here.
+      </p>
+    );
+  }
+  return (
+    <div className="space-y-4">
+      {items.map((skill) => {
+        const proficiency =
+          typeof skill.proficiency === "number"
+            ? Math.min(100, Math.max(0, skill.proficiency))
+            : 0;
+        return (
+          <div key={skill._id} className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="font-medium">{skill.name}</span>
+              <span className="forge-chip text-xs">{skill.category}</span>
+            </div>
+            <Progress value={proficiency} className="h-2" />
+            <div className="text-right text-sm text-forge-mute">
+              {proficiency}%
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function About() {
   const [about, setAbout] = useState<AboutType | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -99,6 +127,13 @@ export default function About() {
     );
   }
 
+  const technicalSkills = skills.filter(
+    (s) => (s.skillType || "technical") === "technical"
+  );
+  const engineeringSkills = skills.filter(
+    (s) => s.skillType === "engineering"
+  );
+
   return (
     <div className="relative">
       {/* Hero Section */}
@@ -121,17 +156,10 @@ export default function About() {
               <ForgeEyebrow centered>Profile</ForgeEyebrow>
               <h1 className="forge-h1">About Me</h1>
               <p className="forge-lead forge-lead-center">
-                I&apos;m a Full Stack Developer focused on building modern,
-                scalable, and production-ready web applications. I enjoy turning
-                ideas and complex requirements into clean, reliable, and
-                maintainable solutions. My experience spans frontend and backend
-                development, with a strong focus on React, Next.js, Node.js,
-                NestJS, TypeScript, PostgreSQL, MongoDB, and Docker. I care
-                about clean architecture, performance, security, and creating
-                seamless user experiences. I'm continuously learning and
-                exploring new technologies, particularly AI development and
-                modern backend architectures, while improving my problem-solving
-                and engineering skills through real-world projects.
+                I&apos;m a Full Stack Developer experienced in MERN and
+                TypeScript-based backends. I build scalable, production-ready
+                applications using React, Next.js, Node.js, NestJS, PostgreSQL,
+                MongoDB, and Docker.
               </p>
             </div>
           </ForgeReveal>
@@ -146,16 +174,18 @@ export default function About() {
               <ForgeEyebrow>My Journey</ForgeEyebrow>
               <div className="space-y-4 text-muted-foreground leading-relaxed mt-6">
                 {about?.bio ? (
-                  about.bio.split(/\n+/).map((para, i) => <p key={i}>{para}</p>)
+                  about.bio
+                    .split(/\n+/)
+                    .map((para, i) => <p key={i}>{para}</p>)
                 ) : (
                   <>
                     <p>
-                      My journey into web development started during my computer
-                      science studies, where I discovered my passion for
-                      creating digital experiences that make a difference. What
-                      began as curiosity about how websites work evolved into a
-                      deep love for crafting elegant solutions to complex
-                      problems.
+                      My journey into web development started during my
+                      computer science studies, where I discovered my passion
+                      for creating digital experiences that make a
+                      difference. What began as curiosity about how websites
+                      work evolved into a deep love for crafting elegant
+                      solutions to complex problems.
                     </p>
                     <p>
                       Over the past years, I&apos;ve had the privilege of
@@ -211,34 +241,7 @@ export default function About() {
             <ForgeReveal>
               <h3 className="forge-h3">Proficiency Levels</h3>
               <div className="mt-6">
-                {skills.length === 0 ? (
-                  <p className="text-muted-foreground">
-                    Skills added from the admin panel will appear here.
-                  </p>
-                ) : (
-                  <div className="space-y-4">
-                    {skills.map((skill) => {
-                      const proficiency =
-                        typeof skill.proficiency === "number"
-                          ? Math.min(100, Math.max(0, skill.proficiency))
-                          : 0;
-                      return (
-                        <div key={skill._id} className="space-y-2">
-                          <div className="flex justify-between items-center">
-                            <span className="font-medium">{skill.name}</span>
-                            <span className="forge-chip text-xs">
-                              {skill.category}
-                            </span>
-                          </div>
-                          <Progress value={proficiency} className="h-2" />
-                          <div className="text-right text-sm text-forge-mute">
-                            {proficiency}%
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                <ProficiencyList items={technicalSkills} />
               </div>
             </ForgeReveal>
 
@@ -264,6 +267,27 @@ export default function About() {
           </div>
         </div>
       </section>
+
+      {/* Development / Engineering Skills Section */}
+      {engineeringSkills.length > 0 && (
+        <>
+          <hr className="forge-divider" />
+
+          <section>
+            <div className="forge-section">
+              <ForgeSectionHeader
+                eyebrow="Skills"
+                title="Development / Engineering Skills"
+                lead="The engineering practices and disciplines I rely on to design, build, and ship reliable software."
+              />
+
+              <div className="mt-12 grid gap-x-8 md:grid-cols-2">
+                <ProficiencyList items={engineeringSkills} />
+              </div>
+            </div>
+          </section>
+        </>
+      )}
 
       <hr className="forge-divider" />
 

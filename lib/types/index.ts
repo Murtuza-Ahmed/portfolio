@@ -102,6 +102,7 @@ export interface Settings {
   }
   contactEmail: string
   contactSuccessMessage: string
+  emailNotifications: boolean
   theme: "light" | "dark" | "auto"
   accentColor: string
   featuredProjectsCount: number
@@ -224,4 +225,33 @@ export interface CertificationForm {
   issuer: string
   date: Date
   url?: string
+}
+
+export interface Resume {
+  _id: string
+  fullName: string
+  title: string
+  summary: string
+  email: string
+  phone?: string
+  location?: string
+  website?: string
+  linkedin?: string
+  github?: string
+  downloadUrl?: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface ResumeForm {
+  fullName: string
+  title: string
+  summary: string
+  email: string
+  phone?: string
+  location?: string
+  website?: string
+  linkedin?: string
+  github?: string
+  downloadUrl?: string
 }

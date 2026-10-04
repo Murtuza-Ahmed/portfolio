@@ -2,11 +2,15 @@ import { type NextRequest, NextResponse } from "next/server"
 import connectDB from "@/lib/database/connection"
 import Skill from "@/models/Skill"
 import { skillSchema } from "@/lib/validations/schemas"
-import { createSuccessResponse, createErrorResponse, HTTP_STATUS } from "@/lib/utils/api"
+import { createSuccessResponse, createErrorResponse, isValidObjectId, HTTP_STATUS } from "@/lib/utils/api"
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     await connectDB()
+
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid skill ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
 
     const skill = await Skill.findById(params.id)
     if (!skill) {
@@ -28,17 +32,23 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   try {
     await connectDB()
 
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid skill ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
+
     const body = await request.json()
 
+    // Validate request body (strip unknown fields to prevent mass assignment)
+    let skillData: Record<string, unknown>
     try {
-      await skillSchema.validate(body)
+      skillData = (await skillSchema.validate(body, { stripUnknown: true })) as Record<string, unknown>
     } catch (validationError: any) {
       return NextResponse.json(createErrorResponse("Validation failed", validationError.message), {
         status: HTTP_STATUS.BAD_REQUEST,
       })
     }
 
-    const skill = await Skill.findByIdAndUpdate(params.id, body, { new: true, runValidators: true })
+    const skill = await Skill.findByIdAndUpdate(params.id, skillData, { new: true, runValidators: true })
     if (!skill) {
       return NextResponse.json(createErrorResponse("Skill not found"), { status: HTTP_STATUS.NOT_FOUND })
     }
@@ -55,6 +65,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     await connectDB()
+
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid skill ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
 
     const skill = await Skill.findByIdAndDelete(params.id)
     if (!skill) {

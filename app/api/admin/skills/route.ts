@@ -11,6 +11,8 @@ import {
   HTTP_STATUS,
 } from "@/lib/utils/api"
 
+const SKILL_SORT_FIELDS = ["createdAt", "updatedAt", "name", "proficiency", "category"]
+
 export async function GET(request: NextRequest) {
   try {
     await connectDB()
@@ -22,7 +24,7 @@ export async function GET(request: NextRequest) {
     const filters = await filterSchema.validate(queryParams)
 
     const filterQuery = buildFilterQuery(filters)
-    const sortQuery = buildSortQuery(sortBy, sortOrder)
+    const sortQuery = buildSortQuery(sortBy, sortOrder, SKILL_SORT_FIELDS)
 
     const [skills, totalSkills] = await Promise.all([
       Skill.find(filterQuery)
@@ -52,15 +54,18 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
 
+    // Validate request body (strip unknown fields to prevent mass assignment,
+    // e.g. an attacker-supplied _id)
+    let skillData: Record<string, unknown>
     try {
-      await skillSchema.validate(body)
+      skillData = (await skillSchema.validate(body, { stripUnknown: true })) as Record<string, unknown>
     } catch (validationError: any) {
       return NextResponse.json(createErrorResponse("Validation failed", validationError.message), {
         status: HTTP_STATUS.BAD_REQUEST,
       })
     }
 
-    const skill = new Skill(body)
+    const skill = new Skill(skillData)
     await skill.save()
 
     return NextResponse.json(createSuccessResponse(skill, "Skill created successfully"), {

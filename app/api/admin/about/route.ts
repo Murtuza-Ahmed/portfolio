@@ -43,8 +43,10 @@ export async function PUT(request: NextRequest) {
 
     const body = await request.json()
 
+    // Validate request body (strip unknown fields to prevent mass assignment)
+    let aboutData: Record<string, unknown>
     try {
-      await aboutSchema.validate(body)
+      aboutData = (await aboutSchema.validate(body, { stripUnknown: true })) as Record<string, unknown>
     } catch (validationError: any) {
       return NextResponse.json(createErrorResponse("Validation failed", validationError.message), {
         status: HTTP_STATUS.BAD_REQUEST,
@@ -57,10 +59,10 @@ export async function PUT(request: NextRequest) {
       const defaults = getDefaultAbout()
       about = new About({
         ...defaults,
-        ...body,
+        ...aboutData,
       })
     } else {
-      Object.assign(about, body)
+      Object.assign(about, aboutData)
     }
 
     await about.save()

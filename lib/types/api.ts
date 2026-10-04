@@ -58,6 +58,12 @@ export interface AboutResponse {
   message?: string
 }
 
+export interface ResumeResponse {
+  success: boolean
+  data: Resume
+  message?: string
+}
+
 // Dashboard statistics
 export interface DashboardStats {
   totalUsers: number
@@ -66,6 +72,10 @@ export interface DashboardStats {
   featuredProjects: number
   unreadMessages: number
   recentUsers: number
+  totalSkills: number
+  totalEducation: number
+  totalExperience: number
+  totalCertifications: number
   projectsByStatus: {
     active: number
     completed: number
@@ -92,4 +102,4 @@ export interface ApiError {
 }
 
 // Import the base types
-import type { User, Project, ContactMessage, Settings, Home, About, Skill, Experience, Education, Certification } from "./index"
+import type { User, Project, ContactMessage, Settings, Home, About, Skill, Experience, Education, Certification, Resume } from "./index"

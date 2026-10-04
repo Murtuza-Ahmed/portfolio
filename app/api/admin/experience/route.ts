@@ -11,6 +11,8 @@ import {
   HTTP_STATUS,
 } from "@/lib/utils/api"
 
+const EXPERIENCE_SORT_FIELDS = ["createdAt", "startDate", "company", "jobTitle"]
+
 export async function GET(request: NextRequest) {
   try {
     await connectDB()
@@ -22,7 +24,7 @@ export async function GET(request: NextRequest) {
     const filters = await filterSchema.validate(queryParams)
 
     const filterQuery = buildFilterQuery(filters)
-    const sortQuery = buildSortQuery(sortBy || "startDate", sortOrder)
+    const sortQuery = buildSortQuery(sortBy || "startDate", sortOrder, EXPERIENCE_SORT_FIELDS)
 
     const [experiences, totalExperiences] = await Promise.all([
       Experience.find(filterQuery)
@@ -52,15 +54,18 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
 
+    // Validate request body (strip unknown fields to prevent mass assignment,
+    // e.g. an attacker-supplied _id)
+    let experienceData: Record<string, unknown>
     try {
-      await experienceSchema.validate(body)
+      experienceData = (await experienceSchema.validate(body, { stripUnknown: true })) as Record<string, unknown>
     } catch (validationError: any) {
       return NextResponse.json(createErrorResponse("Validation failed", validationError.message), {
         status: HTTP_STATUS.BAD_REQUEST,
       })
     }
 
-    const experience = new Experience(body)
+    const experience = new Experience(experienceData)
     await experience.save()
 
     return NextResponse.json(createSuccessResponse(experience, "Experience created successfully"), {

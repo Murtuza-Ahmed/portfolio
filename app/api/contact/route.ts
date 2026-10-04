@@ -4,6 +4,7 @@ import ContactMessage from "@/models/ContactMessage"
 import { contactSchema } from "@/lib/validations/schemas"
 import { createSuccessResponse, createErrorResponse, HTTP_STATUS } from "@/lib/utils/api"
 import { rateLimit, getClientIp, rateLimitExceededResponse } from "@/lib/utils/rate-limit"
+import { sendContactNotification } from "@/lib/notifications/contact-email"
 
 // POST /api/contact - Submit a contact form message (public, rate-limited)
 export async function POST(request: NextRequest) {
@@ -36,6 +37,15 @@ export async function POST(request: NextRequest) {
       message: input.message,
       status: "unread",
     })
+
+    // Fire-and-forget email notification to the owner. Never blocks or fails
+    // the contact request — sendContactNotification swallows its own errors.
+    void sendContactNotification({
+      name: input.name,
+      email: input.email,
+      subject: input.subject,
+      message: input.message,
+    }).catch((error) => console.error("Contact notification error:", error))
 
     return NextResponse.json(
       createSuccessResponse(

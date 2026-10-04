@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { verifyTokenEdge } from "@/lib/auth/jwt"
+import { verifyTokenEdge } from "@/lib/auth/jwt-edge"
 
 export async function middleware(request: NextRequest) {
-
   const { pathname } = request.nextUrl
 
-  // Check if the request is for admin routes
-  if (pathname.startsWith("/admin") && !pathname.startsWith("/login")) {
+  // Protect admin pages — requires a valid admin JWT in the auth cookie
+  if (pathname.startsWith("/admin")) {
     const token = request.cookies.get("auth-token")?.value
 
     if (!token) {
@@ -43,9 +42,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    // "/admin/:path*",
-    "/api/admin/:path*",
-    "/api/protected/:path*"
-  ],
+  matcher: ["/admin/:path*", "/api/admin/:path*", "/api/protected/:path*"],
 }

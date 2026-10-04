@@ -45,6 +45,11 @@ export const userUpdateSchema = yup.object({
     .optional(),
 })
 
+// Schema for admins creating users (password required, no weak defaults)
+export const adminCreateUserSchema = registerSchema.shape({
+  role: yup.string().oneOf(["admin", "user"], "Invalid role").required("Role is required"),
+})
+
 // Project validation schemas
 export const projectSchema = yup.object({
   title: yup

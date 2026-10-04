@@ -2,12 +2,16 @@ import { type NextRequest, NextResponse } from "next/server"
 import connectDB from "@/lib/database/connection"
 import Project from "@/models/Project"
 import { projectSchema } from "@/lib/validations/schemas"
-import { createSuccessResponse, createErrorResponse, HTTP_STATUS } from "@/lib/utils/api"
+import { createSuccessResponse, createErrorResponse, isValidObjectId, HTTP_STATUS } from "@/lib/utils/api"
 
 // GET /api/admin/projects/[id] - Get project by ID
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     await connectDB()
+
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid project ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
 
     const project = await Project.findById(params.id)
     if (!project) {
@@ -30,18 +34,23 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   try {
     await connectDB()
 
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid project ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
+
     const body = await request.json()
 
-    // Validate request body
+    // Validate request body (strip unknown fields to prevent mass assignment)
+    let projectData: Record<string, unknown>
     try {
-      await projectSchema.validate(body)
+      projectData = (await projectSchema.validate(body, { stripUnknown: true })) as Record<string, unknown>
     } catch (validationError: any) {
       return NextResponse.json(createErrorResponse("Validation failed", validationError.message), {
         status: HTTP_STATUS.BAD_REQUEST,
       })
     }
 
-    const project = await Project.findByIdAndUpdate(params.id, body, { new: true, runValidators: true })
+    const project = await Project.findByIdAndUpdate(params.id, projectData, { new: true, runValidators: true })
     if (!project) {
       return NextResponse.json(createErrorResponse("Project not found"), { status: HTTP_STATUS.NOT_FOUND })
     }
@@ -59,6 +68,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     await connectDB()
+
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid project ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
 
     const project = await Project.findByIdAndDelete(params.id)
     if (!project) {

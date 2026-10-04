@@ -1,12 +1,16 @@
 import { type NextRequest, NextResponse } from "next/server"
 import connectDB from "@/lib/database/connection"
 import Project from "@/models/Project"
-import { createSuccessResponse, createErrorResponse, HTTP_STATUS } from "@/lib/utils/api"
+import { createSuccessResponse, createErrorResponse, isValidObjectId, HTTP_STATUS } from "@/lib/utils/api"
 
 // GET /api/projects/[id] - Get public project by ID
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     await connectDB()
+
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid project ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
 
     const project = await Project.findOne({ _id: params.id, status: "active" })
     if (!project) {

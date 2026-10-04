@@ -11,7 +11,8 @@ import {
   buildFilterQuery,
   HTTP_STATUS,
 } from "@/lib/utils/api"
-import { FilterParams } from "@/lib/types/api"
+
+const MESSAGE_SORT_FIELDS = ["createdAt", "updatedAt", "status", "name", "email"]
 
 // GET /api/admin/messages - Get all contact messages with pagination and filtering
 export async function GET(request: NextRequest) {
@@ -22,22 +23,23 @@ export async function GET(request: NextRequest) {
     const queryParams = Object.fromEntries(searchParams.entries())
 
     // Validate pagination and filter parameters
-    const { page, limit, sortBy, sortOrder } = await paginationSchema.validate(queryParams)
-    const filters = await filterSchema.validate(queryParams)
-
-    const fixedFilters: FilterParams = {
-  ...filters,
-  technologies: filters.technologies?.filter(
-    (tech): tech is string => Boolean(tech)
-  ),
-  dateFrom: filters.dateFrom ? new Date(filters.dateFrom).toISOString() : undefined,
-  dateTo: filters.dateTo ? new Date(filters.dateTo).toISOString() : undefined,
-}
-
+    let page: number, limit: number, sortBy: string | undefined, sortOrder: "asc" | "desc", filters: any
+    try {
+      const pagination = await paginationSchema.validate(queryParams)
+      page = pagination.page
+      limit = pagination.limit
+      sortBy = pagination.sortBy
+      sortOrder = pagination.sortOrder === "asc" ? "asc" : "desc"
+      filters = await filterSchema.validate(queryParams)
+    } catch (validationError: any) {
+      return NextResponse.json(createErrorResponse("Validation failed", validationError.message), {
+        status: HTTP_STATUS.BAD_REQUEST,
+      })
+    }
 
     // Build query
-    const filterQuery = buildFilterQuery(fixedFilters)
-    const sortQuery = buildSortQuery(sortBy, sortOrder)
+    const filterQuery = buildFilterQuery(filters)
+    const sortQuery = buildSortQuery(sortBy, sortOrder, MESSAGE_SORT_FIELDS)
 
     // Execute queries
     const [messages, totalMessages] = await Promise.all([

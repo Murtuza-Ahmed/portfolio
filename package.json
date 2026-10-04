@@ -74,6 +74,7 @@
     "axios": "^1.13.2",
     "bcryptjs": "latest",
     "class-variance-authority": "^0.7.1",
+    "cloudinary": "^2.10.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
     "date-fns": "latest",

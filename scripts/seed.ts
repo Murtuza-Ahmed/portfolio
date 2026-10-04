@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import { randomBytes } from "crypto"
 import { config } from "dotenv"
 import User from "../models/User"
 import Project from "../models/Project"
@@ -8,13 +9,28 @@ import { hashPassword } from "../lib/auth/password"
 // Load environment variables
 config({ path: ".env.local" })
 
-const MONGODB_URI = process.env.MONGODB_URI!
+const MONGODB_URI = process.env.MONGODB_URI
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@example.com"
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "Admin123!@#"
 
 if (!MONGODB_URI) {
   throw new Error("Please define the MONGODB_URI environment variable inside .env.local")
 }
+
+// Never fall back to a hardcoded default password. Use ADMIN_PASSWORD from
+// the environment, or generate a strong random one (printed once below).
+function resolveAdminPassword(): { password: string; generated: boolean } {
+  const fromEnv = process.env.ADMIN_PASSWORD
+  if (fromEnv) {
+    if (fromEnv.length < 12) {
+      throw new Error("ADMIN_PASSWORD must be at least 12 characters long")
+    }
+    return { password: fromEnv, generated: false }
+  }
+  const generated = randomBytes(24).toString("base64url")
+  return { password: generated, generated: true }
+}
+
+const { password: ADMIN_PASSWORD, generated: ADMIN_PASSWORD_GENERATED } = resolveAdminPassword()
 
 // Sample data
 const sampleUsers = [
@@ -135,8 +151,13 @@ const sampleMessages = [
 ]
 
 async function connectDB() {
+  const uri = process.env.MONGODB_URI
+  if (!uri) {
+    console.error("❌ Please define the MONGODB_URI environment variable inside .env.local")
+    process.exit(1)
+  }
   try {
-    await mongoose.connect(MONGODB_URI)
+    await mongoose.connect(uri)
     console.log("✅ Connected to MongoDB")
   } catch (error) {
     console.error("❌ MongoDB connection error:", error)
@@ -199,6 +220,14 @@ async function seedMessages() {
 async function main() {
   console.log("🌱 Starting database seeding...")
 
+  // DANGER: this wipes all data. Require an explicit --force flag so it
+  // can never run destructively by accident (e.g. against production).
+  if (!process.argv.includes("--force")) {
+    console.error("❌ Refusing to clear the database without --force.")
+    console.error('   Run with: npm run admin -- --force  (make sure MONGODB_URI points at the right database!)')
+    process.exit(1)
+  }
+
   await connectDB()
   await clearDatabase()
   await seedUsers()
@@ -212,7 +241,11 @@ async function main() {
   console.log(`   • ${sampleMessages.length} contact messages created`)
   console.log("\n🔐 Admin Credentials:")
   console.log(`   Email: ${ADMIN_EMAIL}`)
-  console.log(`   Password: ${ADMIN_PASSWORD}`)
+  if (ADMIN_PASSWORD_GENERATED) {
+    console.log(`   Password: ${ADMIN_PASSWORD} (generated — shown once, change it after first login)`)
+  } else {
+    console.log("   Password: (taken from ADMIN_PASSWORD in your environment)")
+  }
   console.log("\n🚀 You can now start the application and log in to the admin panel!")
 
   await mongoose.disconnect()

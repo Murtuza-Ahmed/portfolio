@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import type React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +18,7 @@ import {
   Globe,
   Linkedin,
   Github,
+  Loader2,
 } from "lucide-react";
 
 const workExperience = [
@@ -130,6 +134,60 @@ function TimelineItem({
 }
 
 export default function Resume() {
+  const [experience, setExperience] = useState<Experience[]>([]);
+  const [education, setEducation] = useState<Education[]>([]);
+  const [certifications, setCertifications] = useState<Certification[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [expRes, eduRes, certRes, skillsRes] = await Promise.all([
+          fetch("/api/experience?limit=100"),
+          fetch("/api/education?limit=100"),
+          fetch("/api/certifications?limit=100"),
+          fetch("/api/skills?limit=100"),
+        ]);
+
+        const expData = await expRes.json();
+        const eduData = await eduRes.json();
+        const certData = await certRes.json();
+        const skillsData = await skillsRes.json();
+
+        if (expData.data) setExperience(expData.data);
+        if (eduData.data) setEducation(eduData.data);
+        if (certData.data) setCertifications(certData.data);
+        if (skillsData.data) setSkills(skillsData.data);
+      } catch (error) {
+        console.error("Failed to fetch resume data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  const skillsByCategory = skills.reduce(
+    (acc, skill) => {
+      if (!acc[skill.category]) {
+        acc[skill.category] = [];
+      }
+      acc[skill.category].push(skill);
+      return acc;
+    },
+    {} as Record<string, Skill[]>,
+  );
+
   return (
     <div className="container max-w-4xl mx-auto px-4 py-12 space-y-12">
       {/* Header */}
@@ -200,166 +258,181 @@ export default function Resume() {
       </Card>
 
       {/* Work Experience */}
-      <Card className="page-section page-section-delay-4 glass-card">
-        <CardHeader>
-          <CardTitle className="text-2xl flex items-center">
-            <Building className="mr-2 h-6 w-6" />
-            Work Experience
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-0">
-            {workExperience.map((job, index) => (
-              <TimelineItem
-                key={index}
-                isLast={index === workExperience.length - 1}
-              >
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                      <h3 className="text-xl font-semibold">{job.position}</h3>
-                      <Badge variant="outline">{job.type}</Badge>
+      {experience.length > 0 && (
+        <Card className="page-section page-section-delay-4 glass-card">
+          <CardHeader>
+            <CardTitle className="text-2xl flex items-center">
+              <Building className="mr-2 h-6 w-6" />
+              Work Experience
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-0">
+              {experience.map((job, index) => (
+                <TimelineItem
+                  key={job._id}
+                  isLast={index === experience.length - 1}
+                >
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-semibold">{job.jobTitle}</h3>
+                      <div className="flex flex-col md:flex-row md:items-center gap-2 text-muted-foreground">
+                        <div className="flex items-center">
+                          <Building className="mr-1 h-4 w-4" />
+                          <span className="font-medium">{job.company}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Calendar className="mr-1 h-4 w-4" />
+                          <span>
+                            {new Date(job.startDate).getFullYear()} -{" "}
+                            {job.endDate
+                              ? new Date(job.endDate).getFullYear()
+                              : "Present"}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex flex-col md:flex-row md:items-center gap-2 text-muted-foreground">
-                      <div className="flex items-center">
-                        <Building className="mr-1 h-4 w-4" />
-                        <span className="font-medium">{job.company}</span>
-                      </div>
-                      <div className="flex items-center">
-                        <MapPin className="mr-1 h-4 w-4" />
-                        <span>{job.location}</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Calendar className="mr-1 h-4 w-4" />
-                        <span>{job.duration}</span>
-                      </div>
-                    </div>
-                  </div>
 
-                  <ul className="space-y-2 text-muted-foreground">
-                    {job.description.map((item, i) => (
-                      <li key={i} className="flex items-start">
-                        <span className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
+                    <p className="text-muted-foreground">{job.description}</p>
 
-                  <div className="flex flex-wrap gap-2">
-                    {job.technologies.map((tech) => (
-                      <Badge key={tech} variant="secondary" className="text-xs">
-                        {tech}
-                      </Badge>
-                    ))}
+                    {job.technologies.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {job.technologies.map((tech) => (
+                          <Badge
+                            key={tech}
+                            variant="secondary"
+                            className="text-xs"
+                          >
+                            {tech}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                </div>
-              </TimelineItem>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+                </TimelineItem>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Education */}
-      <Card className="page-section page-section-delay-5 glass-card">
-        <CardHeader>
-          <CardTitle className="text-2xl flex items-center">
-            <GraduationCap className="mr-2 h-6 w-6" />
-            Education
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-0">
-            {education.map((edu, index) => (
-              <TimelineItem key={index} isLast={index === education.length - 1}>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-semibold">{edu.degree}</h3>
-                    <div className="flex flex-col md:flex-row md:items-center gap-2 text-muted-foreground">
-                      <div className="flex items-center">
-                        <Building className="mr-1 h-4 w-4" />
-                        <span className="font-medium">{edu.institution}</span>
-                      </div>
-                      <div className="flex items-center">
-                        <MapPin className="mr-1 h-4 w-4" />
-                        <span>{edu.location}</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Calendar className="mr-1 h-4 w-4" />
-                        <span>{edu.duration}</span>
+      {education.length > 0 && (
+        <Card className="page-section page-section-delay-5 glass-card">
+          <CardHeader>
+            <CardTitle className="text-2xl flex items-center">
+              <GraduationCap className="mr-2 h-6 w-6" />
+              Education
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-0">
+              {education.map((edu, index) => (
+                <TimelineItem
+                  key={edu._id}
+                  isLast={index === education.length - 1}
+                >
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-semibold">{edu.degree}</h3>
+                      <div className="flex flex-col md:flex-row md:items-center gap-2 text-muted-foreground">
+                        <div className="flex items-center">
+                          <Building className="mr-1 h-4 w-4" />
+                          <span className="font-medium">{edu.school}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Calendar className="mr-1 h-4 w-4" />
+                          <span>
+                            {new Date(edu.startDate).getFullYear()} -{" "}
+                            {edu.endDate
+                              ? new Date(edu.endDate).getFullYear()
+                              : "Present"}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    {/* {edu.gpa && (
-                      <div className="text-muted-foreground">
-                        <span className="font-medium">GPA: {edu.gpa}</span>
-                      </div>
-                    )} */}
-                  </div>
 
-                  <ul className="space-y-2 text-muted-foreground">
-                    {edu.achievements.map((achievement, i) => (
-                      <li key={i} className="flex items-start">
-                        <span className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 shrink-0" />
-                        <span>{achievement}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </TimelineItem>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+                    {edu.achievements.length > 0 && (
+                      <ul className="space-y-2 text-muted-foreground">
+                        {edu.achievements.map((achievement, i) => (
+                          <li key={i} className="flex items-start">
+                            <span className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 shrink-0" />
+                            <span>{achievement}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </TimelineItem>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Skills */}
-      <Card className="page-section page-section-delay-6 glass-card">
-        <CardHeader>
-          <CardTitle className="text-2xl">Technical Skills</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-6">
-            {Object.entries(skills).map(([category, skillList]) => (
-              <div key={category} className="space-y-3">
-                <h3 className="font-semibold text-lg">{category}</h3>
-                <div className="flex flex-wrap gap-2">
-                  {skillList.map((skill) => (
-                    <Badge key={skill} variant="outline">
-                      {skill}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {Object.keys(skillsByCategory).length > 0 && (
+        <Card className="page-section page-section-delay-6 glass-card">
+          <CardHeader>
+            <CardTitle className="text-2xl">Technical Skills</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-6">
+              {Object.entries(skillsByCategory).map(
+                ([category, categorySkills]) => (
+                  <div key={category} className="space-y-3">
+                    <h3 className="font-semibold text-lg">{category}</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {categorySkills.map((skill) => (
+                        <Badge key={skill._id} variant="outline">
+                          {skill.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                ),
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Certifications */}
-      <Card className="page-section page-section-delay-7 glass-card">
-        <CardHeader>
-          <CardTitle className="text-2xl flex items-center">
-            <Award className="mr-2 h-6 w-6" />
-            Certifications
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-6">
-            {certifications.map((cert, index) => (
-              <div key={index} className="space-y-2 p-4 border rounded-lg">
-                <h3 className="font-semibold">{cert.name}</h3>
-                <p className="text-muted-foreground">{cert.issuer}</p>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-muted-foreground">
-                    Issued: {cert.date}
-                  </span>
-                  <Badge variant="outline" className="text-xs">
-                    {cert.credentialId}
-                  </Badge>
+      {certifications.length > 0 && (
+        <Card className="page-section page-section-delay-7 glass-card">
+          <CardHeader>
+            <CardTitle className="text-2xl flex items-center">
+              <Award className="mr-2 h-6 w-6" />
+              Certifications
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-6">
+              {certifications.map((cert) => (
+                <div key={cert._id} className="space-y-2 p-4 border rounded-lg">
+                  <h3 className="font-semibold">{cert.name}</h3>
+                  <p className="text-muted-foreground">{cert.issuer}</p>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">
+                      Issued: {new Date(cert.date).getFullYear()}
+                    </span>
+                    {cert.url && (
+                      <a
+                        href={cert.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline text-xs"
+                      >
+                        View Credential
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Call to Action */}
       <section className="text-center space-y-6 py-12 bg-muted/30 rounded-lg page-section page-section-delay-8">

@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -16,6 +19,7 @@ import {
   Users,
   Target,
   Heart,
+  Loader2,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -35,7 +39,7 @@ const skills = [
   { name: "REST APIs", level: 75, category: "Backend" },
 ];
 
-const technologies = [
+const defaultTechnologies = [
   { name: "React", icon: Code2, color: "text-blue-500" },
   { name: "Next.js", icon: Globe, color: "text-gray-800 dark:text-gray-200" },
   { name: "TypeScript", icon: Code2, color: "text-blue-600" },
@@ -47,76 +51,77 @@ const technologies = [
   { name: "Git", icon: GitBranch, color: "text-orange-500" },
 ];
 
-const interests = [
-  {
-    name: "Coffee Brewing",
-    icon: Coffee,
-    description: "Exploring different brewing methods and coffee origins",
-  },
-  {
-    name: "Photography",
-    icon: Camera,
-    description: "Capturing moments and landscapes in my free time",
-  },
-  {
-    name: "Music Production",
-    icon: Music,
-    description: "Creating electronic music and learning new instruments",
-  },
-  {
-    name: "Reading",
-    icon: BookOpen,
-    description: "Tech blogs, sci-fi novels, and personal development books",
-  },
-];
+const interestIcons: Record<string, any> = {
+  Coffee: Coffee,
+  Photography: Camera,
+  Music: Music,
+  Reading: BookOpen,
+};
 
-const values = [
-  {
-    icon: Target,
-    title: "Quality First",
-    description:
-      "I believe in writing clean, maintainable code that stands the test of time.",
-  },
-  {
-    icon: Users,
-    title: "Collaboration",
-    description:
-      "Great products are built by great teams. I thrive in collaborative environments.",
-  },
-  {
-    icon: Award,
-    title: "Continuous Learning",
-    description:
-      "Technology evolves rapidly, and I'm committed to staying current with the latest trends.",
-  },
-  {
-    icon: Heart,
-    title: "User-Centric",
-    description:
-      "Every line of code I write is with the end user's experience in mind.",
-  },
-];
+const valueIcons: Record<string, any> = {
+  "Quality First": Target,
+  Collaboration: Users,
+  "Continuous Learning": Award,
+  "User-Centric": Heart,
+};
 
 export default function About() {
+  const [about, setAbout] = useState<AboutType | null>(null);
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [aboutRes, skillsRes] = await Promise.all([
+          fetch("/api/about"),
+          fetch("/api/skills?limit=100"),
+        ]);
+
+        const aboutData = await aboutRes.json();
+        const skillsData = await skillsRes.json();
+
+        if (aboutData.data) setAbout(aboutData.data);
+        if (skillsData.data) setSkills(skillsData.data);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="container max-w-6xl mx-auto px-4 py-12 space-y-16">
       {/* Hero Section */}
       <section className="text-center space-y-6 page-section page-section-delay-1">
-        <div className="relative w-32 h-32 mx-auto">
-          <Image
-            src="/my-image.png"
-            alt="Murtuza Ahmed"
-            width={128}
-            height={128}
-            className="rounded-full object-cover border-4 border-primary/20"
-          />
-        </div>
+        {about?.profileImage && (
+          <div className="relative w-32 h-32 mx-auto">
+            <Image
+              src={about.profileImage}
+              alt="Profile"
+              width={128}
+              height={128}
+              className="rounded-full object-cover border-4 border-primary/20"
+            />
+          </div>
+        )}
         <div className="space-y-4">
           <h1 className="text-4xl md:text-5xl font-bold">About Me</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            I'm a Full Stack Developer experienced in MERN and TypeScript-based backends.
-            I build scalable, production-ready applications using React, Next.js,
-            Node.js, NestJS, PostgreSQL, MongoDB, and Docker.
+            I'm a Full Stack Developer experienced in MERN and TypeScript-based
+            backends. I build scalable, production-ready applications using
+            React, Next.js, Node.js, NestJS, PostgreSQL, MongoDB, and Docker.
           </p>
         </div>
       </section>
@@ -134,15 +139,15 @@ export default function About() {
               solutions to complex problems.
             </p>
             <p>
-              Over the past one years, I've had the privilege of working with
+              Over the past years, I've had the privilege of working with
               startups and established companies, helping them bring their
               visions to life through code. I specialize in the MERN stack but
               I'm always eager to learn new technologies that can help me build
               better products.
             </p>
             <p>
-              When I'm not coding, you'll find me exploring new coffee shops,
-              experimenting with photography, or contributing to open-source
+              When I'm not coding, you'll find me exploring new experiences,
+              experimenting with new things, or contributing to open-source
               projects. I believe that the best developers are those who never
               stop learning and growing, both professionally and personally.
             </p>
@@ -202,16 +207,16 @@ export default function About() {
             <h3 className="text-xl font-semibold">Proficiency Levels</h3>
             <div className="space-y-4">
               {skills.map((skill) => (
-                <div key={skill.name} className="space-y-2">
+                <div key={skill._id} className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="font-medium">{skill.name}</span>
                     <Badge variant="outline" className="text-xs">
                       {skill.category}
                     </Badge>
                   </div>
-                  <Progress value={skill.level} className="h-2" />
+                  <Progress value={skill.proficiency} className="h-2" />
                   <div className="text-right text-sm text-muted-foreground">
-                    {skill.level}%
+                    {skill.proficiency}%
                   </div>
                 </div>
               ))}
@@ -222,7 +227,7 @@ export default function About() {
           <div className="space-y-6">
             <h3 className="text-xl font-semibold">Technologies I Use</h3>
             <div className="grid grid-cols-2 gap-4">
-              {technologies.map((tech) => {
+              {defaultTechnologies.map((tech) => {
                 const Icon = tech.icon;
                 return (
                   <Card
@@ -254,22 +259,22 @@ export default function About() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {values.map((value) => {
-            const Icon = value.icon;
+          {about?.values.map((value) => {
+            const Icon = valueIcons[value] || Target;
             return (
               <Card
-                key={value.title}
+                key={value}
                 className="text-center group hover:shadow-lg transition-all duration-300"
               >
                 <CardHeader>
                   <div className="w-12 h-12 mx-auto bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                     <Icon className="h-6 w-6 text-primary" />
                   </div>
-                  <CardTitle className="text-lg">{value.title}</CardTitle>
+                  <CardTitle className="text-lg">{value}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    {value.description}
+                    Guided by this core principle
                   </p>
                 </CardContent>
               </Card>
@@ -291,18 +296,18 @@ export default function About() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {interests.map((interest) => {
-            const Icon = interest.icon;
+          {about?.interests.map((interest) => {
+            const Icon = interestIcons[interest] || Coffee;
             return (
               <Card
-                key={interest.name}
+                key={interest}
                 className="group hover:shadow-md transition-all duration-300"
               >
                 <CardContent className="p-6 text-center space-y-4">
                   <Icon className="h-8 w-8 mx-auto text-primary" />
-                  <h3 className="font-semibold">{interest.name}</h3>
+                  <h3 className="font-semibold">{interest}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    {interest.description}
+                    One of my passions
                   </p>
                 </CardContent>
               </Card>

@@ -1,12 +1,16 @@
 import { type NextRequest, NextResponse } from "next/server"
 import connectDB from "@/lib/database/connection"
 import ContactMessage from "@/models/ContactMessage"
-import { createSuccessResponse, createErrorResponse, HTTP_STATUS } from "@/lib/utils/api"
+import { createSuccessResponse, createErrorResponse, isValidObjectId, HTTP_STATUS } from "@/lib/utils/api"
 
 // GET /api/admin/messages/[id] - Get message by ID
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     await connectDB()
+
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid message ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
 
     const message = await ContactMessage.findById(params.id)
     if (!message) {
@@ -28,6 +32,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     await connectDB()
+
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid message ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
 
     const body = await request.json()
     const { status } = body
@@ -56,6 +64,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     await connectDB()
+
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid message ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
 
     const message = await ContactMessage.findByIdAndDelete(params.id)
     if (!message) {

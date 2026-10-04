@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Save, Home as HomeIcon } from "lucide-react";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 import axios from "axios";
 
 export default function HomeContent() {
@@ -116,15 +117,12 @@ export default function HomeContent() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="hero-image">Hero Image URL</Label>
-                      <Input
-                        id="hero-image"
-                        value={form.heroImage}
-                        onChange={(e) => set("heroImage", e.target.value)}
-                        placeholder="https://example.com/hero.jpg"
-                      />
-                    </div>
+                    <ImageUpload
+                      id="hero-image"
+                      label="Hero Image"
+                      value={form.heroImage}
+                      onChange={(url) => set("heroImage", url)}
+                    />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="hero-title">Hero Title</Label>

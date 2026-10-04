@@ -12,10 +12,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Save, User as UserIcon } from "lucide-react";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 import axios from "axios";
 
 export default function About() {
@@ -116,15 +116,12 @@ export default function About() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="profile-image">Profile Image URL</Label>
-                      <Input
-                        id="profile-image"
-                        value={form.profileImage}
-                        onChange={(e) => set("profileImage", e.target.value)}
-                        placeholder="https://example.com/profile.jpg"
-                      />
-                    </div>
+                    <ImageUpload
+                      id="profile-image"
+                      label="Profile Image"
+                      value={form.profileImage}
+                      onChange={(url) => set("profileImage", url)}
+                    />
                     <div className="space-y-2">
                       <Label htmlFor="bio">Bio</Label>
                       <Textarea

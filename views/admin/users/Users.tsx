@@ -26,8 +26,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Plus, Search, MoreHorizontal, Edit, Trash2 } from "lucide-react"
+import { Plus, Search, Edit, Trash2 } from "lucide-react"
 import axios from "axios"
 import { format } from "date-fns"
 import type { User } from "@/lib/types"
@@ -83,7 +82,13 @@ export default function Users() {
 
     try {
       await axios.delete(`/api/admin/users/${userId}`)
-      fetchUsers() // Refresh the list
+      // If we deleted the last item on this page, go back a page;
+      // otherwise just refresh the list.
+      if (users.length === 1 && currentPage > 1) {
+        setCurrentPage((prev) => prev - 1)
+      } else {
+        fetchUsers()
+      }
     } catch (error) {
       console.error("Failed to delete user:", error)
     }
@@ -113,8 +118,10 @@ export default function Users() {
     setFormError(null)
     setSaving(true)
 
+    const isEdit = !!editingUser
+
     try {
-      if (editingUser) {
+      if (isEdit) {
         // Omit password when blank so the existing one is kept
         const payload: Record<string, string> = {
           name: form.name,
@@ -134,7 +141,13 @@ export default function Users() {
         })
       }
       setDialogOpen(false)
-      fetchUsers() // Refresh the list
+      // After creating, jump back to page 1 so the new user is visible.
+      // (Changing the page triggers a refetch via useEffect.)
+      if (!isEdit && currentPage !== 1) {
+        setCurrentPage(1)
+      } else {
+        fetchUsers()
+      }
     } catch (err: any) {
       setFormError(err.response?.data?.message || "Failed to save user")
     } finally {
@@ -223,28 +236,25 @@ export default function Users() {
                           </TableCell>
                           <TableCell>{format(new Date(user.createdAt), "MMM dd, yyyy")}</TableCell>
                           <TableCell className="text-right">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                  onClick={() => openEditDialog(user)}
-                                >
-                                  <Edit className="mr-2 h-4 w-4" />
-                                  Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => handleDeleteUser(user._id)}
-                                  className="text-destructive"
-                                >
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                            <div className="flex items-center justify-end gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                title="Edit user"
+                                onClick={() => openEditDialog(user)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                title="Delete user"
+                                className="text-destructive hover:text-destructive"
+                                onClick={() => handleDeleteUser(user._id)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))

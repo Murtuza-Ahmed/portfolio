@@ -22,13 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Search, MoreHorizontal, Eye, Trash2, Mail } from "lucide-react";
+import { Search, Eye, Trash2, Mail } from "lucide-react";
 import axios from "axios";
 import { format } from "date-fns";
 import type { ContactMessage } from "@/lib/types";
@@ -83,7 +77,13 @@ export default function Message() {
 
     try {
       await axios.delete(`/api/admin/messages/${messageId}`);
-      fetchMessages(); // Refresh the list
+      // If we deleted the last item on this page, go back a page;
+      // otherwise just refresh the list.
+      if (messages.length === 1 && currentPage > 1) {
+        setCurrentPage((prev) => prev - 1);
+      } else {
+        fetchMessages();
+      }
     } catch (error) {
       console.error("Failed to delete message:", error);
     }
@@ -191,50 +191,51 @@ export default function Message() {
                             )}
                           </TableCell>
                           <TableCell className="text-right">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                  onClick={() => setViewingMessage(message)}
-                                >
-                                  <Eye className="mr-2 h-4 w-4" />
-                                  View Details
-                                </DropdownMenuItem>
-                                {message.status === "unread" && (
-                                  <DropdownMenuItem
-                                    onClick={() =>
-                                      handleUpdateStatus(message._id, "read")
-                                    }
-                                  >
-                                    <Mail className="mr-2 h-4 w-4" />
-                                    Mark as Read
-                                  </DropdownMenuItem>
-                                )}
-                                {message.status !== "replied" && (
-                                  <DropdownMenuItem
-                                    onClick={() =>
-                                      handleUpdateStatus(message._id, "replied")
-                                    }
-                                  >
-                                    <Mail className="mr-2 h-4 w-4" />
-                                    Mark as Replied
-                                  </DropdownMenuItem>
-                                )}
-                                <DropdownMenuItem
+                            <div className="flex items-center justify-end gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                title="View details"
+                                onClick={() => setViewingMessage(message)}
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                              {message.status === "unread" && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  title="Mark as read"
                                   onClick={() =>
-                                    handleDeleteMessage(message._id)
+                                    handleUpdateStatus(message._id, "read")
                                   }
-                                  className="text-destructive"
                                 >
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                                  <Mail className="h-4 w-4" />
+                                </Button>
+                              )}
+                              {message.status !== "replied" && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  title="Mark as replied"
+                                  onClick={() =>
+                                    handleUpdateStatus(message._id, "replied")
+                                  }
+                                >
+                                  <Mail className="h-4 w-4" />
+                                </Button>
+                              )}
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                title="Delete message"
+                                className="text-destructive hover:text-destructive"
+                                onClick={() =>
+                                  handleDeleteMessage(message._id)
+                                }
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))

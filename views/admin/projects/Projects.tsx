@@ -34,20 +34,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Plus,
-  Search,
-  MoreHorizontal,
-  Edit,
-  Trash2,
-  ExternalLink,
-} from "lucide-react";
+import { Plus, Search, Edit, Trash2, ExternalLink } from "lucide-react";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 import axios from "axios";
 import { format } from "date-fns";
 import Image from "next/image";
@@ -110,7 +98,13 @@ export default function Projects() {
 
     try {
       await axios.delete(`/api/admin/projects/${projectId}`);
-      fetchProjects(); // Refresh the list
+      // If we deleted the last item on this page, go back a page;
+      // otherwise just refresh the list.
+      if (projects.length === 1 && currentPage > 1) {
+        setCurrentPage((prev) => prev - 1);
+      } else {
+        fetchProjects();
+      }
     } catch (error) {
       console.error("Failed to delete project:", error);
     }
@@ -160,8 +154,10 @@ export default function Projects() {
       status: form.status,
     };
 
+    const isEdit = !!editingProject;
+
     try {
-      if (editingProject) {
+      if (isEdit) {
         await axios.put(
           `/api/admin/projects/${editingProject._id}`,
           payload
@@ -170,7 +166,13 @@ export default function Projects() {
         await axios.post("/api/admin/projects", payload);
       }
       setDialogOpen(false);
-      fetchProjects(); // Refresh the list
+      // After creating, jump back to page 1 so the new project is visible.
+      // (Changing the page triggers a refetch via useEffect.)
+      if (!isEdit && currentPage !== 1) {
+        setCurrentPage(1);
+      } else {
+        fetchProjects();
+      }
     } catch (err: any) {
       setFormError(err.response?.data?.message || "Failed to save project");
     } finally {
@@ -228,6 +230,7 @@ export default function Projects() {
               </CardHeader>
 
               <CardContent>
+                <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -255,7 +258,7 @@ export default function Projects() {
                     ) : (
                       projects.map((project) => (
                         <TableRow key={project._id}>
-                          <TableCell>
+                          <TableCell className="min-w-[220px]">
                             <div className="flex items-center space-x-3">
                               <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted">
                                 <Image
@@ -315,48 +318,50 @@ export default function Projects() {
                             )}
                           </TableCell>
                           <TableCell className="text-right">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <MoreHorizontal className="h-4 w-4" />
+                            <div className="flex items-center justify-end gap-1">
+                              {project.liveUrl && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  asChild
+                                  title="View live site"
+                                >
+                                  <Link
+                                    href={project.liveUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <ExternalLink className="h-4 w-4" />
+                                  </Link>
                                 </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                {project.liveUrl && (
-                                  <DropdownMenuItem asChild>
-                                    <Link
-                                      href={project.liveUrl}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                    >
-                                      <ExternalLink className="mr-2 h-4 w-4" />
-                                      View Live
-                                    </Link>
-                                  </DropdownMenuItem>
-                                )}
-                                <DropdownMenuItem
-                                  onClick={() => openEditDialog(project)}
-                                >
-                                  <Edit className="mr-2 h-4 w-4" />
-                                  Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() =>
-                                    handleDeleteProject(project._id)
-                                  }
-                                  className="text-destructive"
-                                >
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                              )}
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                title="Edit project"
+                                onClick={() => openEditDialog(project)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                title="Delete project"
+                                className="text-destructive hover:text-destructive"
+                                onClick={() =>
+                                  handleDeleteProject(project._id)
+                                }
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))
                     )}
                   </TableBody>
                 </Table>
+                </div>
 
                 {/* Pagination */}
                 {totalPages > 1 && (
@@ -453,17 +458,12 @@ export default function Projects() {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="project-image">Image URL</Label>
-              <Input
-                id="project-image"
-                value={form.image}
-                onChange={(e) =>
-                  setForm((prev) => ({ ...prev, image: e.target.value }))
-                }
-                placeholder="https://example.com/image.png"
-              />
-            </div>
+            <ImageUpload
+              id="project-image"
+              label="Project Image"
+              value={form.image}
+              onChange={(url) => setForm((prev) => ({ ...prev, image: url }))}
+            />
 
             <div className="space-y-2">
               <Label htmlFor="project-technologies">

@@ -1,5 +1,6 @@
-import type {  FilterParams, PaginatedResponse } from "@/lib/types/api"
-import { ApiResponse } from "../types"
+import { Types } from "mongoose"
+import type { FilterParams, PaginatedResponse } from "@/lib/types/api"
+import type { ApiResponse } from "../types"
 
 // API response helper functions
 export function createSuccessResponse<T>(data: T, message = "Success"): ApiResponse<T> {
@@ -42,21 +43,34 @@ export function createPaginatedResponse<T>(
   }
 }
 
+// Escape user input before embedding it in a $regex query to prevent
+// ReDoS via crafted regular-expression syntax.
+function escapeRegExp(input: string): string {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+}
+
 // Query builder helpers
-export function buildSortQuery(sortBy?: string, sortOrder: "asc" | "desc" = "desc"): Record<string, 1 | -1> {
-  if (!sortBy) return { createdAt: -1 }
-  return { [sortBy]: sortOrder === "asc" ? 1 : -1 }
+export function buildSortQuery(
+  sortBy?: string,
+  sortOrder: "asc" | "desc" = "desc",
+  allowedFields: string[] = [],
+  defaultField = "createdAt",
+): Record<string, 1 | -1> {
+  // Only allow sorting on an explicit allowlist — sortBy comes from the URL
+  const field = sortBy && allowedFields.includes(sortBy) ? sortBy : defaultField
+  return { [field]: sortOrder === "asc" ? 1 : -1 }
 }
 
 export function buildFilterQuery(filters: FilterParams): Record<string, any> {
   const query: Record<string, any> = {}
 
   if (filters.search) {
+    const safeSearch = escapeRegExp(filters.search)
     query.$or = [
-      { name: { $regex: filters.search, $options: "i" } },
-      { title: { $regex: filters.search, $options: "i" } },
-      { description: { $regex: filters.search, $options: "i" } },
-      { email: { $regex: filters.search, $options: "i" } },
+      { name: { $regex: safeSearch, $options: "i" } },
+      { title: { $regex: safeSearch, $options: "i" } },
+      { description: { $regex: safeSearch, $options: "i" } },
+      { email: { $regex: safeSearch, $options: "i" } },
     ]
   }
 
@@ -89,36 +103,10 @@ export function buildFilterQuery(filters: FilterParams): Record<string, any> {
   return query
 }
 
-// Error handling helpers
-export function handleApiError(error: any): ApiResponse {
-  console.error("API Error:", error)
-
-  if (error.name === "ValidationError") {
-    const errors = Object.values(error.errors).map((err: any) => ({
-      field: err.path,
-      message: err.message,
-    }))
-    return {
-      success: false,
-      message: "Validation failed",
-      validationErrors: errors,
-    }
-  }
-
-  if (error.code === 11000) {
-    const field = Object.keys(error.keyPattern)[0]
-    return {
-      success: false,
-      message: `${field} already exists`,
-      error: "Duplicate entry",
-    }
-  }
-
-  return {
-    success: false,
-    message: error.message || "Internal server error",
-    error: "Server error",
-  }
+// Validate a route param before using it as a MongoDB ObjectId. Without this,
+// an invalid id throws a CastError and produces a 500 instead of a 400.
+export function isValidObjectId(id: string): boolean {
+  return Types.ObjectId.isValid(id)
 }
 
 // HTTP status codes
@@ -130,5 +118,6 @@ export const HTTP_STATUS = {
   FORBIDDEN: 403,
   NOT_FOUND: 404,
   CONFLICT: 409,
+  TOO_MANY_REQUESTS: 429,
   INTERNAL_SERVER_ERROR: 500,
 } as const

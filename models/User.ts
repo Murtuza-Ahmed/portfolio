@@ -31,7 +31,7 @@ const UserSchema = new Schema<UserDocument>(
     role: {
       type: String,
       enum: ["admin", "user"],
-      default: "admin",
+      default: "user",
       required: true,
     },
     avatar: {

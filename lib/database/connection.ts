@@ -1,9 +1,13 @@
 import mongoose from "mongoose"
 
-const MONGODB_URI = process.env.MONGODB_URI!
-
-if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable inside .env.local")
+// Env access is lazy so importing this module never crashes `next build`
+// when MONGODB_URI is missing; the error surfaces only on first connect.
+function getMongoUri(): string {
+  const uri = process.env.MONGODB_URI
+  if (!uri) {
+    throw new Error("Please define the MONGODB_URI environment variable inside .env.local")
+  }
+  return uri
 }
 
 interface MongooseConnection {
@@ -28,7 +32,7 @@ async function connectDB(): Promise<typeof mongoose> {
       bufferCommands: false,
     }
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+    cached.promise = mongoose.connect(getMongoUri(), opts).then((mongoose) => {
       console.log("✅ Connected to MongoDB")
       return mongoose
     })

@@ -46,8 +46,7 @@ interface FormErrors {
 
 const LABEL_CLASS =
   "font-mono text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-forge-mute";
-const ERROR_TEXT_CLASS =
-  "flex items-center gap-1 text-sm text-red-400";
+const ERROR_TEXT_CLASS = "flex items-center gap-1 text-sm text-red-400";
 
 export default function Contact() {
   const [formData, setFormData] = useState<FormData>({
@@ -101,8 +100,8 @@ export default function Contact() {
     {
       icon: Phone,
       label: "Phone",
-      value: "+92 (312) 291-3097",
-      href: "tel:+923122913097",
+      value: "+92 (349) 229-7626",
+      href: "tel:+923492297626",
     },
     {
       icon: MapPin,
@@ -364,7 +363,9 @@ export default function Contact() {
                           <Icon className="h-5 w-5" />
                         </div>
                         <div>
-                          <p className="font-medium text-foreground">{info.label}</p>
+                          <p className="font-medium text-foreground">
+                            {info.label}
+                          </p>
                           <p className="text-sm text-muted-foreground break-all">
                             {info.value}
                           </p>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, Briefcase, Loader2 } from "lucide-react";
+import { ArrowRight, Briefcase, Loader2, Star } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { TypeAnimation } from "react-type-animation";
@@ -335,39 +335,55 @@ export default function Home() {
                 return (
                   <ForgeReveal key={project._id} delay={(index % 3) * 100}>
                     <article className="forge-card forge-card-hover group flex h-full flex-col overflow-hidden">
-                      {project.image ? (
-                        <Image
-                          src={project.image}
-                          alt={project.title || "Project image"}
-                          width={600}
-                          height={400}
-                          className="h-56 w-full object-cover transition group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="flex h-56 w-full items-center justify-center bg-forge-brown-1">
-                          <Briefcase className="h-12 w-12 text-muted-foreground" />
-                        </div>
-                      )}
-                      <div className="flex flex-1 flex-col space-y-4 p-6">
-                        <h3 className="forge-h3">
+                      <div className="relative overflow-hidden">
+                        {project.image ? (
+                          <Image
+                            src={project.image}
+                            alt={project.title || "Project image"}
+                            width={600}
+                            height={400}
+                            className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="flex h-52 w-full items-center justify-center bg-forge-brown-1">
+                            <Briefcase className="h-12 w-12 text-muted-foreground" />
+                          </div>
+                        )}
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                        {project.featured && (
+                          <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-forge-amber px-3 py-1 text-xs font-bold text-[#140e04] shadow-[0_4px_16px_rgba(255,178,56,0.5)]">
+                            <Star className="h-3 w-3" />
+                            Featured
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-1 flex-col p-6">
+                        <h3 className="forge-h3 transition-colors group-hover:text-forge-amber">
                           {project.title || "Untitled project"}
                         </h3>
-                        <p className="text-sm leading-7 text-muted-foreground">
+                        <p className="mt-2 line-clamp-2 text-sm leading-7 text-muted-foreground">
                           {project.description || "No description provided."}
                         </p>
                         {badges.length > 0 && (
-                          <div className="flex flex-wrap gap-2">
-                            {asArray<string>(badges).map((badge) => (
-                              <span
-                                key={badge}
-                                className="forge-chip text-xs"
-                              >
-                                {badge}
+                          <div className="mt-4 flex flex-wrap gap-2">
+                            {asArray<string>(badges)
+                              .slice(0, 4)
+                              .map((badge) => (
+                                <span
+                                  key={badge}
+                                  className="forge-chip text-xs"
+                                >
+                                  {badge}
+                                </span>
+                              ))}
+                            {badges.length > 4 && (
+                              <span className="forge-chip text-xs">
+                                +{badges.length - 4}
                               </span>
-                            ))}
+                            )}
                           </div>
                         )}
-                        <div className="flex flex-wrap gap-3 pt-4 mt-auto">
+                        <div className="mt-auto flex flex-wrap gap-3 pt-6">
                           {liveUrl && (
                             <Link
                               href={liveUrl}
@@ -395,6 +411,16 @@ export default function Home() {
                 );
               })}
             </div>
+          )}
+          {projects.length > 0 && (
+            <ForgeReveal delay={150}>
+              <div className="mt-10 text-center">
+                <Link href="/projects" className="forge-btn-ghost group">
+                  View All Projects
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </div>
+            </ForgeReveal>
           )}
         </div>
       </section>

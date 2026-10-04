@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Briefcase, Loader2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -38,6 +38,126 @@ function asArray<T>(value: unknown): T[] {
   return Array.isArray(value) ? (value as T[]) : [];
 }
 
+/** Rotation order for the hero tech-stack groups. */
+const TECH_GROUP_ORDER = [
+  "Frontend",
+  "Backend",
+  "Database",
+  "DevOps",
+  "Tools",
+  "Other",
+];
+
+/**
+ * Rotating tech-stack: shows one skill group at a time (Frontend, Backend,
+ * …, Engineering) and cycles every few seconds with a soft fade.
+ * Static when there is a single group or the user prefers reduced motion.
+ */
+function RotatingTechStack({ skills }: { skills: Skill[] }) {
+  const groups = useMemo(() => {
+    if (skills.length === 0) {
+      return [{ label: "Core Stack", items: fallbackTechNames }];
+    }
+    const built: { label: string; items: string[] }[] = [];
+    for (const cat of TECH_GROUP_ORDER) {
+      const names = skills
+        .filter(
+          (s) => (s.skillType || "technical") === "technical" && s.category === cat,
+        )
+        .map((s) => s.name);
+      if (names.length > 0) built.push({ label: cat, items: names.slice(0, 8) });
+    }
+    const engNames = skills
+      .filter((s) => s.skillType === "engineering")
+      .map((s) => s.name);
+    if (engNames.length > 0)
+      built.push({ label: "Engineering", items: engNames.slice(0, 8) });
+    return built.length > 0
+      ? built
+      : [{ label: "Core Stack", items: fallbackTechNames }];
+  }, [skills]);
+
+  const [index, setIndex] = useState(0);
+  const [fading, setFading] = useState(false);
+  const timeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    setIndex(0);
+  }, [groups.length]);
+
+  useEffect(() => {
+    if (groups.length <= 1) return;
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
+    const id = window.setInterval(() => {
+      setFading(true);
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = window.setTimeout(() => {
+        setIndex((i) => (i + 1) % groups.length);
+        setFading(false);
+      }, 280);
+    }, 3600);
+    return () => {
+      window.clearInterval(id);
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+    };
+  }, [groups.length]);
+
+  const goTo = (i: number) => {
+    if (i === index || fading) return;
+    setFading(true);
+    if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+    timeoutRef.current = window.setTimeout(() => {
+      setIndex(i);
+      setFading(false);
+    }, 220);
+  };
+
+  const group = groups[index % groups.length];
+
+  return (
+    <div className="mt-12">
+      <ForgeEyebrow centered>Tech Stack</ForgeEyebrow>
+      <div className="mt-6 flex min-h-[148px] flex-col items-center">
+        <p className="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-forge-amber">
+          {group.label}
+        </p>
+        <div
+          className={`mt-4 flex flex-wrap justify-center gap-3 transition-all duration-300 ${
+            fading ? "translate-y-2 opacity-0" : "translate-y-0 opacity-100"
+          }`}
+        >
+          {group.items.map((name) => (
+            <span key={name} className="forge-chip">
+              {name}
+            </span>
+          ))}
+        </div>
+        {groups.length > 1 && (
+          <div className="mt-5 flex items-center gap-2">
+            {groups.map((g, i) => (
+              <button
+                key={g.label}
+                type="button"
+                onClick={() => goTo(i)}
+                aria-label={`Show ${g.label} skills`}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === index
+                    ? "w-6 bg-forge-amber"
+                    : "w-1.5 bg-white/20 hover:bg-white/40"
+                }`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [home, setHome] = useState<HomeType | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -63,7 +183,7 @@ export default function Home() {
 
         if (homeData.data) setHome(homeData.data);
         if (Array.isArray(skillsData.data))
-          setSkills(skillsData.data.slice(0, 8));
+          setSkills(skillsData.data.slice(0, 48));
         if (Array.isArray(experienceData.data))
           setExperience(experienceData.data);
         if (Array.isArray(projectsData.data))
@@ -127,21 +247,9 @@ export default function Home() {
             </p>
           </ForgeReveal>
 
-          {/* Tech Stack — live skills when available, sensible fallback otherwise */}
+          {/* Tech Stack — rotating groups, live from the skills API */}
           <ForgeReveal delay={200}>
-            <div className="mt-12">
-              <ForgeEyebrow centered>Tech Stack</ForgeEyebrow>
-              <div className="mt-6 flex flex-wrap justify-center gap-3">
-                {(skills.length > 0
-                  ? skills.map((s) => s.name)
-                  : fallbackTechNames
-                ).map((name) => (
-                  <span key={name} className="forge-chip">
-                    {name}
-                  </span>
-                ))}
-              </div>
-            </div>
+            <RotatingTechStack skills={skills} />
           </ForgeReveal>
 
           <ForgeReveal delay={200}>

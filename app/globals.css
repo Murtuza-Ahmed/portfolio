@@ -660,6 +660,61 @@ select.forge-field option {
   color: #ffb238;
   background: rgb(255 178 56 / 0.06);
 }
+
+/* ---- Tab pills (skills) ---- */
+.forge-tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  background: transparent;
+  color: #8a8378;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  cursor: pointer;
+  transition:
+    border-color 0.25s ease,
+    color 0.25s ease,
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.forge-tab:hover {
+  border-color: rgb(255 178 56 / 0.45);
+  color: #ffffff;
+}
+.forge-tab-active {
+  background: linear-gradient(120deg, #8a5c09, #ce830b);
+  border-color: transparent;
+  color: #0a0805;
+  box-shadow: 0 6px 24px -6px rgb(255 178 56 / 0.45);
+}
+.forge-tab-active:hover {
+  color: #0a0805;
+}
+
+/* ---- Tab content enter animation ---- */
+@keyframes forge-tab-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.forge-tab-enter {
+  animation: forge-tab-in 0.35s ease both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .forge-tab-enter {
+    animation: none;
+  }
+}
 } /* end @layer components */
 
 /* ---- Light-mode sanity: keep forge classes readable if user toggles ---- */

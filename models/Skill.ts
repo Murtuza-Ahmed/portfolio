@@ -4,6 +4,7 @@ interface ISkill extends Document {
   name: string;
   proficiency: number;
   category: "Frontend" | "Backend" | "Database" | "Tools" | "DevOps" | "Other";
+  skillType: "technical" | "engineering";
   createdAt: Date;
   updatedAt: Date;
 }
@@ -31,12 +32,22 @@ const skillSchema = new Schema<ISkill>(
         message: "Category must be one of: Frontend, Backend, Database, Tools, DevOps, Other",
       },
     },
+    skillType: {
+      type: String,
+      required: [true, "Skill type is required"],
+      enum: {
+        values: ["technical", "engineering"],
+        message: "Skill type must be one of: technical, engineering",
+      },
+      default: "technical",
+    },
   },
   { timestamps: true }
 );
 
 skillSchema.index({ name: 1 });
 skillSchema.index({ category: 1 });
+skillSchema.index({ skillType: 1 });
 
 const Skill = mongoose.models.Skill || mongoose.model<ISkill>("Skill", skillSchema);
 

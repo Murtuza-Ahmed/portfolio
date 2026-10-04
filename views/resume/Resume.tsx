@@ -104,16 +104,25 @@ export default function Resume() {
     );
   }
 
-  const skillsByCategory = skills.reduce(
-    (acc, skill) => {
-      if (!acc[skill.category]) {
-        acc[skill.category] = [];
-      }
-      acc[skill.category].push(skill);
-      return acc;
-    },
-    {} as Record<string, Skill[]>,
+  const groupSkillsByCategory = (list: Skill[]) =>
+    list.reduce(
+      (acc, skill) => {
+        const key = skill.category || "Other";
+        if (!acc[key]) {
+          acc[key] = [];
+        }
+        acc[key].push(skill);
+        return acc;
+      },
+      {} as Record<string, Skill[]>,
+    );
+
+  const technicalSkills = skills.filter(
+    (s) => (s.skillType || "technical") === "technical",
   );
+  const engineeringSkills = skills.filter((s) => s.skillType === "engineering");
+  const technicalByCategory = groupSkillsByCategory(technicalSkills);
+  const engineeringByCategory = groupSkillsByCategory(engineeringSkills);
 
   return (
     <div className="relative">
@@ -326,33 +335,71 @@ export default function Resume() {
         )}
 
         {/* Skills */}
-        {Object.keys(skillsByCategory).length > 0 && (
+        {Object.keys(technicalByCategory).length > 0 ||
+        Object.keys(engineeringByCategory).length > 0 ? (
           <ForgeReveal delay={320}>
-            <div className="forge-card p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <h3 className="forge-h3">Technical Skills</h3>
-              </div>
-              <div className="grid md:grid-cols-2 gap-6">
-                {Object.entries(skillsByCategory).map(
-                  ([category, categorySkills]) => (
-                    <div key={category} className="space-y-3">
-                      <p className="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-forge-mute">
-                        {category}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {categorySkills.map((skill) => (
-                          <span key={skill._id} className="forge-chip text-xs">
-                            {skill.name}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ),
-                )}
-              </div>
+            <div className="space-y-8">
+              {Object.keys(technicalByCategory).length > 0 && (
+                <div className="forge-card p-8">
+                  <div className="flex items-center gap-3 mb-6">
+                    <h3 className="forge-h3">Technical Skills</h3>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {Object.entries(technicalByCategory).map(
+                      ([category, categorySkills]) => (
+                        <div key={category} className="space-y-3">
+                          <p className="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-forge-mute">
+                            {category}
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {categorySkills.map((skill) => (
+                              <span
+                                key={skill._id}
+                                className="forge-chip text-xs"
+                              >
+                                {skill.name}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ),
+                    )}
+                  </div>
+                </div>
+              )}
+              {Object.keys(engineeringByCategory).length > 0 && (
+                <div className="forge-card p-8">
+                  <div className="flex items-center gap-3 mb-6">
+                    <h3 className="forge-h3">
+                      Development / Engineering Skills
+                    </h3>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {Object.entries(engineeringByCategory).map(
+                      ([category, categorySkills]) => (
+                        <div key={category} className="space-y-3">
+                          <p className="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-forge-mute">
+                            {category}
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {categorySkills.map((skill) => (
+                              <span
+                                key={skill._id}
+                                className="forge-chip text-xs"
+                              >
+                                {skill.name}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ),
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </ForgeReveal>
-        )}
+        ) : null}
 
         {/* Certifications */}
         {certifications.length > 0 && (

@@ -134,6 +134,10 @@ export const skillSchema = yup.object({
     .string()
     .oneOf(["Frontend", "Backend", "Database", "Tools", "DevOps", "Other"], "Invalid category")
     .required("Category is required"),
+  skillType: yup
+    .string()
+    .oneOf(["technical", "engineering"], "Invalid skill type")
+    .default("technical"),
 })
 
 // Education validation schema (matches models/Education.ts)

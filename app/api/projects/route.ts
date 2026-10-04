@@ -37,10 +37,11 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Build query - only show active projects for public API
+    // Build query - show active and completed projects publicly
+    // (archived projects stay hidden)
     const filterQuery = {
       ...buildFilterQuery(filters),
-      status: "active", // Only show active projects publicly
+      status: { $in: ["active", "completed"] },
     }
     const sortQuery = buildSortQuery(sortBy, sortOrder, PROJECT_SORT_FIELDS, "featured") // Default sort by featured
 

@@ -65,7 +65,7 @@ const navigation = [
   },
   {
     name: "About",
-    href: "/about",
+    href: "/about-content",
     icon: UserIcon,
   },
   {
@@ -75,7 +75,7 @@ const navigation = [
   },
   {
     name: "Resume",
-    href: "/resume",
+    href: "/resume-content",
     icon: FileText,
   },
   {

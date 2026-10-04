@@ -11,7 +11,7 @@ import {
   HTTP_STATUS,
 } from "@/lib/utils/api"
 
-const SKILL_SORT_FIELDS = ["createdAt", "updatedAt", "name", "proficiency", "category"]
+const SKILL_SORT_FIELDS = ["createdAt", "updatedAt", "name", "proficiency", "category", "skillType"]
 
 export async function GET(request: NextRequest) {
   try {
@@ -24,6 +24,13 @@ export async function GET(request: NextRequest) {
     const filters = await filterSchema.validate(queryParams)
 
     const filterQuery = buildFilterQuery(filters)
+
+    // Optional filter: ?skillType=technical|engineering
+    const skillTypeParam = searchParams.get("skillType")
+    if (skillTypeParam === "technical" || skillTypeParam === "engineering") {
+      ;(filterQuery as Record<string, unknown>).skillType = skillTypeParam
+    }
+
     const sortQuery = buildSortQuery(sortBy, sortOrder, SKILL_SORT_FIELDS)
 
     const [skills, totalSkills] = await Promise.all([

@@ -38,6 +38,7 @@ import type { Skill } from "@/lib/types";
 import type { SkillsResponse } from "@/lib/types/api";
 
 type SkillCategory = Skill["category"];
+type SkillType = Skill["skillType"];
 
 const CATEGORIES: SkillCategory[] = [
   "Frontend",
@@ -48,16 +49,23 @@ const CATEGORIES: SkillCategory[] = [
   "Other",
 ];
 
+const SKILL_TYPES: { value: SkillType; label: string }[] = [
+  { value: "technical", label: "Technical" },
+  { value: "engineering", label: "Engineering" },
+];
+
 interface SkillFormState {
   name: string;
   proficiency: string;
   category: SkillCategory;
+  skillType: SkillType;
 }
 
 const emptyForm: SkillFormState = {
   name: "",
   proficiency: "",
   category: "Other",
+  skillType: "technical",
 };
 
 export default function Skills() {
@@ -71,10 +79,11 @@ export default function Skills() {
   const [form, setForm] = useState<SkillFormState>(emptyForm);
   const [dialogError, setDialogError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [typeFilter, setTypeFilter] = useState<"all" | SkillType>("all");
 
   useEffect(() => {
     fetchSkills();
-  }, [currentPage, searchTerm]);
+  }, [currentPage, searchTerm, typeFilter]);
 
   const fetchSkills = async () => {
     try {
@@ -83,6 +92,7 @@ export default function Skills() {
         page: currentPage.toString(),
         limit: "10",
         ...(searchTerm && { search: searchTerm }),
+        ...(typeFilter !== "all" && { skillType: typeFilter }),
       });
 
       const response = await axios.get(`/api/admin/skills?${params}`);
@@ -111,6 +121,7 @@ export default function Skills() {
       name: skill.name,
       proficiency: String(skill.proficiency),
       category: skill.category,
+      skillType: skill.skillType || "technical",
     });
     setDialogError("");
     setDialogOpen(true);
@@ -124,6 +135,7 @@ export default function Skills() {
         name: form.name.trim(),
         proficiency: Number(form.proficiency),
         category: form.category,
+        skillType: form.skillType,
       };
       if (editingId) {
         await axios.put(`/api/admin/skills/${editingId}`, payload);
@@ -175,8 +187,8 @@ export default function Skills() {
                   </Button>
                 </div>
 
-                {/* Search */}
-                <div className="flex items-center space-x-2">
+                {/* Search + type filter */}
+                <div className="flex flex-wrap items-center gap-2">
                   <div className="relative flex-1 max-w-sm">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
@@ -189,6 +201,29 @@ export default function Skills() {
                       className="pl-10"
                     />
                   </div>
+                  <div className="flex gap-1 rounded-full border p-1">
+                    {(["all", "technical", "engineering"] as const).map(
+                      (t) => (
+                        <Button
+                          key={t}
+                          type="button"
+                          variant={typeFilter === t ? "default" : "ghost"}
+                          size="sm"
+                          className="rounded-full"
+                          onClick={() => {
+                            setTypeFilter(t);
+                            setCurrentPage(1);
+                          }}
+                        >
+                          {t === "all"
+                            ? "All"
+                            : t === "technical"
+                              ? "Technical"
+                              : "Engineering"}
+                        </Button>
+                      )
+                    )}
+                  </div>
                 </div>
               </CardHeader>
 
@@ -199,6 +234,7 @@ export default function Skills() {
                       <TableHead>Name</TableHead>
                       <TableHead>Proficiency</TableHead>
                       <TableHead>Category</TableHead>
+                      <TableHead>Type</TableHead>
                       <TableHead>Created</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
@@ -206,13 +242,13 @@ export default function Skills() {
                   <TableBody>
                     {loading ? (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center py-8">
+                        <TableCell colSpan={6} className="text-center py-8">
                           Loading skills...
                         </TableCell>
                       </TableRow>
                     ) : skills.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center py-8">
+                        <TableCell colSpan={6} className="text-center py-8">
                           No skills found
                         </TableCell>
                       </TableRow>
@@ -229,6 +265,21 @@ export default function Skills() {
                           </TableCell>
                           <TableCell>
                             <Badge variant="outline">{skill.category}</Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                (skill.skillType || "technical") ===
+                                "engineering"
+                                  ? "default"
+                                  : "secondary"
+                              }
+                            >
+                              {(skill.skillType || "technical") ===
+                              "engineering"
+                                ? "Engineering"
+                                : "Technical"}
+                            </Badge>
                           </TableCell>
                           <TableCell>
                             {format(
@@ -334,6 +385,34 @@ export default function Skills() {
                 }
                 placeholder="e.g. 85"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="skill-type">Skill Type</Label>
+              <Select
+                value={form.skillType}
+                onValueChange={(value) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    skillType: value as SkillType,
+                  }))
+                }
+              >
+                <SelectTrigger id="skill-type">
+                  <SelectValue placeholder="Select a type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {SKILL_TYPES.map((t) => (
+                    <SelectItem key={t.value} value={t.value}>
+                      {t.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Technical = technologies & tools · Engineering = development
+                practices & disciplines
+              </p>
             </div>
 
             <div className="space-y-2">

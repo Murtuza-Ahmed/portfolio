@@ -32,9 +32,31 @@ export interface FilterParams {
 }
 
 // API endpoint response types
-export interface UsersResponse extends PaginatedResponse<User> {}
-export interface ProjectsResponse extends PaginatedResponse<Project> {}
-export interface ContactMessagesResponse extends PaginatedResponse<ContactMessage> {}
+export interface UsersResponse extends PaginatedResponse<User> { }
+export interface ProjectsResponse extends PaginatedResponse<Project> { }
+export interface ContactMessagesResponse extends PaginatedResponse<ContactMessage> { }
+export interface SkillsResponse extends PaginatedResponse<Skill> { }
+export interface ExperienceResponse extends PaginatedResponse<Experience> { }
+export interface EducationResponse extends PaginatedResponse<Education> { }
+export interface CertificationsResponse extends PaginatedResponse<Certification> { }
+
+export interface SettingsResponse {
+  success: boolean
+  data: Settings
+  message?: string
+}
+
+export interface HomeResponse {
+  success: boolean
+  data: Home
+  message?: string
+}
+
+export interface AboutResponse {
+  success: boolean
+  data: About
+  message?: string
+}
 
 // Dashboard statistics
 export interface DashboardStats {
@@ -70,4 +92,4 @@ export interface ApiError {
 }
 
 // Import the base types
-import type { User, Project, ContactMessage } from "./index"
+import type { User, Project, ContactMessage, Settings, Home, About, Skill, Experience, Education, Certification } from "./index"

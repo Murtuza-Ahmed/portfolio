@@ -6,23 +6,33 @@ import { comparePassword } from "@/lib/auth/password"
 import { generateToken } from "@/lib/auth/jwt"
 import { loginSchema } from "@/lib/validations/schemas"
 import { createSuccessResponse, createErrorResponse, HTTP_STATUS } from "@/lib/utils/api"
+import { rateLimit, getClientIp, rateLimitExceededResponse } from "@/lib/utils/rate-limit"
+
+const COOKIE_MAX_AGE_SECONDS = 7 * 24 * 60 * 60 // 7 days
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request)
+  const limit = rateLimit(`auth:login:${ip}`, 10, 60 * 1000)
+  if (!limit.allowed) {
+    return rateLimitExceededResponse(limit.retryAfterMs)
+  }
+
   try {
     await connectDB()
 
     const body = await request.json()
 
     // Validate request body
+    let credentials: { email: string; password: string }
     try {
-      await loginSchema.validate(body)
+      credentials = await loginSchema.validate(body, { stripUnknown: true })
     } catch (validationError: any) {
       return NextResponse.json(createErrorResponse("Validation failed", validationError.message), {
         status: HTTP_STATUS.BAD_REQUEST,
       })
     }
 
-    const { email, password } = body
+    const { email, password } = credentials
 
     // Find user with password field included
     const user = await User.findOne({ email }).select("+password")
@@ -36,15 +46,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(createErrorResponse("Invalid email or password"), { status: HTTP_STATUS.UNAUTHORIZED })
     }
 
-    if (!user.accountVerified) {
-      user.accountVerified = true
-    }
-
     // Generate JWT token
-    const token = generateToken(user)
-
-    user.refreshToken = token;
-    await user.save();
+    const token = generateToken({
+      _id: user._id.toString(),
+      email: user.email,
+      role: user.role,
+    })
 
     // Set HTTP-only cookie
     const cookieStore = cookies()
@@ -52,7 +59,7 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: COOKIE_MAX_AGE_SECONDS,
       path: "/",
     })
 

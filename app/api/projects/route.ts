@@ -12,6 +12,8 @@ import {
   HTTP_STATUS,
 } from "@/lib/utils/api"
 
+const PROJECT_SORT_FIELDS = ["createdAt", "updatedAt", "title", "status", "featured"]
+
 // GET /api/projects - Get public projects with pagination and filtering
 export async function GET(request: NextRequest) {
   try {
@@ -21,15 +23,26 @@ export async function GET(request: NextRequest) {
     const queryParams = Object.fromEntries(searchParams.entries())
 
     // Validate pagination and filter parameters
-    const { page, limit, sortBy, sortOrder } = await paginationSchema.validate(queryParams)
-    const filters: any = await filterSchema.validate(queryParams)
+    let page: number, limit: number, sortBy: string | undefined, sortOrder: "asc" | "desc", filters: any
+    try {
+      const pagination = await paginationSchema.validate(queryParams)
+      page = pagination.page
+      limit = pagination.limit
+      sortBy = pagination.sortBy
+      sortOrder = pagination.sortOrder === "asc" ? "asc" : "desc"
+      filters = await filterSchema.validate(queryParams)
+    } catch (validationError: any) {
+      return NextResponse.json(createErrorResponse("Validation failed", validationError.message), {
+        status: HTTP_STATUS.BAD_REQUEST,
+      })
+    }
 
     // Build query - only show active projects for public API
     const filterQuery = {
       ...buildFilterQuery(filters),
       status: "active", // Only show active projects publicly
     }
-    const sortQuery = buildSortQuery(sortBy || "featured", sortOrder) // Default sort by featured
+    const sortQuery = buildSortQuery(sortBy, sortOrder, PROJECT_SORT_FIELDS, "featured") // Default sort by featured
 
     // Execute queries
     const [projects, totalProjects] = await Promise.all([

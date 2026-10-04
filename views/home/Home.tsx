@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import {
   Code2,
   Briefcase,
   Sparkles,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -69,8 +71,53 @@ const experience = [
 ];
 
 export default function Home() {
+  const [home, setHome] = useState<HomeType | null>(null);
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [experience, setExperience] = useState<Experience[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [homeRes, skillsRes, experienceRes, projectsRes] =
+          await Promise.all([
+            fetch("/api/home"),
+            fetch("/api/skills?limit=100"),
+            fetch("/api/experience?limit=100"),
+            fetch("/api/projects?limit=3"),
+          ]);
+
+        const homeData = await homeRes.json();
+        const skillsData = await skillsRes.json();
+        const experienceData = await experienceRes.json();
+        const projectsData = await projectsRes.json();
+
+        if (homeData.data) setHome(homeData.data);
+        if (skillsData.data) setSkills(skillsData.data.slice(0, 4));
+        if (experienceData.data) setExperience(experienceData.data);
+        if (projectsData.data) setProjects(projectsData.data);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
+      {/* Hero Section */}
       <section id="top" className="relative overflow-hidden px-4 py-20">
         <div className="absolute inset-x-0 top-0 h-72 bg-linear-to-b from-primary/10 via-transparent to-transparent" />
         <div className="container mx-auto max-w-6xl">
@@ -140,8 +187,8 @@ export default function Home() {
                   size="lg"
                   className="group transition-transform hover:-translate-y-0.5 hover:scale-[1.02]"
                 >
-                  <Link href="/contact">
-                    Hire Me
+                  <Link href={home?.ctaButtonLink || "/contact"}>
+                    {home?.ctaButtonText || "Hire Me"}
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </Button>
@@ -213,6 +260,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* About Section */}
       <section
         id="about"
         className="px-4 py-20 page-section page-section-delay-1"
@@ -265,6 +313,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Projects Section */}
       <section
         id="projects"
         className="px-4 py-20 page-section page-section-delay-3"
@@ -279,7 +328,7 @@ export default function Home() {
           <div className="grid gap-6 lg:grid-cols-3">
             {projects.map((project) => (
               <Card
-                key={project.title}
+                key={project._id}
                 className="group tilt-card overflow-hidden border border-border/70 bg-background transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 {project.image ? (
@@ -307,11 +356,11 @@ export default function Home() {
                   <div className="flex flex-wrap gap-2">
                     {(project.badges || []).map((badge) => (
                       <Badge
-                        key={badge}
+                        key={tech}
                         variant="outline"
                         className="text-xs py-2 px-3"
                       >
-                        {badge}
+                        {tech}
                       </Badge>
                     ))}
                   </div>
@@ -357,6 +406,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Experience Section */}
       <section
         id="experience"
         className="bg-muted/30 px-4 py-20 page-section page-section-delay-1"
@@ -373,20 +423,25 @@ export default function Home() {
           <div className="grid gap-6 lg:grid-cols-2">
             {experience.map((item) => (
               <div
-                key={item.role}
+                key={item._id}
                 className="glass-card tilt-card p-6 transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <div className="flex items-center justify-between gap-4">
                   <div>
-                    <h3 className="text-xl font-semibold">{item.role}</h3>
+                    <h3 className="text-xl font-semibold">{item.jobTitle}</h3>
                     <p className="text-sm text-muted-foreground">
                       {item.company}
                     </p>
                   </div>
-                  <Badge variant="secondary">{item.period}</Badge>
+                  <Badge variant="secondary">
+                    {new Date(item.startDate).getFullYear()} -{" "}
+                    {item.endDate
+                      ? new Date(item.endDate).getFullYear()
+                      : "Present"}
+                  </Badge>
                 </div>
                 <p className="mt-4 text-muted-foreground leading-7">
-                  {item.details}
+                  {item.description}
                 </p>
               </div>
             ))}
@@ -394,6 +449,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Contact Section */}
       <section
         id="contact"
         className="px-4 py-20 page-section page-section-delay-2"
@@ -404,11 +460,11 @@ export default function Home() {
               Contact
             </p>
             <h2 className="mt-4 text-3xl md:text-4xl font-bold">
-              Let’s create something exceptional.
+              Let's create something exceptional.
             </h2>
             <p className="mt-4 text-muted-foreground leading-8">
               If you'd like a portfolio with clean structure, polished motion,
-              and fast performance, I’m ready to help.
+              and fast performance, I'm ready to help.
             </p>
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Button

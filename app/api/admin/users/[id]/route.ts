@@ -1,14 +1,20 @@
 import { type NextRequest, NextResponse } from "next/server"
+import { cookies } from "next/headers"
 import connectDB from "@/lib/database/connection"
 import User from "@/models/User"
 import { hashPassword } from "@/lib/auth/password"
+import { verifyToken } from "@/lib/auth/jwt"
 import { userUpdateSchema } from "@/lib/validations/schemas"
-import { createSuccessResponse, createErrorResponse, HTTP_STATUS } from "@/lib/utils/api"
+import { createSuccessResponse, createErrorResponse, isValidObjectId, HTTP_STATUS } from "@/lib/utils/api"
 
 // GET /api/admin/users/[id] - Get user by ID
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     await connectDB()
+
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid user ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
 
     const user = await User.findById(params.id).select("-password")
     if (!user) {
@@ -29,11 +35,15 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   try {
     await connectDB()
 
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid user ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
+
     const body = await request.json()
 
     // Validate request body
     try {
-      await userUpdateSchema.validate(body)
+      await userUpdateSchema.validate(body, { stripUnknown: true })
     } catch (validationError: any) {
       return NextResponse.json(createErrorResponse("Validation failed", validationError.message), {
         status: HTTP_STATUS.BAD_REQUEST,
@@ -88,9 +98,33 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   try {
     await connectDB()
 
+    if (!isValidObjectId(params.id)) {
+      return NextResponse.json(createErrorResponse("Invalid user ID"), { status: HTTP_STATUS.BAD_REQUEST })
+    }
+
     const user = await User.findById(params.id)
     if (!user) {
       return NextResponse.json(createErrorResponse("User not found"), { status: HTTP_STATUS.NOT_FOUND })
+    }
+
+    // Prevent deleting your own account
+    const cookieStore = cookies()
+    const token = cookieStore.get("auth-token")?.value || request.headers.get("authorization")?.replace("Bearer ", "")
+    const payload = token ? verifyToken(token) : null
+    if (payload && payload.userId === user._id.toString()) {
+      return NextResponse.json(createErrorResponse("You cannot delete your own account"), {
+        status: HTTP_STATUS.FORBIDDEN,
+      })
+    }
+
+    // Prevent deleting the last remaining admin
+    if (user.role === "admin") {
+      const adminCount = await User.countDocuments({ role: "admin" })
+      if (adminCount <= 1) {
+        return NextResponse.json(createErrorResponse("Cannot delete the last admin account"), {
+          status: HTTP_STATUS.FORBIDDEN,
+        })
+      }
     }
 
     await User.findByIdAndDelete(params.id)

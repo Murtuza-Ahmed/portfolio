@@ -1,443 +1,417 @@
 "use client";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ExternalLink, Github, Calendar, Users, Star } from "lucide-react";
+  ForgeEyebrow,
+  ForgeReveal,
+  ForgeSectionHeader,
+} from "@/components/forge";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  ExternalLink,
+  Github,
+  Search,
+  Star,
+  FolderOpen,
+  AlertCircle,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import CountUp from "react-countup";
+import type { Project } from "@/lib/types";
 
-const projects = [
-  {
-    id: 1,
-    title: "E-Commerce Platform",
-    description:
-      "A full-featured e-commerce platform with user authentication, product management, shopping cart, payment integration, and admin dashboard.",
-    image: "/ecommerce-platform-screenshot.png",
-    technologies: ["React", "Node.js", "MongoDB", "Express", "Stripe", "JWT"],
-    category: "Full Stack",
-    liveUrl: "https://e-commerce-frontend-seven-rho.vercel.app/",
-    githubUrl: "https://github.com/Murtuza-Ahmed/e-commerce-frontend",
-    featured: true,
-    stats: {
-      stars: 45,
-      users: "1.2k",
-      date: "2024",
-    },
-  },
-  {
-    id: 2,
-    title: "Social Media Dashboard",
-    description:
-      "A comprehensive social media management dashboard with real-time analytics, post scheduling, and multi-platform integration.",
-    image: "/social-dashboard-screenshot.png",
-    technologies: ["Next.js", "TypeScript", "MongoDB", "Socket.io", "Chart.js"],
-    category: "Full Stack",
-    liveUrl: "",
-    githubUrl: "",
-    // liveUrl: "https://social-dashboard-demo.vercel.app",
-    // githubUrl: "https://github.com/johndoe/social-dashboard",
-    featured: true,
-    stats: {
-      stars: 32,
-      users: "0",
-      date: "2024",
-    },
-  },
-  {
-    id: 3,
-    title: "Mern Authentication Frontend",
-    description:
-      "I implemented a complete MERN authentication system covering frontend and backend, including user registration with OTP verification, secure login, token-based authentication, dashboard access, logout functionality, and a full forgot-password workflow.",
-    image: "/mern-authentication-frontend.png",
-    technologies: ["React.js", "Axios"],
-    category: "Full Stack",
-    liveUrl: "https://mern-authentication-frontend-nine.vercel.app/",
-    githubUrl: "https://github.com/Murtuza-Ahmed/mern-authentication-frontend",
-    featured: false,
-    stats: {
-      stars: 0,
-      users: "0",
-      date: "2025",
-    },
-  },
-  {
-    id: 4,
-    title: "Mern Authentication Backend",
-    description:
-      "I implemented a complete MERN authentication system covering frontend and backend, including user registration with OTP verification, secure login, token-based authentication, dashboard access, logout functionality, and a full forgot-password workflow.",
-    image: "/mern-authentication-backend.png",
-    technologies: [
-      "Node.js",
-      "Express",
-      "MongoDB",
-      "JWT",
-      "joi",
-      "nodemailer",
-      "bcrypt",
-      "dotenv",
-      "cors",
-      "cookie-parser",
-      "morgan",
-    ],
-    category: "Full Stack",
-    liveUrl: "",
-    githubUrl: "https://github.com/Murtuza-Ahmed/mern-authentication-backend",
-    featured: false,
-    stats: {
-      stars: 0,
-      users: "0",
-      date: "2025",
-    },
-  },
-  {
-    id: 5,
-    title: "CISCO Web Page",
-    description:
-      "A modern Cisco-inspired corporate website built with React, featuring a clean enterprise UI, responsive layout, structured content sections, and optimized performance. The project focuses on professional design standards, smooth navigation, and real-world corporate website architecture.",
-    image: "/cisco-web.png",
-    technologies: ["React"],
-    category: "Frontend",
-    liveUrl: "https://incandescent-moonbeam-1c2f53.netlify.app/",
-    githubUrl: "https://github.com/Murtuza-Ahmed/cisco-web-page",
-    featured: false,
-    stats: {
-      stars: 0,
-      users: "0",
-      date: "2024",
-    },
-  },
-  {
-    id: 6,
-    title: "Weather Forecast App",
-    description:
-      "A beautiful weather application with location-based forecasts, interactive maps, and detailed weather analytics.",
-    image: "/weather-app-screenshot.png",
-    technologies: ["HTML", "CSS", "JavaScript"],
-    category: "Frontend",
-    liveUrl: "https://appweatherjsproject.netlify.app/",
-    githubUrl:
-      "https://github.com/Murtuza-Ahmed/javascript-paractice-project/tree/main/weather-app",
-    featured: false,
-    stats: {
-      stars: 0,
-      users: "0",
-      date: "2023",
-    },
-  },
-  {
-    id: 7,
-    title: "SHOPPER E-Commerce Website",
-    description:
-      "I developed a Shopper e-commerce website using React.js as part of my learning journey. This project helped me understand folder structure, React hooks, and various core React concepts.",
-    image: "/shopper-ecommerce.png",
-    technologies: ["Next.js", "React", "Tailwind CSS"],
-    category: "Frontend",
-    liveUrl: "https://e-commerce-website-shopper.netlify.app/",
-    githubUrl:
-      "https://github.com/Murtuza-Ahmed/react-paractice-tutorial/tree/main/react-ecommerce-tutorial",
-    featured: false,
-    stats: {
-      stars: 0,
-      users: "0",
-      date: "2023",
-    },
-  },
-  {
-    id: 8,
-    title: "Age Calculator App",
-    description:
-      "I developed an age calculator project using HTML, CSS, and vanilla JavaScript as part of my learning and practice.",
-    image: "/age-calculator.png",
-    technologies: ["React"],
-    category: "Frontend",
-    liveUrl: "https://code-age-calculator.netlify.app/",
-    githubUrl:
-      "https://github.com/Murtuza-Ahmed/react-class-project/tree/main/age-calculator",
-    featured: false,
-    stats: {
-      stars: 0,
-      users: "0",
-      date: "2023",
-    },
-  },
-  {
-    id: 9,
-    title: "Wall of Wander",
-    description:
-      "After completing CSS, I practiced building fully responsive layouts using HTML and CSS. This website is structured and responsive.",
-    image: "/wall-of-wander.png",
-    technologies: ["HTML", "CSS"],
-    category: "Frontend",
-    liveUrl: "https://wall-of-wander.netlify.app/",
-    githubUrl: "https://github.com/Murtuza-Ahmed/wall-repo",
-    featured: false,
-    stats: {
-      stars: 0,
-      users: "0",
-      date: "2023",
-    },
-  },
-  {
-    id: 10,
-    title: "Shopping List",
-    description:
-      "I created a React shopping list project during the early stage of learning React.js, which helped me learn many important concepts.",
-    image: "/shopping-list.png",
-    technologies: ["React"],
-    category: "Frontend",
-    liveUrl: "https://shoppinglist-reactjs.netlify.app/",
-    githubUrl:
-      "https://github.com/Murtuza-Ahmed/react-class-project/tree/main/react-shoppingList",
-    featured: false,
-    stats: {
-      stars: 0,
-      users: "0",
-      date: "2023",
-    },
-  },
-];
+const PAGE_LIMIT = 9;
 
-const categories = ["All", "Full Stack", "Frontend", "Backend"];
+type SortOption = "newest" | "oldest" | "title";
 
-function ProjectCard({ project }: { project: (typeof projects)[0] }) {
+function ProjectCard({ project }: { project: Project }) {
+  const technologies = Array.isArray(project.technologies)
+    ? project.technologies
+    : [];
+
   return (
-    <Card className="group overflow-hidden glass-card hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-      <CardHeader className="p-0">
-        <div className="relative overflow-hidden">
+    <article className="forge-card forge-card-hover group flex flex-col overflow-hidden">
+      <div className="relative overflow-hidden">
+        {project.image ? (
           <Image
-            src={project.image || "/placeholder.svg"}
-            alt={project.title}
-            width={400}
-            height={250}
-            className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+            src={project.image}
+            alt={project.title || "Project image"}
+            width={600}
+            height={340}
+            className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          {project.featured && (
-            <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground">
-              Featured
-            </Badge>
-          )}
-          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-2">
-            <Button size="sm" variant="secondary" asChild>
-              <Link
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <ExternalLink className="h-4 w-4 mr-1" />
-                Live Demo
-              </Link>
-            </Button>
-            <Button size="sm" variant="secondary" asChild>
-              <Link
-                href={project.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Github className="h-4 w-4 mr-1" />
-                Code
-              </Link>
-            </Button>
+        ) : (
+          <div className="flex h-48 w-full items-center justify-center bg-forge-brown-1">
+            <FolderOpen className="h-12 w-12 text-forge-mute" />
           </div>
-        </div>
-      </CardHeader>
+        )}
+        {project.featured && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-forge-amber px-3 py-1 text-xs font-bold text-[#140e04] shadow-[0_4px_16px_rgba(255,178,56,0.5)] absolute left-3 top-3">
+            <Star className="h-3 w-3" />
+            Featured
+          </span>
+        )}
+      </div>
 
-      <CardContent className="p-6 space-y-4">
+      <div className="flex flex-1 flex-col space-y-4 p-6">
         <div className="space-y-2">
-          <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">
-            {project.title}
+          <h3 className="font-display text-xl font-bold transition-colors group-hover:text-forge-amber">
+            {project.title || "Untitled project"}
           </h3>
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            {project.description}
+          <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+            {project.description || "No description provided."}
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {project.technologies.map((tech) => (
-            <Badge key={tech} variant="outline" className="text-xs">
-              {tech}
-            </Badge>
-          ))}
-        </div>
-
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-1">
-              <Star className="h-4 w-4" />
-              <span>{project.stats.stars}</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <Users className="h-4 w-4" />
-              <span>{project.stats.users}</span>
-            </div>
+        {technologies.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {technologies.slice(0, 6).map((tech) => (
+              <span key={tech} className="forge-chip text-xs">
+                {tech}
+              </span>
+            ))}
+            {technologies.length > 6 && (
+              <span className="forge-chip text-xs">
+                +{technologies.length - 6}
+              </span>
+            )}
           </div>
-          <div className="flex items-center space-x-1">
-            <Calendar className="h-4 w-4" />
-            <span>{project.stats.date}</span>
-          </div>
-        </div>
-      </CardContent>
+        )}
 
-      <CardFooter className="p-6 pt-0 flex space-x-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex-1 bg-transparent"
-          asChild
-        >
-          <Link
-            href={project.liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <ExternalLink className="h-4 w-4 mr-1" />
-            Live Demo
-          </Link>
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex-1 bg-transparent"
-          asChild
-        >
-          <Link
-            href={project.githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Github className="h-4 w-4 mr-1" />
-            View Code
-          </Link>
-        </Button>
-      </CardFooter>
-    </Card>
+        <div className="flex gap-2 pt-2">
+          {project.liveUrl ? (
+            <Link
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="forge-btn-ghost flex-1 px-4 py-2.5 text-sm"
+            >
+              <ExternalLink className="mr-1 h-4 w-4" />
+              Live Demo
+            </Link>
+          ) : null}
+          {project.githubUrl ? (
+            <Link
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="forge-btn-ghost flex-1 px-4 py-2.5 text-sm"
+            >
+              <Github className="mr-1 h-4 w-4" />
+              View Code
+            </Link>
+          ) : null}
+          {!project.liveUrl && !project.githubUrl && (
+            <p className="text-xs text-forge-mute">No links added yet.</p>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function ProjectSkeleton() {
+  return (
+    <div className="forge-card overflow-hidden p-0">
+      <Skeleton className="h-48 w-full rounded-none bg-white/5" />
+      <div className="space-y-4 p-6">
+        <Skeleton className="h-6 w-3/4 bg-white/5" />
+        <Skeleton className="h-4 w-full bg-white/5" />
+        <Skeleton className="h-4 w-5/6 bg-white/5" />
+        <div className="flex gap-2">
+          <Skeleton className="h-6 w-16 bg-white/5" />
+          <Skeleton className="h-6 w-16 bg-white/5" />
+          <Skeleton className="h-6 w-16 bg-white/5" />
+        </div>
+      </div>
+    </div>
   );
 }
 
 export default function Projects() {
-  const featuredProjects = projects.filter((project) => project.featured);
-  const allProjects = projects;
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
+  const [featuredOnly, setFeaturedOnly] = useState(false);
+  const [sort, setSort] = useState<SortOption>("newest");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Debounce the search input so we don't hammer the API on every keystroke
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setSearch(searchInput.trim());
+      setPage(1);
+    }, 400);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [searchInput]);
+
+  const fetchProjects = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const params = new URLSearchParams({
+        page: String(page),
+        limit: String(PAGE_LIMIT),
+      });
+      if (search) params.set("search", search);
+      if (featuredOnly) params.set("featured", "true");
+      if (sort === "newest") {
+        params.set("sortBy", "createdAt");
+        params.set("sortOrder", "desc");
+      } else if (sort === "oldest") {
+        params.set("sortBy", "createdAt");
+        params.set("sortOrder", "asc");
+      } else {
+        params.set("sortBy", "title");
+        params.set("sortOrder", "asc");
+      }
+
+      const res = await fetch(`/api/projects?${params.toString()}`);
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to load projects");
+      }
+
+      const list = Array.isArray(data.data) ? data.data : [];
+      setProjects(list);
+      setTotalPages(data.pagination?.totalPages ?? 1);
+      setTotalItems(data.pagination?.totalItems ?? list.length);
+    } catch (err) {
+      console.error("Failed to fetch projects:", err);
+      setError(
+        err instanceof Error ? err.message : "Failed to load projects",
+      );
+      setProjects([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, search, featuredOnly, sort]);
+
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
 
   return (
-    <div className="container max-w-7xl mx-auto px-4 py-12 space-y-16">
-      {/* Hero Section */}
-      <section className="text-center space-y-6 page-section page-section-delay-1">
-        <h1 className="text-4xl md:text-5xl font-bold">My Projects</h1>
-        <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-          Here's a collection of projects I've worked on, showcasing my
-          expertise in MERN stack development and modern web technologies.
-        </p>
-      </section>
-
-      {/* Featured Projects */}
-      <section className="space-y-8 page-section page-section-delay-2">
-        <div className="text-center space-y-4">
-          <h2 className="text-3xl font-bold">Featured Projects</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            These are some of my most impactful and technically challenging
-            projects.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8">
-          {featuredProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
+    <div className="relative">
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="forge-hero-glow" />
+        <div className="forge-section text-center">
+          <ForgeReveal>
+            <ForgeEyebrow centered>Portfolio</ForgeEyebrow>
+            <h1 className="forge-h1">My Projects</h1>
+            <p className="forge-lead forge-lead-center">
+              A collection of projects I&apos;ve built — each one managed live
+              from my admin panel, showcasing MERN stack development and modern
+              web technologies.
+            </p>
+          </ForgeReveal>
         </div>
       </section>
 
-      {/* All Projects with Tabs */}
-      <section className="space-y-8 page-section page-section-delay-3">
-        <div className="text-center space-y-4">
-          <h2 className="text-3xl font-bold">All Projects</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Browse through all my projects by category or view them all at once.
-          </p>
-        </div>
-
-        <Tabs defaultValue="All" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 max-w-md mx-auto">
-            {categories.map((category) => (
-              <TabsTrigger key={category} value={category} className="text-sm">
-                {category}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
-          {categories.map((category) => (
-            <TabsContent key={category} value={category} className="mt-8">
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {(category === "All"
-                  ? allProjects
-                  : allProjects.filter(
-                      (project) => project.category === category,
-                    )
-                ).map((project) => (
-                  <ProjectCard key={project.id} project={project} />
-                ))}
-              </div>
-            </TabsContent>
-          ))}
-        </Tabs>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-16 bg-muted/30 rounded-lg page-section page-section-delay-4">
-        <div className="text-center space-y-8">
-          <h2 className="text-3xl font-bold">Project Statistics</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="space-y-2">
-              <div className="text-3xl md:text-4xl font-bold text-primary">
-                <CountUp end={3} duration={4} />+
-              </div>
-              <div className="text-sm text-muted-foreground">
-                Total Projects
-              </div>
+      {/* Filters */}
+      <div className="mx-auto w-full max-w-7xl px-4 pb-20 md:px-6 md:pb-28">
+        <ForgeReveal>
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="relative w-full md:max-w-sm">
+              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-forge-mute" />
+              <Input
+                placeholder="Search projects..."
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="forge-field rounded-full pl-11"
+                aria-label="Search projects"
+              />
             </div>
-            <div className="space-y-2">
-              <div className="text-3xl md:text-4xl font-bold text-primary">
-                <CountUp end={5} duration={4} />+
+
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="forge-card flex rounded-full p-1.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFeaturedOnly(false);
+                    setPage(1);
+                  }}
+                  className={
+                    !featuredOnly
+                      ? "forge-btn-primary px-5 py-2 text-sm"
+                      : "rounded-full px-5 py-2 text-sm font-medium text-forge-mute transition-colors hover:text-foreground"
+                  }
+                >
+                  All
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFeaturedOnly(true);
+                    setPage(1);
+                  }}
+                  className={
+                    featuredOnly
+                      ? "forge-btn-primary px-5 py-2 text-sm"
+                      : "rounded-full px-5 py-2 text-sm font-medium text-forge-mute transition-colors hover:text-foreground"
+                  }
+                >
+                  <Star className="mr-1 inline h-3 w-3" />
+                  Featured
+                </button>
               </div>
-              <div className="text-sm text-muted-foreground">
-                Technologies Used
-              </div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-3xl md:text-4xl font-bold text-primary">
-                <CountUp end={3} duration={4} />+
-              </div>
-              <div className="text-sm text-muted-foreground">GitHub Stars</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-3xl md:text-4xl font-bold text-primary">
-                <CountUp end={1} duration={4} />+
-              </div>
-              <div className="text-sm text-muted-foreground">Total Users</div>
+
+              <Select
+                value={sort}
+                onValueChange={(v) => {
+                  setSort(v as SortOption);
+                  setPage(1);
+                }}
+              >
+                <SelectTrigger
+                  className="forge-field w-[160px] rounded-full"
+                  aria-label="Sort projects"
+                >
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="newest">Newest first</SelectItem>
+                  <SelectItem value="oldest">Oldest first</SelectItem>
+                  <SelectItem value="title">Title A–Z</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
-        </div>
-      </section>
+        </ForgeReveal>
+      </div>
+
+      {/* Project grid */}
+      <div className="mx-auto w-full max-w-7xl px-4 pb-20 md:px-6 md:pb-28">
+        {loading ? (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: PAGE_LIMIT }).map((_, i) => (
+              <ProjectSkeleton key={i} />
+            ))}
+          </div>
+        ) : error ? (
+          <ForgeReveal>
+            <div className="forge-card p-12 text-center">
+              <AlertCircle className="mx-auto h-10 w-10 text-forge-amber" />
+              <div className="mt-4 space-y-1">
+                <p className="font-semibold">Couldn&apos;t load projects</p>
+                <p className="text-sm text-muted-foreground">{error}</p>
+              </div>
+              <button
+                type="button"
+                className="forge-btn-ghost mt-6 px-5 py-2.5 text-sm"
+                onClick={fetchProjects}
+              >
+                Try again
+              </button>
+            </div>
+          </ForgeReveal>
+        ) : projects.length === 0 ? (
+          <ForgeReveal>
+            <div className="forge-card border-dashed p-12 text-center">
+              <FolderOpen className="mx-auto h-10 w-10 text-forge-mute" />
+              <div className="mt-4 space-y-1">
+                <p className="font-semibold">No projects yet</p>
+                <p className="text-sm text-muted-foreground">
+                  {search || featuredOnly
+                    ? "Nothing matches your filters. Try clearing them."
+                    : "Projects added from the admin panel will appear here."}
+                </p>
+              </div>
+              {(search || featuredOnly) && (
+                <button
+                  type="button"
+                  className="forge-btn-ghost mt-6 px-5 py-2.5 text-sm"
+                  onClick={() => {
+                    setSearchInput("");
+                    setSearch("");
+                    setFeaturedOnly(false);
+                    setPage(1);
+                  }}
+                >
+                  Clear filters
+                </button>
+              )}
+            </div>
+          </ForgeReveal>
+        ) : (
+          <>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {projects.map((project, i) => (
+                <ForgeReveal key={project._id} delay={Math.min(i % 9, 5) * 60}>
+                  <ProjectCard project={project} />
+                </ForgeReveal>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-10 flex items-center justify-center gap-4">
+                <button
+                  type="button"
+                  className="forge-btn-ghost px-5 py-2.5 text-sm disabled:opacity-40"
+                  disabled={page <= 1}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                >
+                  <ChevronLeft className="mr-1 h-4 w-4" />
+                  Previous
+                </button>
+                <p className="font-mono text-xs uppercase tracking-[0.18em] text-forge-mute">
+                  Page {page} of {totalPages} · {totalItems} project
+                  {totalItems === 1 ? "" : "s"}
+                </p>
+                <button
+                  type="button"
+                  className="forge-btn-ghost px-5 py-2.5 text-sm disabled:opacity-40"
+                  disabled={page >= totalPages}
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                >
+                  Next
+                  <ChevronRight className="ml-1 h-4 w-4" />
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
 
       {/* Call to Action */}
-      <section className="text-center space-y-6 py-12 page-section page-section-delay-5">
-        <h2 className="text-3xl font-bold">Interested in Working Together?</h2>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          I'm always excited to take on new challenges and create amazing
-          digital experiences. Let's discuss your next project!
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild size="lg">
-            <Link href="/contact">Start a Project</Link>
-          </Button>
-          <Button asChild variant="outline" size="lg">
-            <Link href="/resume">View My Resume</Link>
-          </Button>
+      <section className="relative overflow-hidden">
+        <div className="forge-hero-glow" />
+        <div className="forge-section text-center">
+          <ForgeSectionHeader
+            eyebrow="Contact"
+            title="Interested in Working Together?"
+            lead="I'm always excited to take on new challenges and create amazing digital experiences. Let's discuss your next project!"
+          />
+          <ForgeReveal delay={100}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/contact" className="forge-btn-primary">
+                Start a Project
+              </Link>
+              <Link href="/resume" className="forge-btn-ghost">
+                View My Resume
+              </Link>
+            </div>
+          </ForgeReveal>
         </div>
       </section>
     </div>

@@ -26,7 +26,10 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
 });
 
-const baseUrl = new URL("https://portfolio-murtuza-ahmed.vercel.app");
+const baseUrl = new URL(
+  process.env.NEXT_PUBLIC_SITE_URL ||
+    "https://portfolio-murtuza-ahmed.vercel.app",
+);
 
 export const metadata: Metadata = {
   metadataBase: baseUrl,
@@ -92,6 +95,26 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const siteUrl = baseUrl.toString().replace(/\/$/, "");
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Murtuza Ahmed",
+    url: siteUrl,
+    jobTitle: "MERN Stack Developer",
+    description:
+      "Full-stack MERN developer specializing in modern web applications with React, Node.js, MongoDB, and Express.",
+    knowsAbout: [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "MERN Stack",
+    ],
+  };
+
   return (
     <html
       lang="en"
@@ -99,6 +122,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full bg-background dark:text-white font-sans antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

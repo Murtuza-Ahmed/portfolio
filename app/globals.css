@@ -40,25 +40,25 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: #050505;
+  --foreground: #ffffff;
+  --card: #0b0a07;
+  --card-foreground: #ffffff;
+  --popover: #0b0a07;
+  --popover-foreground: #ffffff;
+  --primary: #ffb238;
+  --primary-foreground: #140e04;
+  --secondary: #1c1206;
+  --secondary-foreground: #beb8ac;
+  --muted: #100d08;
+  --muted-foreground: #beb8ac;
+  --accent: #1c1206;
+  --accent-foreground: #ffb238;
   --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
+  --border: rgb(255 255 255 / 0.08);
+  --input: rgb(255 255 255 / 0.1);
+  --ring: #ffb238;
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -111,8 +111,25 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-hanken);
   --font-mono: var(--font-jetbrains-mono);
+  --font-display: var(--font-space-grotesk);
+}
+
+/* Forge design tokens (Tailwind v4 theme) — single source of truth.
+   Usage: text-forge-amber, bg-forge-ink, border-forge-line, font-display … */
+@theme {
+  --color-forge-ink: #050505;
+  --color-forge-coal: #0b0a07;
+  --color-forge-brown-1: #100d08;
+  --color-forge-brown-2: #1c1206;
+  --color-forge-brown-3: #3a2506;
+  --color-forge-amber: #ffb238;
+  --color-forge-bronze: #ce830b;
+  --color-forge-bronze-deep: #8a5c09;
+  --color-forge-body: #beb8ac;
+  --color-forge-mute: #8a8378;
+  --color-forge-line: rgb(255 255 255 / 0.08);
 }
 
 @layer base {
@@ -159,6 +176,74 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* ---- Portfolio design utilities (ported from the orphaned styles/globals.css,
+   made theme-aware so they work in dark mode too) ---- */
+@layer utilities {
+  .glass-card {
+    @apply rounded-3xl border border-border/60 bg-card/80 shadow-xl shadow-slate-900/5 backdrop-blur-xl;
+    transform-style: preserve-3d;
+    transition:
+      transform 0.35s ease-out,
+      box-shadow 0.35s ease-out;
+  }
+
+  .glass-card:hover {
+    transform: perspective(1000px) translateZ(4px) rotateX(1deg) rotateY(-1deg);
+  }
+
+  .hero-3d-card {
+    @apply rounded-3xl border border-border/50 bg-card/90 shadow-2xl shadow-slate-900/10 backdrop-blur-xl;
+    transform-style: preserve-3d;
+    transition:
+      transform 0.35s ease-out,
+      box-shadow 0.35s ease-out;
+  }
+
+  .hero-3d-card:hover {
+    transform: perspective(1000px) translateZ(14px) rotateX(2deg) rotateY(-3deg);
+  }
+
+  .tilt-card {
+    transform-style: preserve-3d;
+    transition:
+      transform 0.35s ease-out,
+      box-shadow 0.35s ease-out;
+  }
+
+  .tilt-card:hover {
+    transform: perspective(1000px) translateZ(12px) rotateX(2deg) rotateY(-2deg);
+  }
+
+  .page-section {
+    animation: fadeInUp 0.8s ease-out both;
+  }
+
+  .page-section-delay-1 {
+    animation-delay: 0.15s;
+  }
+  .page-section-delay-2 {
+    animation-delay: 0.3s;
+  }
+  .page-section-delay-3 {
+    animation-delay: 0.45s;
+  }
+  .page-section-delay-4 {
+    animation-delay: 0.6s;
+  }
+  .page-section-delay-5 {
+    animation-delay: 0.75s;
+  }
+  .page-section-delay-6 {
+    animation-delay: 0.9s;
+  }
+  .page-section-delay-7 {
+    animation-delay: 1.05s;
+  }
+  .page-section-delay-8 {
+    animation-delay: 1.2s;
+  }
+}
 .navbar {
   overflow: visible !important;
 }
@@ -188,4 +273,448 @@ body[data-scroll-locked] {
 /* Ya phir */
 [data-radix-popper-content-wrapper] {
   position: fixed !important;
+}
+
+/* ============================================================
+   FORGE DESIGN SYSTEM — "midnight forge" public-site theme
+   Single source of truth for the triggerautomate-inspired look.
+   Tokens live in @theme above (forge-amber, forge-bronze, …).
+   These classes are presentation-only; no content/API changes.
+   ============================================================ */
+
+@layer base {
+  ::selection {
+    background: rgb(255 178 56 / 0.28);
+    color: #ffffff;
+  }
+
+  .dark body {
+    background-color: #050505;
+    background-image:
+      radial-gradient(60rem 30rem at 50% -8rem, rgb(255 178 56 / 0.07), transparent 60%),
+      radial-gradient(40rem 24rem at 85% 12rem, rgb(206 131 11 / 0.05), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  /* Visible keyboard focus everywhere (a11y) */
+  :focus-visible {
+    outline: 2px solid #ffb238;
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+
+/* ---- Section scaffolding ---- */
+.forge-section {
+  width: 100%;
+  max-width: 72rem; /* ~max-w-6xl */
+  margin-inline: auto;
+  padding-inline: 1rem;
+  padding-block: 5rem; /* 80px */
+}
+@media (min-width: 768px) {
+  .forge-section {
+    padding-inline: 1.5rem;
+    padding-block: 7.5rem; /* 120px */
+  }
+}
+
+/* ---- Eyebrow label: mono, uppercase, amber, glowing dot ---- */
+.forge-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-weight: 600;
+  font-size: 0.63rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #ffb238;
+}
+.forge-eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #ffb238;
+  box-shadow: 0 0 10px 2px rgb(255 178 56 / 0.8);
+  flex-shrink: 0;
+}
+.forge-eyebrow-center {
+  justify-content: center;
+}
+
+/* ---- Headings ---- */
+.forge-h1 {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: #ffffff;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+}
+.forge-h2 {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: #ffffff;
+  font-size: clamp(1.875rem, 4vw, 3rem);
+}
+.forge-h3 {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+.forge-lead {
+  color: #beb8ac;
+  font-size: 1.125rem;
+  line-height: 1.75;
+  max-width: 48rem;
+}
+.forge-lead-center {
+  margin-inline: auto;
+}
+
+/* ---- Glass pill badge (hero) ---- */
+.forge-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: rgb(255 255 255 / 0.03);
+  backdrop-filter: blur(12px);
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #beb8ac;
+}
+.forge-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #ffb238;
+  box-shadow: 0 0 12px 3px rgb(255 178 56 / 0.75);
+  animation: forge-pulse 2.2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes forge-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.8);
+  }
+}
+
+/* ---- Buttons: pill, bronze gradient / ghost ---- */
+.forge-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2rem;
+  border-radius: 999px;
+  background: linear-gradient(120deg, #8a5c09, #ce830b);
+  color: #140e04;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  border: 1px solid rgb(255 178 56 / 0.35);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.4),
+    0 8px 28px -6px rgb(255 178 56 / 0.45);
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease,
+    filter 0.3s ease;
+  cursor: pointer;
+}
+.forge-btn-primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.4),
+    0 12px 40px -6px rgb(255 178 56 / 0.65),
+    0 0 24px rgb(255 178 56 / 0.25);
+}
+.forge-btn-primary:active {
+  transform: translateY(0);
+}
+.forge-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.forge-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2rem;
+  border-radius: 999px;
+  background: transparent;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1px solid rgb(255 178 56 / 0.4);
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+  cursor: pointer;
+}
+.forge-btn-ghost:hover {
+  transform: translateY(-2px);
+  background: rgb(255 178 56 / 0.08);
+  border-color: rgb(255 178 56 / 0.7);
+  box-shadow: 0 8px 32px -8px rgb(255 178 56 / 0.5);
+}
+.forge-btn-ghost:active {
+  transform: translateY(0);
+}
+
+/* ---- Cards: hairline border, glass fill, amber hover wash ---- */
+.forge-card {
+  border-radius: 20px;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  background: rgb(255 255 255 / 0.025);
+  backdrop-filter: blur(12px);
+  transition:
+    border-color 0.35s ease,
+    background-color 0.35s ease,
+    box-shadow 0.35s ease,
+    transform 0.35s ease;
+}
+.forge-card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgb(255 178 56 / 0.28);
+  background:
+    linear-gradient(160deg, rgb(255 178 56 / 0.07), rgb(255 178 56 / 0.015)),
+    rgb(255 255 255 / 0.03);
+  box-shadow:
+    0 20px 48px -16px rgb(0 0 0 / 0.7),
+    0 0 32px -8px rgb(255 178 56 / 0.25);
+}
+
+/* ---- Icon badge: 52px bronze gradient square + amber glow ---- */
+.forge-icon-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(120deg, #8a5c09, #ce830b);
+  color: #140e04;
+  box-shadow:
+    0 6px 20px -4px rgb(255 178 56 / 0.5),
+    inset 0 1px 0 rgb(255 255 255 / 0.25);
+  flex-shrink: 0;
+}
+.forge-icon-badge-sm {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+}
+
+/* ---- Ghost numerals: amber outline, transparent fill ---- */
+.forge-ghost-num {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-weight: 700;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(255 178 56 / 0.55);
+  line-height: 1;
+  user-select: none;
+}
+
+/* ---- Hero background: soft radial amber glow, top-center ---- */
+.forge-hero-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(52rem 26rem at 50% -6rem, rgb(255 178 56 / 0.12), transparent 62%),
+    radial-gradient(30rem 18rem at 12% 30%, rgb(206 131 11 / 0.06), transparent 60%),
+    radial-gradient(30rem 18rem at 88% 30%, rgb(138 92 9 / 0.07), transparent 60%);
+}
+
+/* ---- Stat strip: 3 columns separated by vertical hairlines ---- */
+.forge-stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  width: 100%;
+}
+@media (min-width: 640px) {
+  .forge-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+  .forge-stats > * + * {
+    border-left: 1px solid rgb(255 255 255 / 0.08);
+  }
+}
+.forge-stat {
+  padding: 0.5rem 1.5rem;
+  text-align: center;
+}
+.forge-stat-value {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  color: #ffffff;
+  line-height: 1.2;
+}
+.forge-stat-label {
+  margin-top: 0.35rem;
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #8a8378;
+}
+
+/* ---- Scroll reveal (JS adds .is-visible via IntersectionObserver) ---- */
+.forge-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s ease-out,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.forge-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Form fields on dark forge ---- */
+.forge-field {
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: rgb(255 255 255 / 0.03);
+  color: #ffffff;
+  padding: 0.8rem 1.1rem;
+  font-size: 0.95rem;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.25s ease;
+}
+.forge-field::placeholder {
+  color: #8a8378;
+}
+.forge-field:hover {
+  border-color: rgb(255 255 255 / 0.18);
+}
+.forge-field:focus {
+  outline: none;
+  border-color: rgb(255 178 56 / 0.6);
+  box-shadow: 0 0 0 3px rgb(255 178 56 / 0.15);
+  background: rgb(255 255 255 / 0.05);
+}
+select.forge-field option {
+  background-color: #0b0a07;
+  color: #ffffff;
+}
+
+/* ---- Dividers / misc ---- */
+.forge-divider {
+  border: 0;
+  border-top: 1px solid rgb(255 255 255 / 0.08);
+}
+.forge-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: rgb(255 255 255 / 0.03);
+  color: #beb8ac;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition:
+    border-color 0.25s ease,
+    color 0.25s ease,
+    background-color 0.25s ease;
+}
+.forge-chip:hover {
+  border-color: rgb(255 178 56 / 0.45);
+  color: #ffb238;
+  background: rgb(255 178 56 / 0.06);
+}
+} /* end @layer components */
+
+/* ---- Light-mode sanity: keep forge classes readable if user toggles ---- */
+:root:not(.dark) .forge-h1,
+:root:not(.dark) .forge-h2,
+:root:not(.dark) .forge-h3,
+:root:not(.dark) .forge-stat-value {
+  color: #140e04;
+}
+:root:not(.dark) .forge-lead {
+  color: #4a4238;
+}
+:root:not(.dark) .forge-card {
+  border-color: rgb(20 14 4 / 0.1);
+  background: rgb(255 255 255 / 0.7);
+}
+:root:not(.dark) .forge-btn-ghost {
+  color: #140e04;
+  border-color: rgb(138 92 9 / 0.5);
+}
+:root:not(.dark) .forge-pill-badge {
+  border-color: rgb(20 14 4 / 0.12);
+  background: rgb(255 255 255 / 0.6);
+  color: #4a4238;
+}
+:root:not(.dark) .forge-chip {
+  border-color: rgb(20 14 4 / 0.12);
+  background: rgb(255 255 255 / 0.6);
+  color: #4a4238;
+}
+:root:not(.dark) .forge-field {
+  border-color: rgb(20 14 4 / 0.15);
+  background: #ffffff;
+  color: #140e04;
+}
+:root:not(.dark) .forge-stats > * + * {
+  border-left-color: rgb(20 14 4 / 0.1);
+}
+
+/* ---- Reduced motion: kill reveals, pulses, hovers that move ---- */
+@media (prefers-reduced-motion: reduce) {
+  .forge-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .forge-pulse-dot {
+    animation: none;
+  }
+  .forge-card-hover:hover,
+  .forge-btn-primary:hover,
+  .forge-btn-ghost:hover {
+    transform: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }

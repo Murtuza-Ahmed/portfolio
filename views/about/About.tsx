@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
+import {
+  ForgeReveal,
+  ForgeEyebrow,
+  ForgeSectionHeader,
+} from "@/components/forge";
 import {
   Code2,
   Database,
@@ -24,32 +26,20 @@ import {
 import Image from "next/image";
 import type { About as AboutType, Skill } from "@/lib/types";
 
-const skills = [
-  { name: "JavaScript/TypeScript", level: 85, category: "Frontend" },
-  { name: "React/Next.js", level: 92, category: "Frontend" },
-  { name: "HTML/CSS", level: 90, category: "Frontend" },
-  { name: "Tailwind CSS", level: 80, category: "Frontend" },
-  { name: "Node.js", level: 70, category: "Backend" },
-  { name: "NestJS", level: 65, category: "Backend" },
-  { name: "Express.js", level: 60, category: "Backend" },
-  { name: "MongoDB", level: 52, category: "Database" },
-  { name: "PostgreSQL", level: 65, category: "Database" },
-  { name: "Docker", level: 75, category: "Tools" },
-  { name: "Git/GitHub", level: 88, category: "Tools" },
-  { name: "Vercel", level: 30, category: "Tools" },
-  { name: "REST APIs", level: 75, category: "Backend" },
-];
+function asArray<T>(value: unknown): T[] {
+  return Array.isArray(value) ? (value as T[]) : [];
+}
 
 const defaultTechnologies = [
-  { name: "React", icon: Code2, color: "text-blue-500" },
-  { name: "Next.js", icon: Globe, color: "text-gray-800 dark:text-gray-200" },
-  { name: "TypeScript", icon: Code2, color: "text-blue-600" },
-  { name: "Node.js", icon: Server, color: "text-green-500" },
-  { name: "NestJS", icon: Server, color: "text-violet-500" },
-  { name: "MongoDB", icon: Database, color: "text-green-600" },
-  { name: "PostgreSQL", icon: Database, color: "text-indigo-600" },
-  { name: "Docker", icon: Server, color: "text-blue-400" },
-  { name: "Git", icon: GitBranch, color: "text-orange-500" },
+  { name: "React", icon: Code2 },
+  { name: "Next.js", icon: Globe },
+  { name: "TypeScript", icon: Code2 },
+  { name: "Node.js", icon: Server },
+  { name: "NestJS", icon: Server },
+  { name: "MongoDB", icon: Database },
+  { name: "PostgreSQL", icon: Database },
+  { name: "Docker", icon: Server },
+  { name: "Git", icon: GitBranch },
 ];
 
 const interestIcons: Record<string, any> = {
@@ -65,6 +55,13 @@ const valueIcons: Record<string, any> = {
   "Continuous Learning": Award,
   "User-Centric": Heart,
 };
+
+const quickFacts = [
+  { value: "3+", label: "Projects" },
+  { value: "1+", label: "Years Exp." },
+  { value: "1+", label: "Happy Clients" },
+  { value: "5+", label: "Technologies" },
+];
 
 export default function About() {
   const [about, setAbout] = useState<AboutType | null>(null);
@@ -83,7 +80,7 @@ export default function About() {
         const skillsData = await skillsRes.json();
 
         if (aboutData.data) setAbout(aboutData.data);
-        if (skillsData.data) setSkills(skillsData.data);
+        if (Array.isArray(skillsData.data)) setSkills(skillsData.data);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
@@ -103,240 +100,257 @@ export default function About() {
   }
 
   return (
-    <div className="container max-w-6xl mx-auto px-4 py-12 space-y-16">
+    <div className="relative">
       {/* Hero Section */}
-      <section className="text-center space-y-6 page-section page-section-delay-1">
-        {about?.profileImage && (
-          <div className="relative w-32 h-32 mx-auto">
-            <Image
-              src={about.profileImage}
-              alt="Profile"
-              width={128}
-              height={128}
-              className="rounded-full object-cover border-4 border-primary/20"
-            />
-          </div>
-        )}
-        <div className="space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold">About Me</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            I'm a Full Stack Developer experienced in MERN and TypeScript-based
-            backends. I build scalable, production-ready applications using
-            React, Next.js, Node.js, NestJS, PostgreSQL, MongoDB, and Docker.
-          </p>
+      <section className="relative overflow-hidden">
+        <div className="forge-hero-glow" />
+        <div className="forge-section text-center">
+          <ForgeReveal>
+            {about?.profileImage && (
+              <div className="relative mx-auto h-32 w-32 rounded-full border-2 border-forge-amber/40 shadow-[0_0_48px_-8px_rgba(255,178,56,0.5)]">
+                <Image
+                  src={about.profileImage}
+                  alt="Profile"
+                  width={128}
+                  height={128}
+                  className="rounded-full object-cover"
+                />
+              </div>
+            )}
+            <div className="mt-8 space-y-4">
+              <ForgeEyebrow centered>Profile</ForgeEyebrow>
+              <h1 className="forge-h1">About Me</h1>
+              <p className="forge-lead forge-lead-center">
+                I&apos;m a Full Stack Developer focused on building modern,
+                scalable, and production-ready web applications. I enjoy turning
+                ideas and complex requirements into clean, reliable, and
+                maintainable solutions. My experience spans frontend and backend
+                development, with a strong focus on React, Next.js, Node.js,
+                NestJS, TypeScript, PostgreSQL, MongoDB, and Docker. I care
+                about clean architecture, performance, security, and creating
+                seamless user experiences. I'm continuously learning and
+                exploring new technologies, particularly AI development and
+                modern backend architectures, while improving my problem-solving
+                and engineering skills through real-world projects.
+              </p>
+            </div>
+          </ForgeReveal>
         </div>
       </section>
 
-      {/* Bio Section */}
-      <section className="grid lg:grid-cols-2 gap-12 items-start page-section page-section-delay-2">
-        <div className="space-y-6 page-section page-section-delay-3">
-          <h2 className="text-3xl font-bold">My Journey</h2>
-          <div className="space-y-4 text-muted-foreground leading-relaxed">
-            <p>
-              My journey into web development started during my computer science
-              studies, where I discovered my passion for creating digital
-              experiences that make a difference. What began as curiosity about
-              how websites work evolved into a deep love for crafting elegant
-              solutions to complex problems.
-            </p>
-            <p>
-              Over the past years, I've had the privilege of working with
-              startups and established companies, helping them bring their
-              visions to life through code. I specialize in the MERN stack but
-              I'm always eager to learn new technologies that can help me build
-              better products.
-            </p>
-            <p>
-              When I'm not coding, you'll find me exploring new experiences,
-              experimenting with new things, or contributing to open-source
-              projects. I believe that the best developers are those who never
-              stop learning and growing, both professionally and personally.
-            </p>
-          </div>
-        </div>
+      {/* Bio + Quick Facts Section */}
+      <section>
+        <div className="forge-section">
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            <ForgeReveal>
+              <ForgeEyebrow>My Journey</ForgeEyebrow>
+              <div className="space-y-4 text-muted-foreground leading-relaxed mt-6">
+                {about?.bio ? (
+                  about.bio.split(/\n+/).map((para, i) => <p key={i}>{para}</p>)
+                ) : (
+                  <>
+                    <p>
+                      My journey into web development started during my computer
+                      science studies, where I discovered my passion for
+                      creating digital experiences that make a difference. What
+                      began as curiosity about how websites work evolved into a
+                      deep love for crafting elegant solutions to complex
+                      problems.
+                    </p>
+                    <p>
+                      Over the past years, I&apos;ve had the privilege of
+                      working with startups and established companies, helping
+                      them bring their visions to life through code. I
+                      specialize in the MERN stack but I&apos;m always eager to
+                      learn new technologies that can help me build better
+                      products.
+                    </p>
+                    <p>
+                      When I&apos;m not coding, you&apos;ll find me exploring
+                      new experiences, experimenting with new things, or
+                      contributing to open-source projects. I believe that the
+                      best developers are those who never stop learning and
+                      growing, both professionally and personally.
+                    </p>
+                  </>
+                )}
+              </div>
+            </ForgeReveal>
 
-        <div className="space-y-6 page-section page-section-delay-4">
-          <h3 className="text-2xl font-semibold">Quick Facts</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-primary">3+</div>
-                <div className="text-sm text-muted-foreground">Projects</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-primary">1+</div>
-                <div className="text-sm text-muted-foreground">Years Exp.</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-primary">1+</div>
-                <div className="text-sm text-muted-foreground">
-                  Happy Clients
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-primary">5+</div>
-                <div className="text-sm text-muted-foreground">
-                  Technologies
-                </div>
-              </CardContent>
-            </Card>
+            <ForgeReveal delay={0.15}>
+              <ForgeEyebrow>Quick Facts</ForgeEyebrow>
+              <div className="grid grid-cols-2 gap-4 mt-6">
+                {quickFacts.map((fact) => (
+                  <div key={fact.label} className="forge-card p-6 text-center">
+                    <div className="font-display text-3xl font-bold text-foreground">
+                      {fact.value}
+                    </div>
+                    <div className="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-forge-mute mt-2">
+                      {fact.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ForgeReveal>
           </div>
         </div>
       </section>
 
-      <Separator />
+      <hr className="forge-divider" />
 
       {/* Skills Section */}
-      <section className="space-y-8 page-section page-section-delay-1">
-        <div className="text-center space-y-4">
-          <h2 className="text-3xl font-bold">Technical Skills</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Here's a breakdown of my technical expertise across different areas
-            of web development.
-          </p>
-        </div>
+      <section>
+        <div className="forge-section">
+          <ForgeSectionHeader
+            eyebrow="Skills"
+            title="Technical Skills"
+            lead="Here's a breakdown of my technical expertise across different areas of web development."
+          />
 
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Skills with Progress Bars */}
-          <div className="space-y-6 page-section page-section-delay-2">
-            <h3 className="text-xl font-semibold">Proficiency Levels</h3>
-            <div className="space-y-4">
-              {skills.map((skill) => (
-                <div key={skill._id} className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">{skill.name}</span>
-                    <Badge variant="outline" className="text-xs">
-                      {skill.category}
-                    </Badge>
+          <div className="grid md:grid-cols-2 gap-8 mt-12">
+            <ForgeReveal>
+              <h3 className="forge-h3">Proficiency Levels</h3>
+              <div className="mt-6">
+                {skills.length === 0 ? (
+                  <p className="text-muted-foreground">
+                    Skills added from the admin panel will appear here.
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    {skills.map((skill) => {
+                      const proficiency =
+                        typeof skill.proficiency === "number"
+                          ? Math.min(100, Math.max(0, skill.proficiency))
+                          : 0;
+                      return (
+                        <div key={skill._id} className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium">{skill.name}</span>
+                            <span className="forge-chip text-xs">
+                              {skill.category}
+                            </span>
+                          </div>
+                          <Progress value={proficiency} className="h-2" />
+                          <div className="text-right text-sm text-forge-mute">
+                            {proficiency}%
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <Progress value={skill.proficiency} className="h-2" />
-                  <div className="text-right text-sm text-muted-foreground">
-                    {skill.proficiency}%
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+                )}
+              </div>
+            </ForgeReveal>
 
-          {/* Technology Icons */}
-          <div className="space-y-6">
-            <h3 className="text-xl font-semibold">Technologies I Use</h3>
-            <div className="grid grid-cols-2 gap-4">
-              {defaultTechnologies.map((tech) => {
-                const Icon = tech.icon;
-                return (
-                  <Card
-                    key={tech.name}
-                    className="group hover:shadow-md transition-all duration-300"
-                  >
-                    <CardContent className="p-4 flex items-center space-x-3">
-                      <Icon className={`h-8 w-8 ${tech.color}`} />
+            <ForgeReveal delay={0.15}>
+              <h3 className="forge-h3">Technologies I Use</h3>
+              <div className="grid grid-cols-2 gap-4 mt-6">
+                {defaultTechnologies.map((tech) => {
+                  const Icon = tech.icon;
+                  return (
+                    <div
+                      key={tech.name}
+                      className="forge-card forge-card-hover p-4 flex items-center gap-3"
+                    >
+                      <span className="forge-icon-badge-sm">
+                        <Icon className="h-5 w-5" />
+                      </span>
                       <span className="font-medium">{tech.name}</span>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </ForgeReveal>
           </div>
         </div>
       </section>
 
-      <Separator />
+      <hr className="forge-divider" />
 
       {/* Values Section */}
-      <section className="space-y-8 page-section page-section-delay-2">
-        <div className="text-center space-y-4">
-          <h2 className="text-3xl font-bold">What Drives Me</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            These core values guide my approach to development and
-            collaboration.
-          </p>
-        </div>
+      <section>
+        <div className="forge-section">
+          <ForgeSectionHeader
+            eyebrow="Values"
+            title="What Drives Me"
+            lead="These core values guide my approach to development and collaboration."
+          />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {about?.values.map((value) => {
-            const Icon = valueIcons[value] || Target;
-            return (
-              <Card
-                key={value}
-                className="text-center group hover:shadow-lg transition-all duration-300"
-              >
-                <CardHeader>
-                  <div className="w-12 h-12 mx-auto bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Icon className="h-6 w-6 text-primary" />
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+            {asArray<string>(about?.values).map((value, i) => {
+              const Icon = valueIcons[value] || Target;
+              return (
+                <ForgeReveal key={value} delay={i * 0.08}>
+                  <div className="forge-card forge-card-hover p-6 text-center h-full">
+                    <span className="forge-icon-badge-sm mx-auto">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <h3 className="forge-h3 text-lg mt-4">{value}</h3>
+                    <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                      Guided by this core principle
+                    </p>
                   </div>
-                  <CardTitle className="text-lg">{value}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Guided by this core principle
-                  </p>
-                </CardContent>
-              </Card>
-            );
-          })}
+                </ForgeReveal>
+              );
+            })}
+          </div>
         </div>
       </section>
 
-      <Separator />
+      <hr className="forge-divider" />
 
       {/* Interests Section */}
-      <section className="space-y-8 page-section page-section-delay-3">
-        <div className="text-center space-y-4">
-          <h2 className="text-3xl font-bold">Beyond Code</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            When I'm not developing, these are the things that inspire and
-            energize me.
-          </p>
-        </div>
+      <section>
+        <div className="forge-section">
+          <ForgeSectionHeader
+            eyebrow="Interests"
+            title="Beyond Code"
+            lead="When I'm not developing, these are the things that inspire and energize me."
+          />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {about?.interests.map((interest) => {
-            const Icon = interestIcons[interest] || Coffee;
-            return (
-              <Card
-                key={interest}
-                className="group hover:shadow-md transition-all duration-300"
-              >
-                <CardContent className="p-6 text-center space-y-4">
-                  <Icon className="h-8 w-8 mx-auto text-primary" />
-                  <h3 className="font-semibold">{interest}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    One of my passions
-                  </p>
-                </CardContent>
-              </Card>
-            );
-          })}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+            {asArray<string>(about?.interests).map((interest, i) => {
+              const Icon = interestIcons[interest] || Coffee;
+              return (
+                <ForgeReveal key={interest} delay={i * 0.08}>
+                  <div className="forge-card forge-card-hover p-6 text-center h-full">
+                    <span className="forge-icon-badge-sm mx-auto">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <h3 className="forge-h3 text-lg mt-4">{interest}</h3>
+                    <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                      One of my passions
+                    </p>
+                  </div>
+                </ForgeReveal>
+              );
+            })}
+          </div>
         </div>
       </section>
 
       {/* Call to Action */}
-      <section className="text-center space-y-6 py-12 bg-muted/30 rounded-lg page-section page-section-delay-4">
-        <h2 className="text-3xl font-bold">Let's Work Together</h2>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          I'm always excited to take on new challenges and collaborate with
-          amazing people. Let's create something incredible together!
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a
-            href="/contact"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
-          >
-            Get In Touch
-          </a>
-          <a
-            href="/projects"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-6 py-3 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
-          >
-            View My Work
-          </a>
+      <section>
+        <div className="forge-section">
+          <ForgeReveal>
+            <div className="forge-card p-12 text-center">
+              <ForgeEyebrow centered>Contact</ForgeEyebrow>
+              <h2 className="forge-h2 mt-4">Let&apos;s Work Together</h2>
+              <p className="forge-lead forge-lead-center mt-4">
+                I&apos;m always excited to take on new challenges and
+                collaborate with amazing people. Let&apos;s create something
+                incredible together!
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                <a href="/contact" className="forge-btn-primary">
+                  Get In Touch
+                </a>
+                <a href="/projects" className="forge-btn-ghost">
+                  View My Work
+                </a>
+              </div>
+            </div>
+          </ForgeReveal>
         </div>
       </section>
     </div>

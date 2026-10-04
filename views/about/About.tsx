@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Progress } from "@/components/ui/progress";
 import { ForgeReveal, ForgeEyebrow, ForgeSectionHeader } from "@/components/forge";
 import {
   Coffee,
@@ -94,28 +93,41 @@ function SkillTabs({ skills }: { skills: Skill[] }) {
         ))}
       </div>
 
+      {/* Compact scannable grid — names always visible;
+          hovering a row reveals its proficiency bar + %, hides on leave */}
       <div
         key={active}
-        className="forge-tab-enter mt-8 grid gap-4 sm:grid-cols-2"
+        className="forge-tab-enter mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
       >
         {visible.map((skill) => {
           const pct = clampPct(skill.proficiency);
           return (
-            <div key={skill._id} className="forge-card forge-card-hover p-5">
-              <div className="flex items-center justify-between gap-3">
-                <span className="font-medium text-white">{skill.name}</span>
-                <span className="forge-chip text-xs">{skill.category}</span>
-              </div>
-              <div className="mt-4 flex items-center gap-3">
-                <Progress value={pct} className="h-1.5 flex-1" />
-                <span className="w-10 text-right font-mono text-xs text-forge-mute">
+            <div
+              key={skill._id}
+              className="group rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgba(255,178,56,0.45)] hover:bg-[rgba(255,178,56,0.05)] hover:shadow-[0_10px_32px_-12px_rgba(255,178,56,0.4)]"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className="flex items-center gap-2 truncate text-sm font-medium text-white/80 transition-colors duration-300 group-hover:text-white">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-forge-amber/50 transition-all duration-300 group-hover:bg-forge-amber group-hover:shadow-[0_0_8px_rgba(255,178,56,0.9)]" />
+                  <span className="truncate">{skill.name}</span>
+                </span>
+                <span className="shrink-0 font-mono text-[0.68rem] text-forge-amber opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   {pct}%
                 </span>
+              </div>
+              <div className="h-1 w-0 overflow-hidden rounded-full bg-white/10 transition-all duration-500 ease-out group-hover:mt-2.5 group-hover:w-full">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-[#8a5c09] to-[#ffb238]"
+                  style={{ width: `${pct}%` }}
+                />
               </div>
             </div>
           );
         })}
       </div>
+      <p className="mt-6 text-center font-mono text-[0.62rem] uppercase tracking-[0.2em] text-forge-mute">
+        Hover any skill to reveal proficiency
+      </p>
     </div>
   );
 }

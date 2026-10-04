@@ -58,6 +58,10 @@ const SettingsSchema = new Schema<SettingsDocument>(
       trim: true,
       maxlength: [500, "Success message cannot exceed 500 characters"],
     },
+    emailNotifications: {
+      type: Boolean,
+      default: true,
+    },
     theme: {
       type: String,
       enum: ["light", "dark", "auto"],

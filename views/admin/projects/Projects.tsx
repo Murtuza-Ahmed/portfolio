@@ -1,11 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -37,12 +55,29 @@ import Link from "next/link";
 import type { Project } from "@/lib/types";
 import type { ProjectsResponse } from "@/lib/types/api";
 
+const emptyProjectForm = {
+  title: "",
+  description: "",
+  longDescription: "",
+  image: "",
+  technologies: "",
+  githubUrl: "",
+  liveUrl: "",
+  featured: false,
+  status: "active" as Project["status"],
+};
+
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [form, setForm] = useState(emptyProjectForm);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetchProjects();
@@ -81,6 +116,68 @@ export default function Projects() {
     }
   };
 
+  const openAddDialog = () => {
+    setEditingProject(null);
+    setForm(emptyProjectForm);
+    setFormError(null);
+    setDialogOpen(true);
+  };
+
+  const openEditDialog = (project: Project) => {
+    setEditingProject(project);
+    setForm({
+      title: project.title,
+      description: project.description,
+      longDescription: project.longDescription || "",
+      image: project.image,
+      technologies: project.technologies.join(", "),
+      githubUrl: project.githubUrl || "",
+      liveUrl: project.liveUrl || "",
+      featured: project.featured,
+      status: project.status,
+    });
+    setFormError(null);
+    setDialogOpen(true);
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setFormError(null);
+    setSaving(true);
+
+    const payload = {
+      title: form.title,
+      description: form.description,
+      longDescription: form.longDescription || undefined,
+      image: form.image,
+      technologies: form.technologies
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean),
+      githubUrl: form.githubUrl || undefined,
+      liveUrl: form.liveUrl || undefined,
+      featured: form.featured,
+      status: form.status,
+    };
+
+    try {
+      if (editingProject) {
+        await axios.put(
+          `/api/admin/projects/${editingProject._id}`,
+          payload
+        );
+      } else {
+        await axios.post("/api/admin/projects", payload);
+      }
+      setDialogOpen(false);
+      fetchProjects(); // Refresh the list
+    } catch (err: any) {
+      setFormError(err.response?.data?.message || "Failed to save project");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active":
@@ -110,7 +207,7 @@ export default function Projects() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>All Projects</CardTitle>
-                  <Button>
+                  <Button onClick={openAddDialog}>
                     <Plus className="mr-2 h-4 w-4" />
                     Add Project
                   </Button>
@@ -237,7 +334,9 @@ export default function Projects() {
                                     </Link>
                                   </DropdownMenuItem>
                                 )}
-                                <DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => openEditDialog(project)}
+                                >
                                   <Edit className="mr-2 h-4 w-4" />
                                   Edit
                                 </DropdownMenuItem>
@@ -296,6 +395,177 @@ export default function Projects() {
           </main>
         </div>
       </div>
+
+      {/* Add / Edit Project Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editingProject ? "Edit Project" : "Add Project"}
+            </DialogTitle>
+            <DialogDescription>
+              {editingProject
+                ? "Update the project details below."
+                : "Create a new portfolio project."}
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="project-title">Title</Label>
+              <Input
+                id="project-title"
+                value={form.title}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, title: e.target.value }))
+                }
+                placeholder="Project title"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="project-description">Description</Label>
+              <Textarea
+                id="project-description"
+                value={form.description}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, description: e.target.value }))
+                }
+                placeholder="Short description"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="project-long-description">
+                Long Description
+              </Label>
+              <Textarea
+                id="project-long-description"
+                value={form.longDescription}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    longDescription: e.target.value,
+                  }))
+                }
+                placeholder="Detailed description"
+                rows={4}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="project-image">Image URL</Label>
+              <Input
+                id="project-image"
+                value={form.image}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, image: e.target.value }))
+                }
+                placeholder="https://example.com/image.png"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="project-technologies">
+                Technologies (comma-separated)
+              </Label>
+              <Input
+                id="project-technologies"
+                value={form.technologies}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, technologies: e.target.value }))
+                }
+                placeholder="React, Node.js, MongoDB"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="project-github">GitHub URL</Label>
+                <Input
+                  id="project-github"
+                  value={form.githubUrl}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, githubUrl: e.target.value }))
+                  }
+                  placeholder="https://github.com/username/repo"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="project-live">Live URL</Label>
+                <Input
+                  id="project-live"
+                  value={form.liveUrl}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, liveUrl: e.target.value }))
+                  }
+                  placeholder="https://example.com"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="project-status">Status</Label>
+                <Select
+                  value={form.status}
+                  onValueChange={(value) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      status: value as Project["status"],
+                    }))
+                  }
+                >
+                  <SelectTrigger id="project-status">
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                    <SelectItem value="archived">Archived</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-end pb-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="project-featured"
+                    checked={form.featured}
+                    onCheckedChange={(checked) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        featured: checked === true,
+                      }))
+                    }
+                  />
+                  <Label htmlFor="project-featured">Featured project</Label>
+                </div>
+              </div>
+            </div>
+
+            {formError && (
+              <p className="text-sm text-destructive">{formError}</p>
+            )}
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={saving}>
+                {saving
+                  ? "Saving..."
+                  : editingProject
+                    ? "Save Changes"
+                    : "Create Project"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </ProtectedRoute>
   );
 }

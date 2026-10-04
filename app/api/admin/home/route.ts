@@ -46,8 +46,10 @@ export async function PUT(request: NextRequest) {
 
     const body = await request.json()
 
+    // Validate request body (strip unknown fields to prevent mass assignment)
+    let homeData: Record<string, unknown>
     try {
-      await homeSchema.validate(body)
+      homeData = (await homeSchema.validate(body, { stripUnknown: true })) as Record<string, unknown>
     } catch (validationError: any) {
       return NextResponse.json(createErrorResponse("Validation failed", validationError.message), {
         status: HTTP_STATUS.BAD_REQUEST,
@@ -60,10 +62,10 @@ export async function PUT(request: NextRequest) {
       const defaults = getDefaultHome()
       home = new Home({
         ...defaults,
-        ...body,
+        ...homeData,
       })
     } else {
-      Object.assign(home, body)
+      Object.assign(home, homeData)
     }
 
     await home.save()

@@ -1,11 +1,27 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, type FormEvent } from "react"
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute"
 import { AdminSidebar } from "@/components/admin/AdminSidebar"
 import { AdminHeader } from "@/components/admin/AdminHeader"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
@@ -17,12 +33,24 @@ import { format } from "date-fns"
 import type { User } from "@/lib/types"
 import type { UsersResponse } from "@/lib/types/api"
 
+const emptyUserForm = {
+  name: "",
+  email: "",
+  role: "user" as User["role"],
+  password: "",
+}
+
 export default function Users() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [editingUser, setEditingUser] = useState<User | null>(null)
+  const [form, setForm] = useState(emptyUserForm)
+  const [formError, setFormError] = useState<string | null>(null)
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     fetchUsers()
@@ -61,6 +89,59 @@ export default function Users() {
     }
   }
 
+  const openAddDialog = () => {
+    setEditingUser(null)
+    setForm(emptyUserForm)
+    setFormError(null)
+    setDialogOpen(true)
+  }
+
+  const openEditDialog = (user: User) => {
+    setEditingUser(user)
+    setForm({
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      password: "",
+    })
+    setFormError(null)
+    setDialogOpen(true)
+  }
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    setFormError(null)
+    setSaving(true)
+
+    try {
+      if (editingUser) {
+        // Omit password when blank so the existing one is kept
+        const payload: Record<string, string> = {
+          name: form.name,
+          email: form.email,
+          role: form.role,
+        }
+        if (form.password.trim() !== "") {
+          payload.password = form.password
+        }
+        await axios.put(`/api/admin/users/${editingUser._id}`, payload)
+      } else {
+        await axios.post("/api/admin/users", {
+          name: form.name,
+          email: form.email,
+          role: form.role,
+          password: form.password,
+        })
+      }
+      setDialogOpen(false)
+      fetchUsers() // Refresh the list
+    } catch (err: any) {
+      setFormError(err.response?.data?.message || "Failed to save user")
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
     <ProtectedRoute requireAdmin>
       <div className="flex h-screen">
@@ -74,7 +155,7 @@ export default function Users() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>All Users</CardTitle>
-                  <Button>
+                  <Button onClick={openAddDialog}>
                     <Plus className="mr-2 h-4 w-4" />
                     Add User
                   </Button>
@@ -149,7 +230,9 @@ export default function Users() {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => openEditDialog(user)}
+                                >
                                   <Edit className="mr-2 h-4 w-4" />
                                   Edit
                                 </DropdownMenuItem>
@@ -200,6 +283,108 @@ export default function Users() {
           </main>
         </div>
       </div>
+
+      {/* Add / Edit User Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{editingUser ? "Edit User" : "Add User"}</DialogTitle>
+            <DialogDescription>
+              {editingUser
+                ? "Update the user's details below. Leave the password blank to keep the current one."
+                : "Create a new user account."}
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="user-name">Name</Label>
+              <Input
+                id="user-name"
+                value={form.name}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, name: e.target.value }))
+                }
+                placeholder="John Doe"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="user-email">Email</Label>
+              <Input
+                id="user-email"
+                type="email"
+                value={form.email}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, email: e.target.value }))
+                }
+                placeholder="john@example.com"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="user-role">Role</Label>
+              <Select
+                value={form.role}
+                onValueChange={(value) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    role: value as User["role"],
+                  }))
+                }
+              >
+                <SelectTrigger id="user-role">
+                  <SelectValue placeholder="Select role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="user">User</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="user-password">
+                Password{editingUser && " (optional)"}
+              </Label>
+              <Input
+                id="user-password"
+                type="password"
+                value={form.password}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, password: e.target.value }))
+                }
+                placeholder={
+                  editingUser
+                    ? "Leave blank to keep current password"
+                    : "Min 8 chars, upper/lower/number/special"
+                }
+              />
+            </div>
+
+            {formError && (
+              <p className="text-sm text-destructive">{formError}</p>
+            )}
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={saving}>
+                {saving
+                  ? "Saving..."
+                  : editingUser
+                    ? "Save Changes"
+                    : "Create User"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </ProtectedRoute>
   )
 }

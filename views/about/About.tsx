@@ -22,6 +22,7 @@ import {
   Loader2,
 } from "lucide-react";
 import Image from "next/image";
+import type { About as AboutType, Skill } from "@/lib/types";
 
 const skills = [
   { name: "JavaScript/TypeScript", level: 85, category: "Frontend" },

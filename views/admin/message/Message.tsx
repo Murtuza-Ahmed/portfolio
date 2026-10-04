@@ -17,6 +17,12 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -34,6 +40,8 @@ export default function Message() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [viewingMessage, setViewingMessage] =
+    useState<ContactMessage | null>(null);
 
   useEffect(() => {
     fetchMessages();
@@ -190,7 +198,9 @@ export default function Message() {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => setViewingMessage(message)}
+                                >
                                   <Eye className="mr-2 h-4 w-4" />
                                   View Details
                                 </DropdownMenuItem>
@@ -269,6 +279,73 @@ export default function Message() {
           </main>
         </div>
       </div>
+
+      {/* View Details Dialog */}
+      <Dialog
+        open={viewingMessage !== null}
+        onOpenChange={(open) => {
+          if (!open) setViewingMessage(null);
+        }}
+      >
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Message Details</DialogTitle>
+          </DialogHeader>
+          {viewingMessage && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Name
+                  </p>
+                  <p className="text-sm">{viewingMessage.name}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Email
+                  </p>
+                  <p className="text-sm break-all">{viewingMessage.email}</p>
+                </div>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Subject
+                </p>
+                <p className="text-sm">{viewingMessage.subject}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Message
+                </p>
+                <p className="text-sm whitespace-pre-wrap">
+                  {viewingMessage.message}
+                </p>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Status
+                  </p>
+                  <Badge className={getStatusColor(viewingMessage.status)}>
+                    {viewingMessage.status}
+                  </Badge>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Received
+                  </p>
+                  <p className="text-sm">
+                    {format(
+                      new Date(viewingMessage.createdAt),
+                      "MMM dd, yyyy 'at' h:mm a"
+                    )}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </ProtectedRoute>
   );
 }

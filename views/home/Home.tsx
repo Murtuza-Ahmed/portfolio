@@ -18,6 +18,12 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { TypeAnimation } from "react-type-animation";
+import type { Home as HomeType, Skill, Experience, Project } from "@/lib/types";
+
+// The featured-work cards were written against a legacy shape that carried
+// optional `badges`, `live` and `github` fields; API projects don't have them,
+// so they simply don't render for API data.
+type ProjectCard = Project & { badges?: string[]; live?: string; github?: string };
 const techStack = [
   { name: "React", icon: "⚛️" },
   { name: "Next.js", icon: "▲" },
@@ -74,7 +80,7 @@ export default function Home() {
   const [home, setHome] = useState<HomeType | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [experience, setExperience] = useState<Experience[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<ProjectCard[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -354,13 +360,13 @@ export default function Home() {
                     {project.description}
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {(project.badges || []).map((badge) => (
+                    {(project.badges || []).map((badge: string) => (
                       <Badge
-                        key={tech}
+                        key={badge}
                         variant="outline"
                         className="text-xs py-2 px-3"
                       >
-                        {tech}
+                        {badge}
                       </Badge>
                     ))}
                   </div>

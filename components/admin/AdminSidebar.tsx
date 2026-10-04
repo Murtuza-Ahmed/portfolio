@@ -12,7 +12,13 @@ import {
   LogOut,
   Menu,
   Settings,
-  BookOpen,
+  Zap,
+  GraduationCap,
+  Briefcase,
+  Award,
+  User as UserIcon,
+  Home as HomeIcon,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -38,9 +44,39 @@ const navigation = [
     icon: MessageSquare,
   },
   {
-    name: "Content",
-    href: "/content",
-    icon: BookOpen,
+    name: "Skills",
+    href: "/skills",
+    icon: Zap,
+  },
+  {
+    name: "Education",
+    href: "/education",
+    icon: GraduationCap,
+  },
+  {
+    name: "Experience",
+    href: "/experience",
+    icon: Briefcase,
+  },
+  {
+    name: "Certifications",
+    href: "/certifications",
+    icon: Award,
+  },
+  {
+    name: "About",
+    href: "/about",
+    icon: UserIcon,
+  },
+  {
+    name: "Home Content",
+    href: "/home-content",
+    icon: HomeIcon,
+  },
+  {
+    name: "Resume",
+    href: "/resume",
+    icon: FileText,
   },
   {
     name: "Settings",

@@ -2,6 +2,13 @@
 
 import { useEffect, useState } from "react";
 import type React from "react";
+import type {
+  Experience,
+  Education,
+  Certification,
+  Skill,
+  Resume as ResumeData,
+} from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,100 +27,6 @@ import {
   Github,
   Loader2,
 } from "lucide-react";
-
-const workExperience = [
-  {
-    company: "Suffah Tech",
-    position: "Senior MERN Stack Developer",
-    location: "Pakistan Bazar Sec, 11 ½, Orangi Town, Karachi, 75800, Pakistan",
-    duration: "Oct 2024 - Present",
-    type: "Full-time",
-    description: [
-      "Led development of a microservices architecture serving 100k+ daily active users",
-      "Implemented CI/CD pipelines reducing deployment time by 60%",
-      "Mentored 3 junior developers and conducted code reviews",
-      "Built responsive web applications using React, Node.js, and MongoDB",
-    ],
-    technologies: [
-      "React",
-      "Node.js",
-      "MongoDB",
-      // "AWS",
-      // "Docker",
-      "TypeScript",
-      "Next.js",
-      "Express.js",
-      "Redux",
-    ],
-  },
-  {
-    company: "Tek Gravity",
-    position: "Word Press",
-    location: "Remote",
-    duration: "Aug 2024 - Oct 2024",
-    type: "Full-time",
-    description: [
-      "Supported staff members in their daily tasks, reducing workload burden and allowing for increased focus on higher-priority assignments",
-      "Gained valuable experience working within a specific industry, applying learned concepts directly into relevant work situations.",
-    ],
-    technologies: ["Word Press"],
-  },
-];
-
-const education = [
-  {
-    institution: "SMIT",
-    degree: "1 Year Course: Web and Mobile App Development",
-    location: "Gulshan Iqbal",
-    duration: "2022 - 2023",
-    // gpa: "3.8/4.0",
-    achievements: [
-      "Dean's List for 3 semesters",
-      "President of Computer Science Club",
-      "Completed senior capstone project on machine learning applications",
-    ],
-  },
-  {
-    institution: "Suffah Institute of Technology",
-    degree: "Full Stack Web Development Certification",
-    location: "sector 11, Orangi Town",
-    duration: "2023",
-    achievements: [
-      // "Completed 300+ hours of coursework",
-      "Built 5 full-stack projects",
-      "Earned certifications in Frontend and Backend development",
-    ],
-  },
-];
-
-const certifications = [
-  {
-    name: "SMIT Certified Developer",
-    issuer: "Web & Mobile App Development",
-    date: "2023",
-    credentialId: "WMA",
-  },
-  {
-    name: "SIT Developer Certification",
-    issuer: "Full Stack Development",
-    date: "2024",
-    credentialId: "FSD",
-  },
-];
-
-const skills = {
-  Frontend: [
-    "React",
-    "Next.js",
-    "TypeScript",
-    "Tailwind CSS",
-    "HTML/CSS",
-    "JavaScript",
-  ],
-  Backend: ["Node.js", "NestJS", "Express.js", "RESTful APIs", "Microservices"],
-  Database: ["PostgreSQL", "MongoDB"],
-  "Tools & DevOps": ["Git", "Docker", "Vercel", "CI/CD", "Jest"],
-};
 
 function TimelineItem({
   children,
@@ -138,27 +51,31 @@ export default function Resume() {
   const [education, setEducation] = useState<Education[]>([]);
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
+  const [resume, setResume] = useState<ResumeData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [expRes, eduRes, certRes, skillsRes] = await Promise.all([
+        const [expRes, eduRes, certRes, skillsRes, resumeRes] = await Promise.all([
           fetch("/api/experience?limit=100"),
           fetch("/api/education?limit=100"),
           fetch("/api/certifications?limit=100"),
           fetch("/api/skills?limit=100"),
+          fetch("/api/resume"),
         ]);
 
         const expData = await expRes.json();
         const eduData = await eduRes.json();
         const certData = await certRes.json();
         const skillsData = await skillsRes.json();
+        const resumeData = await resumeRes.json();
 
         if (expData.data) setExperience(expData.data);
         if (eduData.data) setEducation(eduData.data);
         if (certData.data) setCertifications(certData.data);
         if (skillsData.data) setSkills(skillsData.data);
+        if (resumeData.data) setResume(resumeData.data);
       } catch (error) {
         console.error("Failed to fetch resume data:", error);
       } finally {
@@ -192,14 +109,20 @@ export default function Resume() {
     <div className="container max-w-4xl mx-auto px-4 py-12 space-y-12">
       {/* Header */}
       <section className="text-center space-y-6 page-section page-section-delay-1">
-        <h1 className="text-4xl md:text-5xl font-bold">Resume</h1>
+        <h1 className="text-4xl md:text-5xl font-bold">
+          {resume?.fullName || "Resume"}
+        </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          {resume?.title ? `${resume.title} — ` : ""}
           Download my resume or explore my professional journey, skills, and
           achievements below.
         </p>
         <Button size="lg" className="group">
           <Download className="mr-2 h-5 w-5 transition-transform group-hover:translate-y-1" />
-          <Link href="/resume/Murtuza-Ahmed.pdf"> Download Resume PDF</Link>
+          <Link href={resume?.downloadUrl || "/resume/Murtuza-Ahmed.pdf"}>
+            {" "}
+            Download Resume PDF
+          </Link>
         </Button>
       </section>
 
@@ -212,27 +135,31 @@ export default function Resume() {
           <div className="grid md:grid-cols-2 gap-4">
             <div className="flex items-center space-x-3">
               <Mail className="h-5 w-5 text-muted-foreground" />
-              <span>murtuza.programmer@gmail.com</span>
+              <span>{resume?.email || "murtuza.programmer@gmail.com"}</span>
             </div>
             <div className="flex items-center space-x-3">
               <Phone className="h-5 w-5 text-muted-foreground" />
-              <span>+92 (312) 291-3097</span>
+              <span>{resume?.phone || "+92 (312) 291-3097"}</span>
             </div>
             <div className="flex items-center space-x-3">
               <MapPin className="h-5 w-5 text-muted-foreground" />
-              <span>SECTOR- 11 IMAM COLONY ORANGI TOWN Karachi</span>
+              <span>
+                {resume?.location || "SECTOR- 11 IMAM COLONY ORANGI TOWN Karachi"}
+              </span>
             </div>
             <div className="flex items-center space-x-3">
               <Globe className="h-5 w-5 text-muted-foreground" />
-              <span>portfolio-murtuza-ahmed.vercel.app/</span>
+              <span>{resume?.website || "portfolio-murtuza-ahmed.vercel.app/"}</span>
             </div>
             <div className="flex items-center space-x-3">
               <Linkedin className="h-5 w-5 text-muted-foreground" />
-              <span>linkedin.com/in/murtuza-ahmed-36012628b</span>
+              <span>
+                {resume?.linkedin || "linkedin.com/in/murtuza-ahmed-36012628b"}
+              </span>
             </div>
             <div className="flex items-center space-x-3">
               <Github className="h-5 w-5 text-muted-foreground" />
-              <span>github.com/Murtuza-Ahmed</span>
+              <span>{resume?.github || "github.com/Murtuza-Ahmed"}</span>
             </div>
           </div>
         </CardContent>
@@ -245,14 +172,8 @@ export default function Resume() {
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground leading-relaxed">
-            Passionate Full Stack Developer with 1+ years of experience building
-            scalable web applications using React, Node.js, NestJS, PostgreSQL,
-            and MongoDB. Proven track record of delivering production-ready
-            solutions and improving deployment workflows using Docker and CI/CD.
-            Strong expertise in TypeScript, modern frontend frameworks, and
-            backend architecture. Experienced in mentoring developers and
-            implementing DevOps best practices. Committed to writing clean,
-            maintainable code and staying current with industry standards.
+            {resume?.summary ||
+              "Passionate Full Stack Developer with 1+ years of experience building scalable web applications using React, Node.js, NestJS, PostgreSQL, and MongoDB. Proven track record of delivering production-ready solutions and improving deployment workflows using Docker and CI/CD. Strong expertise in TypeScript, modern frontend frameworks, and backend architecture. Experienced in mentoring developers and implementing DevOps best practices. Committed to writing clean, maintainable code and staying current with industry standards."}
           </p>
         </CardContent>
       </Card>

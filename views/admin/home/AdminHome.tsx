@@ -53,10 +53,10 @@ export default function AdminHome() {
       color: "text-orange-600",
     },
     {
-      title: "Growth",
-      value: "+12%",
+      title: "Total Skills",
+      value: stats?.totalSkills || 0,
       icon: TrendingUp,
-      description: "vs last month",
+      description: "skills listed",
       color: "text-purple-600",
     },
   ];

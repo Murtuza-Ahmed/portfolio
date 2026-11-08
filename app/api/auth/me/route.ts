@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     await connectDB()
 
     // Get token from cookie or Authorization header
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     const token = cookieStore.get("auth-token")?.value || request.headers.get("authorization")?.replace("Bearer ", "")
 
     if (!token) {

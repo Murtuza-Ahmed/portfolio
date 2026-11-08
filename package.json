@@ -36,7 +36,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "lint": "next lint",
+    "lint": "eslint .",
     "start": "next start",
     "admin": "ts-node -P tsconfig.server.json scripts/seed.ts"
   },
@@ -88,13 +88,13 @@
     "jsonwebtoken": "latest",
     "lucide-react": "^0.454.0",
     "mongoose": "latest",
-    "next": "^14.2.35",
+    "next": "16.4.5",
     "next-themes": "latest",
-    "react": "^18.3.1",
+    "react": "19.3.1",
     "react-countdown": "^2.3.6",
     "react-countup": "^6.5.3",
     "react-day-picker": "9.8.0",
-    "react-dom": "^18.3.1",
+    "react-dom": "19.3.1",
     "react-hook-form": "latest",
     "react-resizable-panels": "^2.1.7",
     "react-type-animation": "^3.2.0",
@@ -103,7 +103,7 @@
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
-    "vaul": "^0.9.9",
+    "vaul": "^1.1.2",
     "yup": "latest",
     "zod": "3.25.67"
   },
@@ -112,9 +112,11 @@
     "@types/js-cookie": "^3.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "autoprefixer": "^10.4.21",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.5",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.15",
     "ts-node": "^10.9.2",
@@ -123,5 +125,9 @@
   },
   "engines": {
     "node": "22.x"
+  },
+  "overrides": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0"
   }
 }

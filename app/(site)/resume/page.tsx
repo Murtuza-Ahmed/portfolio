@@ -1,6 +1,7 @@
 import Resume from "@/views/resume/Resume";
 import type { Metadata } from "next";
 
+
 export const metadata: Metadata = {
   title: "Resume",
   description:

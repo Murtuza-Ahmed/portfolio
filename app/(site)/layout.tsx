@@ -3,6 +3,7 @@ import { Navigation } from "@/components/navigation";
 import { AuthProvider } from "@/lib/contexts/AuthContext";
 import React from "react";
 
+
 export default function layout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

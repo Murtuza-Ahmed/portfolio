@@ -1,6 +1,7 @@
 import Home from "@/views/home/Home";
 import type { Metadata } from "next";
 
+
 export const metadata: Metadata = {
   title: "Home",
   description:

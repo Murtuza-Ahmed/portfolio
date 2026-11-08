@@ -4,7 +4,8 @@ import Project from "@/models/Project"
 import { createSuccessResponse, createErrorResponse, isValidObjectId, HTTP_STATUS } from "@/lib/utils/api"
 
 // GET /api/projects/[id] - Get public project by ID
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     await connectDB()
 

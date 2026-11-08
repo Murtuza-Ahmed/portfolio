@@ -1,6 +1,7 @@
 import Contact from "@/views/contact/Contact";
 import type { Metadata } from "next";
 
+
 export const metadata: Metadata = {
   title: "Contact",
   description:

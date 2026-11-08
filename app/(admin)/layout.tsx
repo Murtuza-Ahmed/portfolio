@@ -2,6 +2,7 @@ import { AuthProvider } from "@/lib/contexts/AuthContext";
 import type { Metadata } from "next";
 import React from "react";
 
+
 export const metadata: Metadata = {
   title: {
     default: "Admin Panel - MERN Stack Project",

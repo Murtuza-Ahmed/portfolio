@@ -8,7 +8,8 @@ import { userUpdateSchema } from "@/lib/validations/schemas"
 import { createSuccessResponse, createErrorResponse, isValidObjectId, HTTP_STATUS } from "@/lib/utils/api"
 
 // GET /api/admin/users/[id] - Get user by ID
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     await connectDB()
 
@@ -31,7 +32,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PUT /api/admin/users/[id] - Update user
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     await connectDB()
 
@@ -94,7 +96,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE /api/admin/users/[id] - Delete user
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     await connectDB()
 
@@ -108,7 +111,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     }
 
     // Prevent deleting your own account
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     const token = cookieStore.get("auth-token")?.value || request.headers.get("authorization")?.replace("Bearer ", "")
     const payload = token ? verifyToken(token) : null
     if (payload && payload.userId === user._id.toString()) {

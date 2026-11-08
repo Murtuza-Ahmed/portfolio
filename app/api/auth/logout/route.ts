@@ -5,7 +5,7 @@ import { createSuccessResponse, HTTP_STATUS } from "@/lib/utils/api"
 export async function POST(request: NextRequest) {
   try {
     // Clear the auth cookie
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     cookieStore.set("auth-token", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

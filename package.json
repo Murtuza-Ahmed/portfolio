@@ -87,7 +87,7 @@
     "js-cookie": "latest",
     "jsonwebtoken": "latest",
     "lucide-react": "^0.454.0",
-    "mongoose": "latest",
+    "mongoose": "^9.11.4",
     "next": "16.4.5",
     "next-themes": "latest",
     "react": "19.3.1",
